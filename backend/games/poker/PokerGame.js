@@ -78,31 +78,37 @@ function getBestFiveCardHand(cards) {
 
 // 判断牌型函数
 function isRoyalFlush(cards) {
+  if (!cards || cards.length < 5) return false;
   const straightFlush = isStraightFlush(cards);
   return straightFlush && cards[0].value === 14;
 }
 
 function isStraightFlush(cards) {
+  if (!cards || cards.length < 5) return false;
   return isFlush(cards) && isStraight(cards);
 }
 
 function isFourOfAKind(cards) {
+  if (!cards || cards.length < 4) return false;
   const counts = getValueCounts(cards);
   return Object.values(counts).includes(4);
 }
 
 function isFullHouse(cards) {
+  if (!cards || cards.length < 5) return false;
   const counts = getValueCounts(cards);
   const values = Object.values(counts);
   return values.includes(3) && values.includes(2);
 }
 
 function isFlush(cards) {
+  if (!cards || cards.length < 5) return false;
   const suit = cards[0].suit;
   return cards.every(c => c.suit === suit);
 }
 
 function isStraight(cards) {
+  if (!cards || cards.length < 5) return false;
   const values = cards.map(c => c.value).sort((a, b) => b - a);
   for (let i = 0; i < values.length - 1; i++) {
     if (values[i] - values[i + 1] !== 1) return false;
@@ -111,25 +117,33 @@ function isStraight(cards) {
 }
 
 function isThreeOfAKind(cards) {
+  if (!cards || cards.length < 3) return false;
   const counts = getValueCounts(cards);
   return Object.values(counts).includes(3);
 }
 
 function isTwoPair(cards) {
+  if (!cards || cards.length < 4) return false;
   const counts = getValueCounts(cards);
   const pairs = Object.values(counts).filter(c => c === 2);
   return pairs.length === 2;
 }
 
 function isOnePair(cards) {
+  if (!cards || cards.length < 2) return false;
   const counts = getValueCounts(cards);
   return Object.values(counts).includes(2);
 }
 
 function getValueCounts(cards) {
   const counts = {};
+  if (!cards || !Array.isArray(cards)) {
+    return counts;
+  }
   cards.forEach(c => {
-    counts[c.value] = (counts[c.value] || 0) + 1;
+    if (c && c.value !== undefined) {
+      counts[c.value] = (counts[c.value] || 0) + 1;
+    }
   });
   return counts;
 }

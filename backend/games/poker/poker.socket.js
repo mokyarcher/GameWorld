@@ -337,6 +337,18 @@ function notifyCurrentPlayer(game, io) {
     return;
   }
   
+  // 检查玩家是否已经弃牌或全下，如果是则跳过
+  if (player.folded || player.allIn) {
+    console.log('player folded or all-in, skip:', player.nickname, 'folded:', player.folded, 'allIn:', player.allIn);
+    const nextPlayer = game.findNextActivePlayer(game.currentPlayer);
+    if (nextPlayer >= 0) {
+      game.currentPlayer = nextPlayer;
+      broadcastGameState(io, game.roomId, game);
+      notifyCurrentPlayer(game, io);
+    }
+    return;
+  }
+  
   clearPlayerActionTimer(player);
   
   if (player.disconnected) {

@@ -238,93 +238,172 @@
 
         /* 公共牌尺寸 - 缩小版 */
         .community-cards .card {
-            width: clamp(35px, 8vw, 50px);
-            height: clamp(49px, 11vw, 70px);
-            font-size: clamp(0.9rem, 2.5vw, 1.2rem);
+            width: clamp(40px, 10vw, 60px);
+            height: clamp(56px, 14vw, 84px);
+            font-size: clamp(1rem, 3vw, 1.5rem);
+        }
+
+        .community-cards .card .center-suit {
+            font-size: 1.2em;
+            margin-top: 6px;
+        }
+
+        .community-cards .card .corner-top,
+        .community-cards .card .corner-bottom {
+            font-size: 0.55em;
         }
 
         .card {
             width: clamp(40px, 10vw, 60px);
             height: clamp(56px, 14vw, 84px);
-            background: linear-gradient(135deg, #fff 0%, #f8f8f8 50%, #f0f0f0 100%);
-            border-radius: 8px;
+            background: linear-gradient(145deg, #ffffff 0%, #f5f5f5 50%, #ebebeb 100%);
+            border-radius: 10px;
             display: flex;
             flex-direction: column;
-            justify-content: center;
+            justify-content: space-between;
             align-items: center;
-            font-size: clamp(1.2rem, 3.5vw, 1.8rem);
+            padding: 6px 4px;
+            font-size: clamp(1rem, 3vw, 1.5rem);
             font-weight: bold;
             box-shadow: 
-                0 4px 15px rgba(0,0,0,0.4),
-                0 0 0 1px rgba(0,0,0,0.15),
-                inset 0 1px 0 rgba(255,255,255,0.8);
-            border: 1px solid #ccc;
+                0 2px 4px rgba(0,0,0,0.2),
+                0 4px 8px rgba(0,0,0,0.15),
+                inset 0 1px 0 rgba(255,255,255,1),
+                inset 0 -1px 0 rgba(0,0,0,0.05);
+            border: 1px solid #d0d0d0;
             transition: all 0.3s ease;
             position: relative;
             overflow: hidden;
         }
 
+        /* 牌角标 */
+        .card .corner-top {
+            position: absolute;
+            top: 4px;
+            left: 4px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            line-height: 1;
+            font-size: 0.7em;
+        }
+
+        .card .corner-bottom {
+            position: absolute;
+            bottom: 4px;
+            right: 4px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            line-height: 1;
+            font-size: 0.7em;
+            transform: rotate(180deg);
+        }
+
+        /* 牌中心大花色 */
+        .card .center-suit {
+            font-size: 1.5em;
+            opacity: 0.9;
+            margin-top: 8px;
+        }
+
+        /* 牌面光泽效果 */
         .card::before {
             content: '';
             position: absolute;
             top: 0;
             left: 0;
             right: 0;
-            height: 40%;
-            background: linear-gradient(180deg, rgba(255,255,255,0.8) 0%, transparent 100%);
+            height: 50%;
+            background: linear-gradient(180deg, 
+                rgba(255,255,255,0.9) 0%, 
+                rgba(255,255,255,0.4) 40%,
+                transparent 100%);
+            pointer-events: none;
+            border-radius: 10px 10px 0 0;
+        }
+
+        /* 牌边缘细微阴影 */
+        .card::after {
+            content: '';
+            position: absolute;
+            top: 2px;
+            left: 2px;
+            right: 2px;
+            bottom: 2px;
+            border: 1px solid rgba(0,0,0,0.03);
+            border-radius: 8px;
             pointer-events: none;
         }
 
         .card:hover {
-            transform: translateY(-5px) scale(1.05);
+            transform: translateY(-8px) scale(1.08);
             box-shadow: 
-                0 8px 25px rgba(0,0,0,0.5),
-                0 0 0 1px rgba(0,0,0,0.15);
+                0 8px 20px rgba(0,0,0,0.3),
+                0 12px 30px rgba(0,0,0,0.2);
         }
 
         .card.red {
-            color: #e74c3c;
+            color: #dc143c;
         }
 
         .card.black {
-            color: #2c3e50;
+            color: #1a1a1a;
         }
 
         .card-back {
             width: clamp(40px, 10vw, 60px);
             height: clamp(56px, 14vw, 84px);
             background: 
-                linear-gradient(135deg, #1e5799 0%, #2989d8 50%, #207cca 51%, #7db9e8 100%);
-            border-radius: 8px;
-            border: 1px solid rgba(255,255,255,0.2);
+                linear-gradient(145deg, #1a3a5c 0%, #2d5a87 50%, #1a3a5c 100%);
+            border-radius: 10px;
+            border: 1px solid #1a3a5c;
             display: flex;
             justify-content: center;
             align-items: center;
             font-size: clamp(1.5rem, 4vw, 2.2rem);
             box-shadow: 
-                0 4px 15px rgba(0,0,0,0.4),
-                inset 0 0 20px rgba(0,0,0,0.2);
+                0 2px 4px rgba(0,0,0,0.2),
+                0 4px 8px rgba(0,0,0,0.15),
+                inset 0 1px 0 rgba(255,255,255,0.1);
             position: relative;
             overflow: hidden;
         }
 
+        /* 扑克牌背面花纹 */
         .card-back::before {
             content: '';
             position: absolute;
-            top: 8px;
-            left: 8px;
-            right: 8px;
-            bottom: 8px;
-            border: 2px solid rgba(255,255,255,0.3);
-            border-radius: 4px;
+            top: 4px;
+            left: 4px;
+            right: 4px;
+            bottom: 4px;
+            border: 1px solid rgba(255,255,255,0.2);
+            border-radius: 6px;
             background: 
                 repeating-linear-gradient(
                     45deg,
                     transparent,
-                    transparent 8px,
-                    rgba(255,255,255,0.1) 8px,
-                    rgba(255,255,255,0.1) 16px
+                    transparent 3px,
+                    rgba(255,255,255,0.05) 3px,
+                    rgba(255,255,255,0.05) 6px
+                ),
+                repeating-linear-gradient(
+                    -45deg,
+                    transparent,
+                    transparent 3px,
+                    rgba(255,255,255,0.03) 3px,
+                    rgba(255,255,255,0.03) 6px
                 );
+        }
+
+        /* 牌背中心图案 */
+        .card-back::after {
+            content: '🃏';
+            position: absolute;
+            font-size: 1.5em;
+            opacity: 0.3;
+            filter: drop-shadow(0 1px 2px rgba(0,0,0,0.3));
         }
 
         /* 玩家座位 - 设计规范 */
@@ -547,6 +626,62 @@
             z-index: 5;
         }
 
+        /* 玩家操作显示 - 显示在头像右侧 */
+        .player-action-display {
+            position: absolute;
+            right: -70px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: linear-gradient(135deg, #3498db, #2980b9);
+            color: white;
+            font-size: 0.75rem;
+            font-weight: 700;
+            padding: 6px 12px;
+            border-radius: 15px;
+            box-shadow: 0 3px 12px rgba(0, 0, 0, 0.4);
+            white-space: nowrap;
+            z-index: 30;
+            animation: action-pop 0.3s ease;
+            border: 2px solid rgba(255,255,255,0.3);
+        }
+
+        /* 弃牌 - 灰色 */
+        .player-action-display.fold {
+            background: linear-gradient(135deg, #7f8c8d, #95a5a6);
+        }
+
+        /* 看牌/过牌 - 蓝色 */
+        .player-action-display.check {
+            background: linear-gradient(135deg, #3498db, #2980b9);
+        }
+
+        /* 跟注 - 紫色 */
+        .player-action-display.call {
+            background: linear-gradient(135deg, #9b59b6, #8e44ad);
+        }
+
+        /* 加注 - 橙色 */
+        .player-action-display.raise {
+            background: linear-gradient(135deg, #f39c12, #e67e22);
+        }
+
+        /* 全下 - 红色 */
+        .player-action-display.allin {
+            background: linear-gradient(135deg, #e74c3c, #c0392b);
+            animation: action-pop 0.3s ease, action-shine 1s infinite;
+        }
+
+        @keyframes action-pop {
+            0% { transform: translateY(-50%) scale(0); opacity: 0; }
+            50% { transform: translateY(-50%) scale(1.1); }
+            100% { transform: translateY(-50%) scale(1); opacity: 1; }
+        }
+
+        @keyframes action-shine {
+            0%, 100% { box-shadow: 0 3px 12px rgba(231, 76, 60, 0.4); }
+            50% { box-shadow: 0 3px 20px rgba(231, 76, 60, 0.8), 0 0 30px rgba(231, 76, 60, 0.4); }
+        }
+
         /* 重连提示 */
         .reconnect-toast {
             position: fixed;
@@ -765,7 +900,7 @@
             position: absolute;
             top: 70px;
             right: 15px;
-            width: clamp(180px, 40vw, 300px);
+            width: clamp(120px, 25vw, 180px);
             max-height: clamp(150px, 30vh, 250px);
             background: linear-gradient(180deg, rgba(0,0,0,0.85), rgba(0,0,0,0.75));
             border-radius: 15px;
@@ -915,24 +1050,44 @@
         .result-card {
             width: clamp(36px, 10vw, 50px);
             height: clamp(50px, 14vw, 70px);
-            background: linear-gradient(135deg, #fff 0%, #f8f8f8 100%);
-            border-radius: 6px;
+            background: linear-gradient(145deg, #ffffff 0%, #f5f5f5 50%, #ebebeb 100%);
+            border-radius: 8px;
             display: flex;
             flex-direction: column;
-            justify-content: center;
+            justify-content: space-between;
             align-items: center;
-            font-size: clamp(0.9rem, 2.8vw, 1.2rem);
+            padding: 4px 3px;
+            font-size: clamp(0.8rem, 2.5vw, 1.1rem);
             font-weight: bold;
-            box-shadow: 0 3px 10px rgba(0,0,0,0.3);
-            border: 1px solid #ddd;
+            box-shadow: 
+                0 2px 4px rgba(0,0,0,0.15),
+                0 3px 8px rgba(0,0,0,0.1),
+                inset 0 1px 0 rgba(255,255,255,1);
+            border: 1px solid #d0d0d0;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .result-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 50%;
+            background: linear-gradient(180deg, 
+                rgba(255,255,255,0.9) 0%, 
+                rgba(255,255,255,0.3) 100%);
+            pointer-events: none;
+            border-radius: 8px 8px 0 0;
         }
 
         .result-card.red {
-            color: #e74c3c;
+            color: #dc143c;
         }
 
         .result-card.black {
-            color: #2c3e50;
+            color: #1a1a1a;
         }
 
         /* 倒计时样式 */
@@ -1318,7 +1473,22 @@
             // 清除该玩家的倒计时
             if (data.userId) {
                 delete actionCountdowns[data.userId];
+            }
+            // 存储玩家操作显示（显示3秒）
+            if (data.userId && data.action) {
+                playerActions[data.userId] = {
+                    action: data.action,
+                    amount: data.amount || 0,
+                    timestamp: Date.now()
+                };
                 renderPlayerSeats();
+                // 3秒后清除操作显示
+                setTimeout(() => {
+                    if (playerActions[data.userId] && Date.now() - playerActions[data.userId].timestamp >= 1000) {
+                        delete playerActions[data.userId];
+                        renderPlayerSeats();
+                    }
+                }, 1000);
             }
         });
         
@@ -1380,7 +1550,7 @@
             
             setTimeout(() => {
                 toast.remove();
-            }, 3000);
+            }, 1000);
         }
 
         // 新一轮（翻牌、转牌、河牌）
@@ -1851,8 +2021,15 @@ socket.on('game-ending-soon', (data) => {
                 const isRed = card.suit === '♥' || card.suit === '♦';
                 return `
                     <div class="card ${isRed ? 'red' : 'black'}">
-                        <div>${card.rank}</div>
-                        <div>${card.suit}</div>
+                        <div class="corner-top">
+                            <div>${card.rank}</div>
+                            <div>${card.suit}</div>
+                        </div>
+                        <div class="center-suit">${card.suit}</div>
+                        <div class="corner-bottom">
+                            <div>${card.rank}</div>
+                            <div>${card.suit}</div>
+                        </div>
                     </div>
                 `;
             }).join('');
@@ -1860,6 +2037,9 @@ socket.on('game-ending-soon', (data) => {
 
         // 存储操作倒计时
         const actionCountdowns = {};
+        
+        // 存储玩家操作显示
+        const playerActions = {};
 
         // 渲染玩家座位
         function renderPlayerSeats() {
@@ -1912,6 +2092,24 @@ socket.on('game-ending-soon', (data) => {
                 // 倒计时显示
                 const timerHTML = showTimer ? `<div class="player-timer ${countdown <= 10 ? 'danger' : countdown <= 20 ? 'warning' : ''}" id="timer-${player.userId}">${countdown}s</div>` : '';
                 
+                // 玩家操作显示
+                const playerAction = playerActions[player.userId];
+                const showAction = playerAction !== undefined && (Date.now() - playerAction.timestamp < 1000);
+                let actionText = '';
+                if (showAction) {
+                    const actionLabels = {
+                        'fold': '弃牌',
+                        'check': '看牌',
+                        'call': '跟注',
+                        'raise': '加注',
+                        'allin': '全下'
+                    };
+                    const actionLabel = actionLabels[playerAction.action] || playerAction.action;
+                    actionText = playerAction.amount > 0 ? `${actionLabel} ${playerAction.amount}` : actionLabel;
+                }
+                const actionDisplayHTML = showAction ? `<div class="player-action-display ${playerAction.action}">${actionText}</div>` : '';
+                
+                
                 // 手牌HTML
                 const cardsHTML = showCards ? `
                     <div class="cards">
@@ -1919,8 +2117,15 @@ socket.on('game-ending-soon', (data) => {
                             const isRed = card.suit === '♥' || card.suit === '♦';
                             return `
                                 <div class="card ${isRed ? 'red' : 'black'}">
-                                    <div>${card.rank}</div>
-                                    <div>${card.suit}</div>
+                                    <div class="corner-top">
+                                        <div>${card.rank}</div>
+                                        <div>${card.suit}</div>
+                                    </div>
+                                    <div class="center-suit">${card.suit}</div>
+                                    <div class="corner-bottom">
+                                        <div>${card.rank}</div>
+                                        <div>${card.suit}</div>
+                                    </div>
                                 </div>
                             `;
                         }).join('')}
@@ -1935,6 +2140,7 @@ socket.on('game-ending-soon', (data) => {
                             ${cardsHTML}
                             <div class="player-card">
                                 ${positionBadge}
+                                ${actionDisplayHTML}
                                 <div class="player-avatar ${isActive ? 'active' : ''} ${isFolded ? 'folded' : ''} ${isDisconnected ? 'disconnected' : ''} ${isBot ? 'bot' : ''}">
                                     <img src="/avatars/${player.avatar || 'default.png'}" alt="">
                                     ${isDisconnected ? '<div class="disconnect-badge">⚠</div>' : ''}
@@ -1953,6 +2159,7 @@ socket.on('game-ending-soon', (data) => {
                             ${timerHTML}
                             <div class="player-card">
                                 ${positionBadge}
+                                ${actionDisplayHTML}
                                 <div class="player-avatar ${isActive ? 'active' : ''} ${isFolded ? 'folded' : ''} ${isDisconnected ? 'disconnected' : ''} ${isBot ? 'bot' : ''}">
                                     <img src="/avatars/${player.avatar || 'default.png'}" alt="">
                                     ${isDisconnected ? '<div class="disconnect-badge">⚠</div>' : ''}
@@ -2137,8 +2344,15 @@ socket.on('game-ending-soon', (data) => {
                     const isRed = card.suit === '♥' || card.suit === '♦';
                     return `
                         <div class="result-card ${isRed ? 'red' : 'black'}">
-                            <div>${card.rank}</div>
-                            <div>${card.suit}</div>
+                            <div style="position:absolute; top:2px; left:3px; font-size:0.65em; line-height:1;">
+                                <div>${card.rank}</div>
+                                <div>${card.suit}</div>
+                            </div>
+                            <div style="font-size:1.3em; margin-top:10px;">${card.suit}</div>
+                            <div style="position:absolute; bottom:2px; right:3px; font-size:0.65em; line-height:1; transform:rotate(180deg);">
+                                <div>${card.rank}</div>
+                                <div>${card.suit}</div>
+                            </div>
                         </div>
                     `;
                 }).join('');

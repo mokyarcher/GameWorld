@@ -97,6 +97,23 @@
             background: rgba(231, 76, 60, 1);
         }
 
+        .btn-back {
+            padding: 8px 20px;
+            background: linear-gradient(135deg, #9b59b6, #8e44ad);
+            border: none;
+            border-radius: 6px;
+            color: white;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-right: 10px;
+        }
+
+        .btn-back:hover {
+            background: linear-gradient(135deg, #8e44ad, #9b59b6);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(155, 89, 182, 0.4);
+        }
+
         .container {
             max-width: 1200px;
             margin: 0 auto;
@@ -547,6 +564,7 @@
                 <span id="username">加载中...</span>
                 <span class="chips">💰 <span id="chips">0</span></span>
             </div>
+            <button class="btn-back" onclick="backToGameHall()">🏠 返回大厅</button>
             <button class="btn-profile" onclick="showProfileModal()">👤 个人信息</button>
             <button class="btn-logout" onclick="logout()">退出</button>
         </div>
@@ -870,6 +888,10 @@
             localStorage.removeItem('token');
             localStorage.removeItem('user');
             window.location.href = '../../pages/login.html';
+        }
+
+        function backToGameHall() {
+            window.location.href = '../../pages/gamehall.html';
         }
 
         function escapeHtml(text) {
