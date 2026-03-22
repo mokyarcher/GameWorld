@@ -65,19 +65,6 @@
             border: 1px solid rgba(255,255,255,0.1);
         }
 
-        .pot-display {
-            background: linear-gradient(135deg, #f39c12, #e67e22);
-            padding: 10px 20px;
-            border-radius: 25px;
-            font-weight: bold;
-            font-size: clamp(0.95rem, 2.5vw, 1.2rem);
-            box-shadow: 
-                0 5px 20px rgba(243,156,18,0.5),
-                inset 0 1px 0 rgba(255,255,255,0.2);
-            white-space: nowrap;
-            border: 1px solid rgba(255,255,255,0.1);
-        }
-
         .btn-exit {
             padding: 10px 20px;
             background: linear-gradient(135deg, rgba(231,76,60,0.95), rgba(192,57,43,0.95));
@@ -113,153 +100,152 @@
         }
 
         .poker-table {
-            width: min(99vw, 1100px);
-            height: min(65vh, 520px);
-            max-width: 100%;
-            max-height: 100%;
-            background: 
-                radial-gradient(ellipse at 30% 20%, rgba(61, 120, 80, 0.8) 0%, transparent 50%),
-                radial-gradient(ellipse at 70% 80%, rgba(45, 90, 61, 0.6) 0%, transparent 50%),
-                radial-gradient(ellipse at center, #2d5a3d 0%, #1a4a2e 40%, #0d2818 100%);
-            border-radius: 50%;
-            border: clamp(12px, 2.5vw, 20px) solid #8B4513;
+            position: absolute;
+            width: 95%;
+            height: 88%;
+            top: 52%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            max-width: 1100px;
+            max-height: 580px;
+            /* 牌桌台面渐变 - 从中心向外 */
+            background: radial-gradient(
+                ellipse at center, 
+                #2d5a3d 0%,
+                #1a3d2a 60%,
+                #0d2818 100%
+            );
+            /* 扁椭椭圆 - 设计规范 */
+            border-radius: 50% / 40%;
+            /* 多层边框 */
             box-shadow: 
-                /* 外发光 */
-                0 0 0 4px rgba(139, 69, 19, 0.6),
-                0 0 0 8px rgba(0, 0, 0, 0.3),
-                /* 主阴影 */
-                0 30px 80px rgba(0,0,0,0.8),
-                /* 内发光效果 */
                 inset 0 0 100px rgba(0,0,0,0.5),
-                inset 0 0 40px rgba(0,0,0,0.3);
-            position: relative;
+                0 20px 60px rgba(0,0,0,0.8),
+                0 0 0 12px #2a1810,
+                0 0 0 18px #1a0f0a;
             display: flex;
             justify-content: center;
             align-items: center;
         }
 
-        /* 桌布细节纹理 */
+        /* 木纹边框效果 */
         .poker-table::before {
             content: '';
             position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            border-radius: 50%;
-            background: 
-                /* 横向细纹理 */
-                repeating-linear-gradient(
-                    0deg,
-                    transparent,
-                    transparent 3px,
-                    rgba(0,0,0,0.02) 3px,
-                    rgba(0,0,0,0.02) 6px
-                ),
-                /* 斜向细纹理 */
-                repeating-linear-gradient(
-                    45deg,
-                    transparent,
-                    transparent 4px,
-                    rgba(255,255,255,0.01) 4px,
-                    rgba(255,255,255,0.01) 8px
-                );
-            pointer-events: none;
+            top: -12px;
+            left: -12px;
+            right: -12px;
+            bottom: -12px;
+            background: repeating-linear-gradient(
+                90deg, 
+                #3d2817 0px, 
+                #5a3d2a 2px, 
+                #3d2817 4px
+            );
+            border-radius: 50% / 40%;
+            z-index: -1;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.6);
         }
 
-        /* 桌布中心装饰 */
+        /* 桌面高光 */
         .poker-table::after {
             content: '';
             position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            width: 35%;
-            height: 25%;
+            top: 10%;
+            left: 20%;
+            right: 20%;
+            height: 30%;
+            background: radial-gradient(
+                ellipse at center, 
+                rgba(255,255,255,0.08) 0%, 
+                transparent 70%
+            );
             border-radius: 50%;
-            background: radial-gradient(ellipse at center, 
-                rgba(255,215,0,0.08) 0%, 
-                rgba(255,215,0,0.03) 40%, 
-                transparent 70%);
             pointer-events: none;
         }
 
-        /* 底池区域 */
+
+        /* 底池区域 - 设计规范 */
         .pot-area {
             position: absolute;
-            top: 15%;
+            top: 26%;
             left: 50%;
             transform: translateX(-50%);
             text-align: center;
             z-index: 10;
             background: linear-gradient(180deg, rgba(0,0,0,0.5), rgba(0,0,0,0.35));
-            padding: 15px 35px;
-            border-radius: 30px;
-            border: 2px solid rgba(255,215,0,0.4);
+            padding: 10px 25px;
+            border-radius: 20px;
+            border: 1px solid rgba(255,215,0,0.3);
             box-shadow: 
-                0 8px 30px rgba(0,0,0,0.5),
-                inset 0 1px 0 rgba(255,255,255,0.1),
-                0 0 30px rgba(255,215,0,0.1);
+                0 4px 15px rgba(0,0,0,0.4),
+                inset 0 1px 0 rgba(255,255,255,0.1);
         }
 
         /* 筹码堆叠装饰 */
         .pot-area::before {
             content: '🪙';
             position: absolute;
-            left: -15px;
+            left: -12px;
             top: 50%;
             transform: translateY(-50%);
-            font-size: 24px;
-            filter: drop-shadow(0 3px 6px rgba(0,0,0,0.5));
+            font-size: 18px;
+            filter: drop-shadow(0 2px 4px rgba(0,0,0,0.5));
         }
 
         .pot-area::after {
             content: '🪙';
             position: absolute;
-            right: -15px;
+            right: -12px;
             top: 50%;
             transform: translateY(-50%);
-            font-size: 24px;
-            filter: drop-shadow(0 3px 6px rgba(0,0,0,0.5));
+            font-size: 18px;
+            filter: drop-shadow(0 2px 4px rgba(0,0,0,0.5));
         }
 
         .pot-label {
-            font-size: clamp(0.75rem, 2vw, 1rem);
+            font-size: clamp(0.65rem, 1.8vw, 0.85rem);
             color: rgba(255,255,255,0.8);
-            margin-bottom: 6px;
+            margin-bottom: 4px;
             text-transform: uppercase;
-            letter-spacing: 2px;
+            letter-spacing: 1px;
             font-weight: 500;
         }
 
         .pot-amount {
-            font-size: clamp(1.5rem, 5vw, 2.5rem);
+            font-size: clamp(1.2rem, 4vw, 2rem);
             font-weight: bold;
             color: #ffd700;
             text-shadow: 
                 0 0 10px rgba(255,215,0,0.8), 
-                0 0 20px rgba(255,215,0,0.5),
-                0 0 40px rgba(255,215,0,0.3);
+                0 0 20px rgba(255,215,0,0.5);
         }
 
-        /* 公共牌区域 */
+        /* 公共牌区域 - 设计规范 */
         .community-cards {
             position: absolute;
-            top: 40%;
+            top: 44%;
             left: 50%;
             transform: translateX(-50%);
             display: flex;
-            gap: clamp(6px, 2vw, 15px);
+            gap: clamp(4px, 1.5vw, 10px);
             z-index: 10;
-            padding: 15px 20px;
+            padding: 10px 15px;
             background: rgba(0,0,0,0.2);
-            border-radius: 15px;
+            border-radius: 12px;
             border: 1px solid rgba(255,255,255,0.1);
         }
 
+        /* 公共牌尺寸 - 缩小版 */
+        .community-cards .card {
+            width: clamp(35px, 8vw, 50px);
+            height: clamp(49px, 11vw, 70px);
+            font-size: clamp(0.9rem, 2.5vw, 1.2rem);
+        }
+
         .card {
-            width: clamp(45px, 12vw, 75px);
-            height: clamp(65px, 17vw, 105px);
+            width: clamp(40px, 10vw, 60px);
+            height: clamp(56px, 14vw, 84px);
             background: linear-gradient(135deg, #fff 0%, #f8f8f8 50%, #f0f0f0 100%);
             border-radius: 8px;
             display: flex;
@@ -305,8 +291,8 @@
         }
 
         .card-back {
-            width: clamp(45px, 12vw, 75px);
-            height: clamp(65px, 17vw, 105px);
+            width: clamp(40px, 10vw, 60px);
+            height: clamp(56px, 14vw, 84px);
             background: 
                 linear-gradient(135deg, #1e5799 0%, #2989d8 50%, #207cca 51%, #7db9e8 100%);
             border-radius: 8px;
@@ -341,38 +327,85 @@
                 );
         }
 
-        /* 玩家座位 */
+        /* 玩家座位 - 设计规范 */
         .player-seat {
             position: absolute;
+            width: clamp(110px, 16vw, 150px);
+            min-height: 90px;
             display: flex;
             flex-direction: column;
             align-items: center;
-            gap: 6px;
-            transition: all 0.3s;
+            gap: 8px;
+            transition: all 0.3s ease;
             z-index: 20;
         }
 
-        .player-seat .cards {
-            display: flex;
-            gap: 6px;
-            margin-bottom: 4px;
+        /* 当前行动玩家高亮 */
+        .player-seat.active {
+            filter: drop-shadow(0 0 20px rgba(255, 215, 0, 0.6));
         }
 
+        /* 玩家信息卡片 - 设计规范 */
+        .player-card {
+            background: linear-gradient(145deg, rgba(30,30,30,0.95), rgba(10,10,10,0.98));
+            border-radius: 12px;
+            padding: 10px 12px;
+            border: 1px solid rgba(255,255,255,0.1);
+            box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+            text-align: center;
+            position: relative;
+            backdrop-filter: blur(10px);
+            width: 100%;
+        }
+
+        /* 位置标记 - 设计规范 */
+        .player-position {
+            position: absolute;
+            top: -12px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: linear-gradient(135deg, #ffd700, #ffed4e);
+            color: #1a1a1a;
+            font-size: 0.7rem;
+            font-weight: 700;
+            padding: 3px 10px;
+            border-radius: 10px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            box-shadow: 0 2px 8px rgba(255, 215, 0, 0.4);
+            white-space: nowrap;
+            z-index: 10;
+        }
+
+        .player-position.dealer {
+            background: linear-gradient(135deg, #3498db, #2980b9);
+            color: white;
+        }
+
+        .player-position.small-blind {
+            background: linear-gradient(135deg, #f39c12, #e67e22);
+            color: white;
+        }
+
+        .player-position.big-blind {
+            background: linear-gradient(135deg, #e74c3c, #c0392b);
+            color: white;
+        }
+
+        /* 头像 - 保留但优化位置和大小 */
         .player-avatar {
-            width: clamp(55px, 14vw, 75px);
-            height: clamp(55px, 14vw, 75px);
+            width: clamp(45px, 10vw, 60px);
+            height: clamp(45px, 10vw, 60px);
             border-radius: 50%;
             background: linear-gradient(135deg, #3498db, #2980b9);
             display: flex;
             align-items: center;
             justify-content: center;
-            border: 4px solid rgba(255,255,255,0.4);
+            border: 3px solid rgba(255,255,255,0.3);
             overflow: hidden;
-            box-shadow: 
-                0 5px 20px rgba(0,0,0,0.4),
-                0 0 0 2px rgba(0,0,0,0.2),
-                inset 0 2px 5px rgba(255,255,255,0.3);
+            box-shadow: 0 3px 12px rgba(0,0,0,0.4);
             position: relative;
+            margin: 0 auto 6px;
             transition: all 0.3s ease;
         }
 
@@ -382,125 +415,86 @@
             object-fit: cover;
         }
 
-        .player-avatar.dealer {
-            border-color: #ffd700;
-            box-shadow: 
-                0 0 20px rgba(255,215,0,0.8),
-                0 0 40px rgba(255,215,0,0.4),
-                inset 0 2px 5px rgba(255,255,255,0.3);
-        }
-
-        .player-avatar.dealer::after {
-            content: 'D';
-            position: absolute;
-            bottom: -5px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 20px;
-            height: 20px;
-            background: linear-gradient(135deg, #ffd700, #f39c12);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 11px;
-            font-weight: bold;
-            color: #333;
-            border: 2px solid #fff;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.4);
-        }
-
         .player-avatar.active {
             border-color: #27ae60;
-            box-shadow: 
-                0 0 25px rgba(39,174,96,1),
-                0 0 50px rgba(39,174,96,0.5),
-                inset 0 2px 5px rgba(255,255,255,0.3);
-            animation: pulse 1.5s infinite;
+            box-shadow: 0 0 15px rgba(39,174,96,0.8);
+            animation: avatar-pulse 1.5s infinite;
         }
 
-        @keyframes pulse {
-            0%, 100% { transform: scale(1); box-shadow: 0 0 25px rgba(39,174,96,1), 0 0 50px rgba(39,174,96,0.5); }
-            50% { transform: scale(1.08); box-shadow: 0 0 35px rgba(39,174,96,1), 0 0 70px rgba(39,174,96,0.6); }
+        @keyframes avatar-pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
         }
 
         .player-avatar.folded {
             opacity: 0.4;
-            filter: grayscale(100%) brightness(0.7);
+            filter: grayscale(100%);
         }
 
-        .player-info {
-            background: linear-gradient(180deg, rgba(0,0,0,0.85) 0%, rgba(0,0,0,0.7) 100%);
-            padding: 8px 14px;
-            border-radius: 16px;
-            text-align: center;
-            min-width: 90px;
-            border: 1px solid rgba(255,255,255,0.15);
-            box-shadow: 
-                0 4px 15px rgba(0,0,0,0.4),
-                inset 0 1px 0 rgba(255,255,255,0.1);
-        }
-
+        /* 玩家名称 - 设计规范 */
         .player-name {
-            font-size: clamp(0.75rem, 2.2vw, 1rem);
-            font-weight: 700;
-            margin-bottom: 4px;
+            color: #fff;
+            font-size: clamp(0.75rem, 2vw, 0.9rem);
+            font-weight: 600;
+            margin-bottom: 3px;
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
-            max-width: 100px;
-            color: #fff;
-            text-shadow: 0 1px 2px rgba(0,0,0,0.5);
         }
 
+        /* 筹码数量 - 设计规范 */
         .player-chips {
-            font-size: clamp(0.7rem, 1.8vw, 0.9rem);
             color: #ffd700;
-            font-weight: 600;
-            text-shadow: 0 0 10px rgba(255,215,0,0.5);
+            font-size: clamp(0.8rem, 2.2vw, 1rem);
+            font-weight: 700;
+            text-shadow: 0 0 10px rgba(255, 215, 0, 0.3);
         }
 
+        /* 当前下注显示 - 设计规范 */
         .player-bet {
-            background: linear-gradient(135deg, rgba(255,215,0,0.4), rgba(255,215,0,0.15));
-            border: 2px solid #ffd700;
-            padding: 4px 12px;
-            border-radius: 15px;
-            font-size: clamp(0.7rem, 1.8vw, 0.9rem);
-            color: #ffd700;
-            font-weight: bold;
+            color: #fff;
+            font-size: clamp(0.7rem, 1.8vw, 0.85rem);
+            font-weight: 600;
             margin-top: 4px;
-            box-shadow: 
-                0 3px 12px rgba(255,215,0,0.4),
-                inset 0 1px 0 rgba(255,255,255,0.2);
+            padding: 3px 10px;
+            background: rgba(231, 76, 60, 0.85);
+            border-radius: 12px;
+            display: inline-block;
         }
 
+        /* 倒计时 - 设计规范：放在头像上方 */
         .player-timer {
             position: absolute;
-            top: -8px;
-            right: -8px;
-            width: 28px;
-            height: 28px;
-            background: linear-gradient(135deg, #e74c3c, #c0392b);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 0.85rem;
-            font-weight: bold;
-            color: white;
-            border: 2px solid #fff;
-            box-shadow: 0 3px 12px rgba(231,76,60,0.6);
-            animation: pulse 1s infinite;
+            top: -28px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: linear-gradient(135deg, #ffd700, #ffed4e);
+            color: #1a1a1a;
+            font-size: 0.8rem;
+            font-weight: 700;
+            padding: 4px 12px;
+            border-radius: 12px;
+            box-shadow: 0 3px 12px rgba(255, 215, 0, 0.5);
+            animation: timer-pulse 1s infinite;
+            white-space: nowrap;
+            z-index: 25;
+        }
+
+        @keyframes timer-pulse {
+            0%, 100% { opacity: 1; transform: translateX(-50%) scale(1); }
+            50% { opacity: 0.8; transform: translateX(-50%) scale(1.05); }
         }
 
         .player-timer.warning {
             background: linear-gradient(135deg, #f39c12, #e67e22);
-            animation: pulse 0.5s infinite;
+            color: white;
+            animation: timer-pulse 0.5s infinite;
         }
 
         .player-timer.danger {
             background: linear-gradient(135deg, #e74c3c, #c0392b);
-            animation: pulse 0.3s infinite;
+            color: white;
+            animation: timer-pulse 0.3s infinite;
         }
 
         /* 断线状态 */
@@ -517,37 +511,40 @@
                 0 0 30px rgba(155,89,182,0.3);
         }
 
+        /* 徽章放在右下角，避免与倒计时重叠 */
         .bot-badge {
             position: absolute;
-            top: -8px;
-            right: -8px;
-            width: 24px;
-            height: 24px;
+            bottom: -5px;
+            right: -5px;
+            width: 22px;
+            height: 22px;
             background: linear-gradient(135deg, #9b59b6, #8e44ad);
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 12px;
+            font-size: 11px;
             border: 2px solid #fff;
             box-shadow: 0 3px 10px rgba(0,0,0,0.4);
+            z-index: 5;
         }
 
         .disconnect-badge {
             position: absolute;
-            top: -8px;
-            left: -8px;
-            width: 24px;
-            height: 24px;
+            bottom: -5px;
+            left: -5px;
+            width: 22px;
+            height: 22px;
             background: linear-gradient(135deg, #e74c3c, #c0392b);
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 0.75rem;
+            font-size: 0.7rem;
             color: white;
             border: 2px solid #fff;
             box-shadow: 0 3px 10px rgba(231,76,60,0.5);
+            z-index: 5;
         }
 
         /* 重连提示 */
@@ -571,13 +568,47 @@
             to { transform: translateX(-50%) translateY(0); opacity: 1; }
         }
 
-        /* 座位位置 - 6人桌 - 更宽的椭圆布局 */
-        .seat-0 { bottom: 5%; left: 50%; transform: translateX(-50%); }
-        .seat-1 { bottom: 18%; right: 8%; }
-        .seat-2 { top: 25%; right: 5%; }
-        .seat-3 { top: 5%; left: 50%; transform: translateX(-50%); }
-        .seat-4 { top: 25%; left: 5%; }
-        .seat-5 { bottom: 18%; left: 8%; }
+        /* 座位位置 - 6人桌 - 设计规范布局 */
+        .seat-0 { bottom: -2%; left: 50%; transform: translateX(-50%); }
+        .seat-1 { bottom: 15%; left: 5%; }
+        .seat-2 { top: 15%; left: 5%; }
+        .seat-3 { top: -2%; left: 50%; transform: translateX(-50%); }
+        .seat-4 { top: 15%; right: 5%; }
+        .seat-5 { bottom: 15%; right: 5%; }
+
+        /* 本人位置（中下）特殊样式 */
+        .seat-0 {
+            z-index: 30;
+        }
+
+        .seat-0 .player-card {
+            margin-bottom: 5px;
+        }
+
+        /* 本人的手牌 - 横着铺开在信息框上方 */
+        .seat-0 .cards {
+            position: absolute;
+            bottom: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            flex-direction: row;
+            gap: 4px;
+            margin-bottom: 45px;
+            z-index: 25;
+        }
+
+        .seat-0 .cards .card {
+            width: 50px;
+            height: 70px;
+            font-size: 1rem;
+            margin-right: -20px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+        }
+
+        .seat-0 .cards .card:last-child {
+            margin-right: 0;
+        }
 
         /* 操作区域 */
         .action-area {
@@ -1124,9 +1155,6 @@
             <div class="room-info">
                 <span class="room-name" id="roomName">贵州扑克</span>
                 <span class="blinds-info" id="blindsInfo">盲注: 10/20</span>
-            </div>
-            <div class="pot-display">
-                底池: <span id="potAmount">0</span>
             </div>
             <button class="btn-exit" onclick="exitGame()">退出</button>
 
@@ -1735,6 +1763,14 @@ socket.on('game-ending-soon', (data) => {
         function makeDecision(choice) {
             socket.emit('player-choice', { roomId, userId: user.id, choice });
             hideDecisionButtons();
+            
+            // 如果选择离开，立即跳转到大厅
+            if (choice === 'leave') {
+                console.log('Player chose to leave, redirecting to lobby...');
+                setTimeout(() => {
+                    window.location.href = 'lobby.html';
+                }, 500); // 稍微延迟确保消息发送
+            }
         }
         
         // 显示游戏开始倒计时（桌面显示）
@@ -1800,7 +1836,6 @@ socket.on('game-ending-soon', (data) => {
 
         // 更新底池
         function updatePot(amount) {
-            document.getElementById('potAmount').textContent = amount;
             document.getElementById('potDisplay').textContent = amount;
         }
 
@@ -1864,34 +1899,72 @@ socket.on('game-ending-soon', (data) => {
                 
                 console.log(`玩家 ${index}(${player.nickname}): isMe=${isMe}, isActive=${isActive}, hand=${player.hand?.length}, disconnected=${isDisconnected}`);
 
-                seatsHTML += `
-                    <div class="player-seat ${seatClass}">
-                        ${showCards ? `
-                            <div class="cards">
-                                ${player.hand.map(card => {
-                                    const isRed = card.suit === '♥' || card.suit === '♦';
-                                    return `
-                                        <div class="card ${isRed ? 'red' : 'black'}" style="width: clamp(30px, 8vw, 45px); height: clamp(42px, 11vw, 63px); font-size: clamp(0.8rem, 2.2vw, 1.1rem);">
-                                            <div>${card.rank}</div>
-                                            <div>${card.suit}</div>
-                                        </div>
-                                    `;
-                                }).join('')}
-                            </div>
-                        ` : ''}
-                        <div class="player-avatar ${isDealer ? 'dealer' : ''} ${isActive ? 'active' : ''} ${isFolded ? 'folded' : ''} ${isDisconnected ? 'disconnected' : ''} ${isBot ? 'bot' : ''}">
-                            <img src="/avatars/${player.avatar || 'default.png'}" alt="">
-                            ${isDisconnected ? '<div class="disconnect-badge">⚠</div>' : ''}
-                            ${isBot ? '<div class="bot-badge">🤖</div>' : ''}
-                            ${showTimer ? `<div class="player-timer ${countdown <= 10 ? 'danger' : countdown <= 20 ? 'warning' : ''}" id="timer-${player.userId}">${countdown}</div>` : ''}
-                        </div>
-                        <div class="player-info">
-                            <div class="player-name">${escapeHtml(player.nickname || player.username)} ${isMe ? '(你)' : ''}</div>
-                            <div class="player-chips">💰 ${player.chips}</div>
-                        </div>
-                        ${player.currentBet > 0 ? `<div class="player-bet">${player.currentBet}</div>` : ''}
+                // 位置标记
+                let positionBadge = '';
+                if (isDealer) {
+                    positionBadge = '<div class="player-position dealer">BTN</div>';
+                } else if (player.isSB) {
+                    positionBadge = '<div class="player-position small-blind">SB</div>';
+                } else if (player.isBB) {
+                    positionBadge = '<div class="player-position big-blind">BB</div>';
+                }
+                
+                // 倒计时显示
+                const timerHTML = showTimer ? `<div class="player-timer ${countdown <= 10 ? 'danger' : countdown <= 20 ? 'warning' : ''}" id="timer-${player.userId}">${countdown}s</div>` : '';
+                
+                // 手牌HTML
+                const cardsHTML = showCards ? `
+                    <div class="cards">
+                        ${player.hand.map(card => {
+                            const isRed = card.suit === '♥' || card.suit === '♦';
+                            return `
+                                <div class="card ${isRed ? 'red' : 'black'}">
+                                    <div>${card.rank}</div>
+                                    <div>${card.suit}</div>
+                                </div>
+                            `;
+                        }).join('')}
                     </div>
-                `;
+                ` : '';
+                
+                // 本人位置：手牌在信息框上方
+                if (isMe) {
+                    seatsHTML += `
+                        <div class="player-seat ${seatClass} ${isActive ? 'active' : ''}">
+                            ${timerHTML}
+                            ${cardsHTML}
+                            <div class="player-card">
+                                ${positionBadge}
+                                <div class="player-avatar ${isActive ? 'active' : ''} ${isFolded ? 'folded' : ''} ${isDisconnected ? 'disconnected' : ''} ${isBot ? 'bot' : ''}">
+                                    <img src="/avatars/${player.avatar || 'default.png'}" alt="">
+                                    ${isDisconnected ? '<div class="disconnect-badge">⚠</div>' : ''}
+                                    ${isBot ? '<div class="bot-badge">🤖</div>' : ''}
+                                </div>
+                                <div class="player-name">${escapeHtml(player.nickname || player.username)} (你)</div>
+                                <div class="player-chips">💰 ${player.chips}</div>
+                                ${player.currentBet > 0 ? `<div class="player-bet">${player.currentBet}</div>` : ''}
+                            </div>
+                        </div>
+                    `;
+                } else {
+                    // 其他位置：保持原结构
+                    seatsHTML += `
+                        <div class="player-seat ${seatClass} ${isActive ? 'active' : ''}">
+                            ${timerHTML}
+                            <div class="player-card">
+                                ${positionBadge}
+                                <div class="player-avatar ${isActive ? 'active' : ''} ${isFolded ? 'folded' : ''} ${isDisconnected ? 'disconnected' : ''} ${isBot ? 'bot' : ''}">
+                                    <img src="/avatars/${player.avatar || 'default.png'}" alt="">
+                                    ${isDisconnected ? '<div class="disconnect-badge">⚠</div>' : ''}
+                                    ${isBot ? '<div class="bot-badge">🤖</div>' : ''}
+                                </div>
+                                <div class="player-name">${escapeHtml(player.nickname || player.username)}</div>
+                                <div class="player-chips">💰 ${player.chips}</div>
+                                ${player.currentBet > 0 ? `<div class="player-bet">${player.currentBet}</div>` : ''}
+                            </div>
+                        </div>
+                    `;
+                }
             });
 
             container.innerHTML = seatsHTML;

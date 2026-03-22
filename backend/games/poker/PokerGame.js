@@ -316,6 +316,8 @@ class PokerGame {
         disconnected: p.disconnected,
         isReady: p.isReady || false,
         isBot: p.isBot || false,
+        isSB: p.isSB || false,
+        isBB: p.isBB || false,
         hand: [] // 公开状态不显示手牌
       })),
       communityCards: this.communityCards,

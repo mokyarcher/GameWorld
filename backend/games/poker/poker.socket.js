@@ -552,13 +552,36 @@ async function processGameDecisions(io, roomId, game) {
   const roomChoices = playerChoices.get(roomId);
   if (!roomChoices) return;
   
+  // 检查是否只剩人机（没有真人玩家）
+  const realPlayers = game.players.filter(p => !p.isBot);
+  const botPlayers = game.players.filter(p => p.isBot);
+  
+  // 如果只剩人机，直接解散房间
+  if (realPlayers.length === 0 && botPlayers.length >= 1) {
+    console.log(`Room ${roomId} has only bots (${botPlayers.length}), disbanding room`);
+    
+    io.in(roomId).emit('insufficient-players', {
+      message: '所有玩家已离开，房间即将关闭',
+      reason: 'only-bots-remain'
+    });
+    
+    activeGames.delete(roomId);
+    await db.run('DELETE FROM poker_rooms WHERE id = ?', [roomId]);
+    await db.run('DELETE FROM poker_room_players WHERE room_id = ?', [roomId]);
+    
+    // 清理房间使用的头像记录
+    roomUsedAvatars.delete(roomId);
+    
+    return;
+  }
+  
   const continuingPlayers = [];
   const leavingPlayers = [];
   
   game.players.forEach(p => {
     const choice = roomChoices.get(p.userId);
     
-    // 人机自动继续（如果筹码足够）
+    // 人机自动继续（如果筹码足够且还有真人玩家）
     if (p.isBot) {
       if (p.chips >= 1000) {
         console.log(`bot ${p.nickname} auto continue with chips ${p.chips}`);
@@ -574,8 +597,11 @@ async function processGameDecisions(io, roomId, game) {
     if (choice === 'continue' && p.chips >= 1000) {
       continuingPlayers.push(p);
     } else if (choice === 'leave') {
-      // 明确选择离开
+      // 明确选择离开 - 从数据库删除该玩家
+      console.log(`player ${p.nickname} chose to leave, removing from room`);
       leavingPlayers.push(p);
+      // 立即从数据库删除，防止玩家重新进入房间
+      db.run('DELETE FROM poker_room_players WHERE room_id = ? AND user_id = ?', [roomId, p.userId]);
     } else if (!choice && p.chips >= 1000) {
       // 未选择但筹码足够，自动继续
       console.log(`player ${p.nickname} did not choose, auto continue with chips ${p.chips}`);
@@ -588,10 +614,35 @@ async function processGameDecisions(io, roomId, game) {
         console.log(`player ${p.nickname} did not choose and chips ${p.chips} < 1000, auto leave`);
       }
       leavingPlayers.push(p);
+      db.run('DELETE FROM poker_room_players WHERE room_id = ? AND user_id = ?', [roomId, p.userId]);
     }
   });
   
   console.log('continuing:', continuingPlayers.length, 'leaving:', leavingPlayers.length);
+  
+  // 处理完玩家选择后，再次检查是否只剩人机
+  const remainingRealPlayers = continuingPlayers.filter(p => !p.isBot);
+  const remainingBotPlayers = continuingPlayers.filter(p => p.isBot);
+  
+  // 如果继续游戏的玩家中没有真人，只有人机，则解散房间
+  if (remainingRealPlayers.length === 0 && remainingBotPlayers.length >= 1) {
+    console.log(`Room ${roomId} would only have bots after decisions, disbanding room`);
+    
+    // 通知所有还在房间的玩家（包括选择继续但被强制解散的）
+    io.in(roomId).emit('insufficient-players', {
+      message: '所有玩家已离开，房间即将关闭',
+      reason: 'only-bots-remain'
+    });
+    
+    activeGames.delete(roomId);
+    await db.run('DELETE FROM poker_rooms WHERE id = ?', [roomId]);
+    await db.run('DELETE FROM poker_room_players WHERE room_id = ?', [roomId]);
+    
+    // 清理房间使用的头像记录
+    roomUsedAvatars.delete(roomId);
+    
+    return;
+  }
   
   if (continuingPlayers.length < 2) {
     io.in(roomId).emit('insufficient-players', {
@@ -601,6 +652,10 @@ async function processGameDecisions(io, roomId, game) {
     activeGames.delete(roomId);
     await db.run('DELETE FROM poker_rooms WHERE id = ?', [roomId]);
     await db.run('DELETE FROM poker_room_players WHERE room_id = ?', [roomId]);
+    
+    // 清理房间使用的头像记录
+    roomUsedAvatars.delete(roomId);
+    
     return;
   }
   
