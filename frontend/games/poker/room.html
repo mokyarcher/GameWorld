@@ -82,13 +82,114 @@
             background: rgba(231, 76, 60, 1);
         }
 
-        .container {
-            max-width: 1000px;
+        .main-layout {
+            display: flex;
+            max-width: 1400px;
             margin: 0 auto;
             padding: 40px 20px;
             min-height: calc(100vh - 80px);
+            gap: 30px;
+        }
+
+        .container {
+            flex: 1;
             display: flex;
             flex-direction: column;
+            max-width: 1000px;
+        }
+
+        /* 聊天框样式 */
+        .chat-box {
+            width: 300px;
+            background: rgba(0,0,0,0.3);
+            border-radius: 12px;
+            border: 1px solid rgba(255,255,255,0.1);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .chat-header {
+            background: rgba(0,0,0,0.3);
+            padding: 15px;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            font-weight: 600;
+            color: #ffd700;
+        }
+
+        .chat-messages {
+            flex: 1;
+            padding: 15px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            max-height: calc(100vh - 250px);
+        }
+
+        .chat-message {
+            background: rgba(255,255,255,0.05);
+            padding: 10px 12px;
+            border-radius: 8px;
+            font-size: 0.9rem;
+        }
+
+        .chat-message .sender {
+            color: #ffd700;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+
+        .chat-message .text {
+            color: rgba(255,255,255,0.9);
+        }
+
+        .chat-message.system {
+            background: rgba(155, 89, 182, 0.2);
+            text-align: center;
+        }
+
+        .chat-message.system .text {
+            color: rgba(255,255,255,0.7);
+            font-size: 0.85rem;
+        }
+
+        .chat-input-area {
+            padding: 15px;
+            border-top: 1px solid rgba(255,255,255,0.1);
+            display: flex;
+            gap: 10px;
+        }
+
+        .chat-input {
+            flex: 1;
+            padding: 10px 15px;
+            background: rgba(0,0,0,0.5);
+            border: 1px solid rgba(255,255,255,0.2);
+            border-radius: 6px;
+            color: white;
+            font-size: 0.95rem;
+        }
+
+        .chat-input:focus {
+            outline: none;
+            border-color: #ffd700;
+        }
+
+        .chat-send-btn {
+            padding: 10px 20px;
+            background: linear-gradient(135deg, #ffd700, #ffed4e);
+            border: none;
+            border-radius: 6px;
+            color: #1a1a1a;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .chat-send-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(255, 215, 0, 0.4);
         }
 
         .seats-grid {
@@ -470,16 +571,32 @@
         <button class="btn-leave" onclick="leaveRoom()">离开房间</button>
     </div>
 
-    <div class="container">
-        <div class="seats-grid" id="seatsGrid">
-            <!-- 座位将在这里动态生成 -->
+    <div class="main-layout">
+        <div class="container">
+            <div class="seats-grid" id="seatsGrid">
+                <!-- 座位将在这里动态生成 -->
+            </div>
+
+            <div class="actions" id="actionButtons">
+                <!-- 按钮将在这里动态生成 -->
+            </div>
+
+            <div class="waiting-tip" id="waitingTip">等待其他玩家加入...</div>
         </div>
 
-        <div class="actions" id="actionButtons">
-            <!-- 按钮将在这里动态生成 -->
+        <!-- 聊天框 -->
+        <div class="chat-box">
+            <div class="chat-header">💬 房间聊天</div>
+            <div class="chat-messages" id="chatMessages">
+                <div class="chat-message system">
+                    <div class="text">欢迎来到房间！</div>
+                </div>
+            </div>
+            <div class="chat-input-area">
+                <input type="text" class="chat-input" id="chatInput" placeholder="输入消息..." maxlength="100">
+                <button class="chat-send-btn" onclick="sendChatMessage()">发送</button>
+            </div>
         </div>
-
-        <div class="waiting-tip" id="waitingTip">等待其他玩家加入...</div>
     </div>
 
     <!-- 离开确认弹窗 -->
@@ -862,6 +979,59 @@
             });
         }
 
+        // 发送聊天消息
+        function sendChatMessage() {
+            const input = document.getElementById('chatInput');
+            const message = input.value.trim();
+            
+            if (!message) return;
+            
+            socket.emit('room-chat', {
+                roomId: roomId,
+                userId: user.id,
+                nickname: user.nickname || user.username,
+                message: message
+            });
+            
+            input.value = '';
+        }
+
+        // 监听回车键发送消息
+        document.addEventListener('DOMContentLoaded', () => {
+            const chatInput = document.getElementById('chatInput');
+            if (chatInput) {
+                chatInput.addEventListener('keypress', (e) => {
+                    if (e.key === 'Enter') {
+                        sendChatMessage();
+                    }
+                });
+            }
+        });
+
+        // 接收聊天消息
+        socket.on('chat-message', (data) => {
+            addChatMessage(data.nickname, data.message, data.isSystem);
+        });
+
+        // 添加聊天消息到界面
+        function addChatMessage(sender, text, isSystem = false) {
+            const container = document.getElementById('chatMessages');
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `chat-message ${isSystem ? 'system' : ''}`;
+            
+            if (isSystem) {
+                messageDiv.innerHTML = `<div class="text">${escapeHtml(text)}</div>`;
+            } else {
+                messageDiv.innerHTML = `
+                    <div class="sender">${escapeHtml(sender)}</div>
+                    <div class="text">${escapeHtml(text)}</div>
+                `;
+            }
+            
+            container.appendChild(messageDiv);
+            container.scrollTop = container.scrollHeight;
+        }
+
         // 显示确认弹窗（确认/取消）
         function showConfirmModal(message, onConfirm) {
             const modal = document.getElementById('gameModal');
@@ -943,11 +1113,6 @@
         // 踢出人机成功
         socket.on('kick-bot-success', (data) => {
             console.log('踢出人机成功:', data);
-            showModal(`已成功踢出 ${data.botName}`, 'success', null, false);
-            // 0.6秒后自动关闭弹窗
-            setTimeout(() => {
-                closeModal();
-            }, 600);
         });
 
         // 显示离开弹窗

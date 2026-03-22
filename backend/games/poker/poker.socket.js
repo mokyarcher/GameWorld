@@ -1019,6 +1019,15 @@ function pokerSocket(io) {
         
         socket.emit('joined-room', { roomId, room: game.toJSON(), player });
         socket.to(roomId).emit('player-joined', { player, playerCount: game.players.length });
+        
+        // 发送系统消息
+        pokerNamespace.in(roomId).emit('chat-message', {
+          nickname: '系统',
+          message: `${player.nickname} 加入了房间`,
+          isSystem: true,
+          timestamp: Date.now()
+        });
+        
         pokerNamespace.emit('rooms-updated');
         console.log('join-room done, socketMap size:', socketMap.size);
       } catch (error) {
@@ -1107,6 +1116,15 @@ function pokerSocket(io) {
               } else {
                 await db.run('DELETE FROM poker_room_players WHERE room_id = ? AND user_id = ?', [roomId, userId]);
                 socket.to(roomId).emit('player-left', { userId, playerCount: game.players.length });
+                
+                // 发送系统消息
+                pokerNamespace.in(roomId).emit('chat-message', {
+                  nickname: '系统',
+                  message: `${player.nickname} 离开了房间`,
+                  isSystem: true,
+                  timestamp: Date.now()
+                });
+                
                 pokerNamespace.emit('rooms-updated');
               }
             }
@@ -1190,6 +1208,14 @@ function pokerSocket(io) {
           playerCount: game.players.length 
         });
         
+        // 发送系统消息
+        pokerNamespace.in(roomId).emit('chat-message', {
+          nickname: '系统',
+          message: `${botPlayer.nickname} 加入了房间`,
+          isSystem: true,
+          timestamp: Date.now()
+        });
+        
         // 更新房间列表
         pokerNamespace.emit('rooms-updated');
         
@@ -1197,6 +1223,39 @@ function pokerSocket(io) {
       } catch (error) {
         console.error('add bot failed:', error);
         socket.emit('error', { message: 'Add bot failed' });
+      }
+    });
+    
+    // 房间聊天
+    socket.on('room-chat', (data) => {
+      try {
+        const { roomId, userId: rawUserId, nickname, message } = data;
+        const userId = String(rawUserId);
+        const game = activeGames.get(roomId);
+        
+        if (!game) {
+          socket.emit('error', { message: 'Room not found' });
+          return;
+        }
+        
+        // 验证玩家在房间内
+        const player = game.players.find(p => p.userId === userId);
+        if (!player) {
+          socket.emit('error', { message: 'Not in room' });
+          return;
+        }
+        
+        // 广播聊天消息给房间内所有人
+        pokerNamespace.in(roomId).emit('chat-message', {
+          userId: userId,
+          nickname: nickname,
+          message: message,
+          isSystem: false,
+          timestamp: Date.now()
+        });
+      } catch (error) {
+        console.error('room chat failed:', error);
+        socket.emit('error', { message: 'Send message failed' });
       }
     });
     
@@ -1252,6 +1311,14 @@ function pokerSocket(io) {
           botUserId: botUserId,
           botName: botPlayer.nickname,
           playerCount: game.players.length 
+        });
+        
+        // 发送系统消息
+        pokerNamespace.in(roomId).emit('chat-message', {
+          nickname: '系统',
+          message: `${botPlayer.nickname} 被踢出房间`,
+          isSystem: true,
+          timestamp: Date.now()
         });
         
         // 更新房间列表
