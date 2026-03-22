@@ -187,6 +187,16 @@ function startActionCountdown(game, io, player) {
         message: `${player.nickname || player.username} timeout auto fold`
       });
       
+      // 检查是否只剩一个未弃牌玩家，如果是则直接结束游戏
+      const notFoldedPlayers = game.getNotFoldedPlayers();
+      if (notFoldedPlayers.length === 1) {
+        console.log('Only one player left after timeout fold, end game');
+        setTimeout(() => {
+          endGame(io, roomId, game, notFoldedPlayers[0]);
+        }, 1000);
+        return;
+      }
+      
       if (game.shouldAdvanceRound()) {
         setTimeout(() => {
           advanceRound(io, roomId, game);
@@ -1100,6 +1110,11 @@ function pokerSocket(io) {
         
         switch (action) {
           case 'fold':
+            // 验证是否是当前玩家的回合
+            if (game.currentPlayer !== playerIndex) {
+              socket.emit('error', { message: 'Not your turn' });
+              return;
+            }
             player.folded = true;
             break;
             
@@ -1169,6 +1184,16 @@ function pokerSocket(io) {
         });
         
         broadcastGameState(pokerNamespace, roomId, game);
+        
+        // 检查是否只剩一个未弃牌玩家，如果是则直接结束游戏
+        const notFoldedPlayers = game.getNotFoldedPlayers();
+        if (notFoldedPlayers.length === 1) {
+          console.log('Only one player left, end game');
+          setTimeout(() => {
+            endGame(pokerNamespace, roomId, game, notFoldedPlayers[0]);
+          }, 1000);
+          return;
+        }
         
         if (game.shouldAdvanceRound()) {
           setTimeout(() => {
