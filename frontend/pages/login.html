@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GameWorld - 登录</title>
+    <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+    <div class="login-container">
+        <div class="login-box">
+            <h1 class="logo">🎮 GameWorld</h1>
+            <p class="subtitle">游戏世界 - 多人在线游戏平台</p>
+            
+            <div class="tabs">
+                <button class="tab-btn active" onclick="switchTab('login')">登录</button>
+                <button class="tab-btn" onclick="switchTab('register')">注册</button>
+            </div>
+            
+            <!-- 登录表单 -->
+            <form id="loginForm" class="form active">
+                <div class="form-group">
+                    <label>用户名</label>
+                    <input type="text" id="loginUsername" placeholder="请输入用户名" required>
+                </div>
+                <div class="form-group">
+                    <label>密码</label>
+                    <input type="password" id="loginPassword" placeholder="请输入密码" required>
+                </div>
+                <button type="submit" class="btn btn-primary">登录</button>
+            </form>
+            
+            <!-- 注册表单 -->
+            <form id="registerForm" class="form">
+                <div class="form-group">
+                    <label>用户名</label>
+                    <input type="text" id="registerUsername" placeholder="请输入用户名" required>
+                </div>
+                <div class="form-group">
+                    <label>昵称</label>
+                    <input type="text" id="registerNickname" placeholder="请输入昵称">
+                </div>
+                <div class="form-group">
+                    <label>密码</label>
+                    <input type="password" id="registerPassword" placeholder="请输入密码" required>
+                </div>
+                <button type="submit" class="btn btn-primary">注册</button>
+            </form>
+            
+            <div class="divider">
+                <span>或</span>
+            </div>
+            
+            <button onclick="guestLogin()" class="btn btn-guest">
+                👤 游客登录
+            </button>
+        </div>
+    </div>
+    
+    <script>
+        // 自动检测 API 地址（支持本地和局域网访问）
+        const API_BASE = `${window.location.protocol}//${window.location.host}/api`;
+        
+        // 切换标签页
+        function switchTab(tab) {
+            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+            document.querySelectorAll('.form').forEach(form => form.classList.remove('active'));
+            
+            if (tab === 'login') {
+                document.querySelectorAll('.tab-btn')[0].classList.add('active');
+                document.getElementById('loginForm').classList.add('active');
+            } else {
+                document.querySelectorAll('.tab-btn')[1].classList.add('active');
+                document.getElementById('registerForm').classList.add('active');
+            }
+        }
+        
+        // 登录
+        document.getElementById('loginForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const username = document.getElementById('loginUsername').value;
+            const password = document.getElementById('loginPassword').value;
+            
+            try {
+                const response = await fetch(`${API_BASE}/user/login`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ username, password })
+                });
+                
+                const data = await response.json();
+                
+                if (data.success) {
+                    localStorage.setItem('token', data.token);
+                    localStorage.setItem('user', JSON.stringify(data.user));
+                    alert('登录成功！');
+                    window.location.href = 'gamehall.html';
+                } else {
+                    alert(data.error || '登录失败');
+                }
+            } catch (error) {
+                alert('网络错误，请稍后重试');
+            }
+        });
+        
+        // 注册
+        document.getElementById('registerForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const username = document.getElementById('registerUsername').value;
+            const nickname = document.getElementById('registerNickname').value;
+            const password = document.getElementById('registerPassword').value;
+            
+            try {
+                const response = await fetch(`${API_BASE}/user/register`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ username, nickname, password })
+                });
+                
+                const data = await response.json();
+                
+                if (data.success) {
+                    alert('注册成功！请登录');
+                    switchTab('login');
+                } else {
+                    alert(data.error || '注册失败');
+                }
+            } catch (error) {
+                alert('网络错误，请稍后重试');
+            }
+        });
+        
+        // 游客登录
+        async function guestLogin() {
+            try {
+                const response = await fetch(`${API_BASE}/user/guest`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' }
+                });
+                
+                const data = await response.json();
+                
+                if (data.success) {
+                    localStorage.setItem('token', data.token);
+                    localStorage.setItem('user', JSON.stringify(data.user));
+                    alert('游客登录成功！');
+                    window.location.href = 'gamehall.html';
+                } else {
+                    alert(data.error || '登录失败');
+                }
+            } catch (error) {
+                alert('网络错误，请稍后重试');
+            }
+        }
+        
+        // 检查是否已登录
+        if (localStorage.getItem('token')) {
+            window.location.href = 'gamehall.html';
+        }
+    </script>
+</body>
+</html>

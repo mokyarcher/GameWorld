@@ -1,0 +1,25 @@
+{
+  "name": "gameworld-server",
+  "version": "1.0.0",
+  "description": "GameWorld - Multi-game platform server",
+  "main": "core/server.js",
+  "scripts": {
+    "start": "node core/server.js",
+    "dev": "nodemon core/server.js"
+  },
+  "dependencies": {
+    "express": "^4.18.2",
+    "socket.io": "^4.7.2",
+    "sqlite3": "^5.1.6",
+    "jsonwebtoken": "^9.0.2",
+    "bcryptjs": "^2.4.3",
+    "cors": "^2.8.5",
+    "uuid": "^9.0.0"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.1"
+  },
+  "keywords": ["game", "poker", "multiplayer"],
+  "author": "",
+  "license": "ISC"
+}

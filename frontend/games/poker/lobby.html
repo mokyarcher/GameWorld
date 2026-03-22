@@ -1,0 +1,811 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>贵州扑克 - 游戏大厅</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Microsoft YaHei', sans-serif;
+            background: linear-gradient(135deg, #1a3d2a 0%, #0d2818 100%);
+            min-height: 100vh;
+            color: white;
+        }
+
+        .header {
+            background: rgba(0,0,0,0.3);
+            padding: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            color: #ffd700;
+            font-weight: bold;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .user-avatar {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #3498db, #2980b9);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            border: 2px solid rgba(255, 215, 0, 0.3);
+        }
+
+        .user-avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 50%;
+        }
+
+        .user-details {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+
+        .chips {
+            color: #ffd700;
+            font-weight: bold;
+        }
+
+        .btn-profile {
+            padding: 8px 20px;
+            background: rgba(52, 152, 219, 0.8);
+            border: none;
+            border-radius: 6px;
+            color: white;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .btn-profile:hover {
+            background: rgba(52, 152, 219, 1);
+        }
+
+        .btn-logout {
+            padding: 8px 20px;
+            background: rgba(231, 76, 60, 0.8);
+            border: none;
+            border-radius: 6px;
+            color: white;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .btn-logout:hover {
+            background: rgba(231, 76, 60, 1);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 30px;
+        }
+
+        .actions {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+
+        .btn-primary {
+            padding: 15px 30px;
+            background: linear-gradient(135deg, #ffd700, #ffed4e);
+            border: none;
+            border-radius: 8px;
+            color: #1a1a1a;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(255, 215, 0, 0.4);
+        }
+
+        .btn-secondary {
+            padding: 15px 30px;
+            background: rgba(255,255,255,0.1);
+            border: 1px solid rgba(255,255,255,0.2);
+            border-radius: 8px;
+            color: white;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .btn-secondary:hover {
+            background: rgba(255,255,255,0.2);
+        }
+
+        .btn-rank {
+            padding: 15px 30px;
+            background: linear-gradient(135deg, #f39c12, #e67e22);
+            border: none;
+            border-radius: 8px;
+            color: white;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .btn-rank:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(243, 156, 18, 0.4);
+        }
+
+        .btn-reconnect {
+            padding: 15px 30px;
+            background: linear-gradient(135deg, #e74c3c, #c0392b);
+            border: none;
+            border-radius: 8px;
+            color: white;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            animation: pulse-red 2s infinite;
+        }
+
+        @keyframes pulse-red {
+            0%, 100% { box-shadow: 0 0 0 0 rgba(231, 76, 60, 0.7); }
+            50% { box-shadow: 0 0 0 10px rgba(231, 76, 60, 0); }
+        }
+
+        .btn-reconnect:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(231, 76, 60, 0.5);
+        }
+
+        .room-list {
+            background: rgba(0,0,0,0.2);
+            border-radius: 12px;
+            overflow: hidden;
+        }
+
+        .room-list-header {
+            background: rgba(0,0,0,0.3);
+            padding: 20px;
+            display: grid;
+            grid-template-columns: 2fr 0.8fr 0.8fr 0.6fr 0.6fr 120px;
+            gap: 10px;
+            font-weight: bold;
+            color: rgba(255,255,255,0.7);
+        }
+
+        .room-item {
+            padding: 20px;
+            display: grid;
+            grid-template-columns: 2fr 0.8fr 0.8fr 0.6fr 0.6fr 120px;
+            gap: 10px;
+            align-items: center;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+            transition: all 0.3s;
+        }
+
+        .room-item:hover {
+            background: rgba(255,255,255,0.05);
+        }
+
+        .room-name {
+            font-weight: 600;
+        }
+
+        .room-host {
+            color: rgba(255,255,255,0.6);
+            font-size: 0.9rem;
+        }
+
+        .btn-join {
+            padding: 8px 20px;
+            background: #27ae60;
+            border: none;
+            border-radius: 6px;
+            color: white;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .btn-join:hover {
+            background: #2ecc71;
+        }
+
+        .btn-join:disabled {
+            background: rgba(255,255,255,0.1);
+            cursor: not-allowed;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 60px;
+            color: rgba(255,255,255,0.5);
+        }
+
+        /* 创建房间弹窗 */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.8);
+            justify-content: center;
+            align-items: center;
+            z-index: 100;
+        }
+
+        .modal.show {
+            display: flex;
+        }
+
+        .modal-content {
+            background: linear-gradient(145deg, rgba(30,30,30,0.95), rgba(10,10,10,0.98));
+            padding: 30px;
+            border-radius: 12px;
+            width: 400px;
+            max-width: 90%;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .modal-header {
+            font-size: 1.3rem;
+            margin-bottom: 20px;
+            color: #ffd700;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: rgba(255,255,255,0.8);
+        }
+
+        .form-group input,
+        .form-group select {
+            width: 100%;
+            padding: 12px;
+            background: rgba(0,0,0,0.8);
+            border: 1px solid rgba(255,255,255,0.2);
+            border-radius: 6px;
+            color: white;
+            font-size: 1rem;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: #ffd700;
+        }
+
+        .modal-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 25px;
+        }
+
+        .modal-actions button {
+            flex: 1;
+            padding: 12px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 1rem;
+        }
+
+        .btn-cancel {
+            background: rgba(255,255,255,0.1);
+            color: white;
+        }
+
+        .room-item.playing {
+            background: rgba(255, 215, 0, 0.1);
+            border-left: 4px solid #ffd700;
+        }
+
+        /* 排行榜弹窗样式 */
+        .leaderboard-modal-content {
+            background: linear-gradient(145deg, rgba(30,30,30,0.98), rgba(10,10,10,0.99));
+            padding: 30px;
+            border-radius: 12px;
+            width: 500px;
+            max-width: 95%;
+            border: 1px solid rgba(255,255,255,0.1);
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+
+        .leaderboard-header {
+            font-size: 1.5rem;
+            margin-bottom: 25px;
+            color: #f39c12;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .leaderboard-list {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .leaderboard-item {
+            display: flex;
+            align-items: center;
+            padding: 12px 15px;
+            background: rgba(255,255,255,0.03);
+            border-radius: 8px;
+            transition: all 0.3s;
+            gap: 15px;
+        }
+
+        .leaderboard-item:hover {
+            background: rgba(255,255,255,0.06);
+        }
+
+        .rank-number {
+            font-size: 1.5rem;
+            font-weight: bold;
+            text-align: center;
+            width: 40px;
+        }
+
+        .rank-1 { color: #ffd700; }
+        .rank-2 { color: #c0c0c0; }
+        .rank-3 { color: #cd7f32; }
+        .rank-other { color: rgba(255,255,255,0.5); }
+
+        .leaderboard-username {
+            flex: 1;
+            font-weight: 600;
+        }
+
+        .leaderboard-chips {
+            color: #ffd700;
+            font-weight: bold;
+        }
+
+        /* 个人信息弹窗样式 */
+        .profile-modal-content {
+            background: linear-gradient(145deg, rgba(30,30,30,0.98), rgba(10,10,10,0.99));
+            padding: 30px;
+            border-radius: 12px;
+            width: 400px;
+            max-width: 95%;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .profile-header {
+            font-size: 1.4rem;
+            margin-bottom: 20px;
+            color: #3498db;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .profile-avatar {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #3498db, #2980b9);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2.5rem;
+            margin: 0 auto 20px;
+        }
+
+        .profile-info {
+            margin-bottom: 20px;
+        }
+
+        .profile-info-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px 0;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .btn-close {
+            background: rgba(255,255,255,0.1);
+            border: none;
+            color: white;
+            padding: 8px 20px;
+            border-radius: 6px;
+            cursor: pointer;
+        }
+
+        .btn-close:hover {
+            background: rgba(255,255,255,0.2);
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="logo">♠ 贵州扑克</div>
+        <div class="user-info">
+            <div class="user-avatar" id="headerAvatar">
+                <img id="headerAvatarImg" src="" alt="头像">
+            </div>
+            <div class="user-details">
+                <span id="username">加载中...</span>
+                <span class="chips">💰 <span id="chips">0</span></span>
+            </div>
+            <button class="btn-profile" onclick="showProfileModal()">👤 个人信息</button>
+            <button class="btn-logout" onclick="logout()">退出</button>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="actions">
+            <button class="btn-primary" onclick="showCreateModal()">创建房间</button>
+            <button class="btn-secondary" onclick="refreshRooms()">刷新列表</button>
+            <button class="btn-rank" onclick="showLeaderboardModal()">🏆 排行榜</button>
+            <button class="btn-reconnect" id="reconnectBtn" onclick="reconnectToGame()" style="display: none;">⚡ 重连游戏</button>
+        </div>
+
+        <div class="room-list">
+            <div class="room-list-header">
+                <div>房间名称</div>
+                <div>房主</div>
+                <div>盲注</div>
+                <div>人数</div>
+                <div>状态</div>
+                <div>操作</div>
+            </div>
+            <div id="roomList">
+                <div class="empty-state">加载中...</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 创建房间弹窗 -->
+    <div class="modal" id="createModal">
+        <div class="modal-content">
+            <div class="modal-header">创建房间</div>
+            <form id="createRoomForm">
+                <div class="form-group">
+                    <label>房间名称</label>
+                    <input type="text" id="roomName" placeholder="输入房间名称" required>
+                </div>
+                <div class="form-group">
+                    <label>最大人数</label>
+                    <select id="maxPlayers">
+                        <option value="2">2人</option>
+                        <option value="3">3人</option>
+                        <option value="4">4人</option>
+                        <option value="5">5人</option>
+                        <option value="6" selected>6人</option>
+                        <option value="7">7人</option>
+                        <option value="8">8人</option>
+                        <option value="9">9人</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>盲注设置</label>
+                    <select id="blindSetting">
+                        <option value="10,20" selected>小盲 10 / 大盲 20</option>
+                        <option value="20,40">小盲 20 / 大盲 40</option>
+                        <option value="50,100">小盲 50 / 大盲 100</option>
+                        <option value="100,200">小盲 100 / 大盲 200</option>
+                    </select>
+                </div>
+                <div class="modal-actions">
+                    <button type="button" class="btn-cancel" onclick="hideCreateModal()">取消</button>
+                    <button type="submit" class="btn-primary">创建</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- 排行榜弹窗 -->
+    <div class="modal" id="leaderboardModal">
+        <div class="leaderboard-modal-content">
+            <div class="leaderboard-header">
+                <span>🏆 筹码排行榜</span>
+                <button class="btn-close" onclick="hideLeaderboardModal()">关闭</button>
+            </div>
+            <div class="leaderboard-list" id="leaderboardList">
+                <div class="empty-state">加载中...</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 个人信息弹窗 -->
+    <div class="modal" id="profileModal">
+        <div class="profile-modal-content">
+            <div class="profile-header">
+                <span>👤 个人信息</span>
+                <button class="btn-close" onclick="hideProfileModal()">关闭</button>
+            </div>
+            <div class="profile-avatar" id="profileAvatar">👤</div>
+            <div class="profile-info">
+                <div class="profile-info-item">
+                    <span>用户名</span>
+                    <span id="profileUsername">-</span>
+                </div>
+                <div class="profile-info-item">
+                    <span>昵称</span>
+                    <span id="profileNickname">-</span>
+                </div>
+                <div class="profile-info-item">
+                    <span>当前筹码</span>
+                    <span id="profileChips" style="color: #ffd700;">0</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+        // 自动检测 API 地址（支持本地和局域网访问）
+        const API_BASE = `${window.location.protocol}//${window.location.host}/api`;
+        const token = localStorage.getItem('token');
+        const user = JSON.parse(localStorage.getItem('user') || '{}');
+
+        if (!token) {
+            window.location.href = '../../pages/login.html';
+        } else {
+            document.getElementById('username').textContent = user.nickname || user.username;
+            document.getElementById('chips').textContent = user.chips || 0;
+            
+            // 设置头像
+            const avatarFilename = user.avatar || 'default.png';
+            const headerAvatarImg = document.getElementById('headerAvatarImg');
+            if (headerAvatarImg) {
+                headerAvatarImg.src = `/avatars/${avatarFilename}`;
+            }
+        }
+
+        // 存储活跃游戏信息
+        let activeGameInfo = null;
+
+        // Socket.io 连接
+        const socket = io(`${window.location.protocol}//${window.location.host}/poker`);
+        
+        socket.on('connect', () => {
+            console.log('已连接到德州扑克服务器');
+            socket.emit('get-rooms');
+            
+            // 延迟检查进行中的游戏，确保 socket 连接稳定
+            setTimeout(() => {
+                checkActiveGame();
+            }, 500);
+        });
+        
+        // 检查是否有进行中的游戏
+        function checkActiveGame() {
+            console.log('checkActiveGame 被调用, user.id:', user.id, '类型:', typeof user.id);
+            if (user.id) {
+                socket.emit('check-active-game', { userId: user.id });
+            }
+        }
+        
+        socket.on('active-game-found', (data) => {
+            console.log('找到进行中的游戏:', data);
+            activeGameInfo = data;
+            // 显示重连按钮
+            const reconnectBtn = document.getElementById('reconnectBtn');
+            reconnectBtn.style.display = 'inline-block';
+            reconnectBtn.textContent = data.isDisconnected ? '⚡ 重新连接 (已掉线)' : '⚡ 返回游戏';
+        });
+        
+        socket.on('active-game-not-found', () => {
+            console.log('没有进行中的游戏');
+            activeGameInfo = null;
+            document.getElementById('reconnectBtn').style.display = 'none';
+        });
+        
+        // 重连到游戏
+        function reconnectToGame() {
+            if (!activeGameInfo) return;
+            
+            // 直接跳转到游戏页面
+            window.location.href = `game.html?roomId=${activeGameInfo.roomId}`;
+        }
+
+        socket.on('rooms-list', (rooms) => {
+            console.log('收到房间列表:', rooms);
+            renderRooms(rooms);
+        });
+
+        socket.on('rooms-updated', () => {
+            console.log('房间列表已更新，重新获取');
+            socket.emit('get-rooms');
+        });
+
+        socket.on('room-created', (data) => {
+            window.location.href = `room.html?roomId=${data.roomId}`;
+        });
+
+        socket.on('joined-room', (data) => {
+            window.location.href = `room.html?roomId=${data.roomId}`;
+        });
+
+        socket.on('error', (data) => {
+            alert(data.message);
+        });
+
+        // 渲染房间列表
+        function renderRooms(rooms) {
+            const container = document.getElementById('roomList');
+            
+            if (rooms.length === 0) {
+                container.innerHTML = '<div class="empty-state">暂无房间，创建一个吧！</div>';
+                return;
+            }
+
+            container.innerHTML = rooms.map(room => {
+                const isPlaying = room.status === 'playing';
+                return `
+                    <div class="room-item ${isPlaying ? 'playing' : ''}">
+                        <div>
+                            <div class="room-name">${escapeHtml(room.name)}</div>
+                        </div>
+                        <div class="room-host">${escapeHtml(room.owner)}</div>
+                        <div>${room.smallBlind}/${room.bigBlind}</div>
+                        <div>${room.playerCount}/${room.maxPlayers}</div>
+                        <div>${isPlaying ? '<span style="color: #e74c3c;">游戏中</span>' : '等待中'}</div>
+                        <div>
+                            <button class="btn-join" 
+                                onclick="joinRoom('${room.id}')"
+                                ${room.playerCount >= room.maxPlayers || isPlaying ? 'disabled' : ''}>
+                                ${room.playerCount >= room.maxPlayers ? '已满' : isPlaying ? '游戏中' : '加入'}
+                            </button>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        // 创建房间
+        document.getElementById('createRoomForm').addEventListener('submit', (e) => {
+            e.preventDefault();
+            
+            const name = document.getElementById('roomName').value;
+            const maxPlayers = parseInt(document.getElementById('maxPlayers').value);
+            const blindSetting = document.getElementById('blindSetting').value.split(',');
+
+            socket.emit('create-room', {
+                userId: user.id,
+                roomName: name,
+                maxPlayers,
+                smallBlind: parseInt(blindSetting[0]),
+                bigBlind: parseInt(blindSetting[1])
+            });
+        });
+
+        // 加入房间
+        function joinRoom(roomId) {
+            socket.emit('join-room', {
+                roomId: roomId,
+                userId: user.id
+            });
+        }
+
+        // 显示/隐藏弹窗
+        function showCreateModal() {
+            const user = JSON.parse(localStorage.getItem('user') || '{}');
+            const defaultRoomName = (user.nickname || user.username || '玩家') + '的房间';
+            document.getElementById('roomName').value = defaultRoomName;
+            document.getElementById('createModal').classList.add('show');
+        }
+
+        function hideCreateModal() {
+            document.getElementById('createModal').classList.remove('show');
+        }
+
+        function refreshRooms() {
+            socket.emit('get-rooms');
+        }
+
+        function logout() {
+            localStorage.removeItem('token');
+            localStorage.removeItem('user');
+            window.location.href = '../../pages/login.html';
+        }
+
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
+        // 显示排行榜弹窗
+        async function showLeaderboardModal() {
+            document.getElementById('leaderboardModal').classList.add('show');
+            await loadLeaderboard();
+        }
+
+        function hideLeaderboardModal() {
+            document.getElementById('leaderboardModal').classList.remove('show');
+        }
+
+        // 加载排行榜
+        async function loadLeaderboard() {
+            try {
+                const response = await fetch(`${API_BASE}/gamehall/leaderboard?limit=10`);
+                const data = await response.json();
+
+                if (data.success) {
+                    renderLeaderboard(data.leaderboard);
+                }
+            } catch (error) {
+                console.error('加载排行榜失败:', error);
+            }
+        }
+
+        // 渲染排行榜
+        function renderLeaderboard(leaderboard) {
+            const container = document.getElementById('leaderboardList');
+            
+            if (leaderboard.length === 0) {
+                container.innerHTML = '<div class="empty-state">暂无数据</div>';
+                return;
+            }
+
+            container.innerHTML = leaderboard.map((item, index) => {
+                const rank = index + 1;
+                const rankClass = rank === 1 ? 'rank-1' : rank === 2 ? 'rank-2' : rank === 3 ? 'rank-3' : 'rank-other';
+                const rankIcon = rank === 1 ? '🥇' : rank === 2 ? '🥈' : rank === 3 ? '🥉' : `#${rank}`;
+                const isCurrentUser = item.id === user.id;
+                
+                return `
+                    <div class="leaderboard-item">
+                        <div class="rank-number ${rankClass}">${rankIcon}</div>
+                        <div class="leaderboard-username">${escapeHtml(item.nickname || item.username)} ${isCurrentUser ? '(你)' : ''}</div>
+                        <div class="leaderboard-chips">💰 ${item.chips || 0}</div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        // 显示个人信息弹窗
+        function showProfileModal() {
+            document.getElementById('profileUsername').textContent = user.username || '-';
+            document.getElementById('profileNickname').textContent = user.nickname || user.username || '-';
+            document.getElementById('profileChips').textContent = user.chips || 0;
+            document.getElementById('profileModal').classList.add('show');
+        }
+
+        function hideProfileModal() {
+            document.getElementById('profileModal').classList.remove('show');
+        }
+
+        // 初始加载
+        // 每5秒自动刷新
+        setInterval(() => {
+            socket.emit('get-rooms');
+        }, 5000);
+    </script>
+</body>
+</html>

@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GameWorld - 游戏大厅</title>
+    <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+    <div class="gamehall-container">
+        <!-- 顶部导航 -->
+        <header class="header">
+            <div class="logo">🎮 GameWorld</div>
+            <div class="user-info">
+                <img id="userAvatar" src="../avatars/default.png" alt="头像" class="avatar">
+                <span id="userNickname">玩家</span>
+                <span class="chips">💰 <span id="userChips">0</span></span>
+                <button onclick="logout()" class="btn btn-small">退出</button>
+            </div>
+        </header>
+        
+        <!-- 主要内容 -->
+        <main class="main-content">
+            <!-- 左侧：公告和排行榜 -->
+            <aside class="sidebar">
+                <div class="panel">
+                    <h3>📢 系统公告</h3>
+                    <div id="announcements" class="announcements">
+                        <p>加载中...</p>
+                    </div>
+                </div>
+                
+                <div class="panel">
+                    <h3>🏆 筹码排行榜</h3>
+                    <div id="leaderboard" class="leaderboard">
+                        <p>加载中...</p>
+                    </div>
+                </div>
+            </aside>
+            
+            <!-- 中间：游戏列表 -->
+            <section class="games-section">
+                <h2>选择游戏</h2>
+                <div id="gamesList" class="games-list">
+                    <p>加载中...</p>
+                </div>
+            </section>
+        </main>
+    </div>
+    
+    <script>
+        // 自动检测 API 地址（支持本地和局域网访问）
+        const API_BASE = `${window.location.protocol}//${window.location.host}/api`;
+        
+        // 获取 token
+        const token = localStorage.getItem('token');
+        if (!token) {
+            window.location.href = 'login.html';
+        }
+        
+        // 页面加载时获取数据
+        document.addEventListener('DOMContentLoaded', () => {
+            loadUserInfo();
+            loadGames();
+            loadAnnouncements();
+            loadLeaderboard();
+        });
+        
+        // 加载用户信息
+        async function loadUserInfo() {
+            const user = JSON.parse(localStorage.getItem('user') || '{}');
+            document.getElementById('userNickname').textContent = user.nickname || user.username || '玩家';
+            document.getElementById('userChips').textContent = user.chips || 0;
+            if (user.avatar) {
+                document.getElementById('userAvatar').src = `../avatars/${user.avatar}`;
+            }
+        }
+        
+        // 加载游戏列表
+        async function loadGames() {
+            try {
+                const response = await fetch(`${API_BASE}/gamehall/games`);
+                const data = await response.json();
+                
+                if (data.success) {
+                    const gamesList = document.getElementById('gamesList');
+                    gamesList.innerHTML = data.games.map(game => `
+                        <div class="game-card" onclick="enterGame('${game.game_code}')">
+                            <div class="game-icon">🃏</div>
+                            <div class="game-info">
+                                <h3>${game.game_name}</h3>
+                                <p>${game.description}</p>
+                                <span class="game-meta">最低筹码: ${game.min_chips} | 最大人数: ${game.max_players}人</span>
+                            </div>
+                            <button class="btn btn-play">进入游戏</button>
+                        </div>
+                    `).join('');
+                }
+            } catch (error) {
+                console.error('加载游戏列表失败:', error);
+            }
+        }
+        
+        // 加载公告
+        async function loadAnnouncements() {
+            try {
+                const response = await fetch(`${API_BASE}/gamehall/announcements`);
+                const data = await response.json();
+                
+                if (data.success) {
+                    const announcements = document.getElementById('announcements');
+                    announcements.innerHTML = data.announcements.map(ann => `
+                        <div class="announcement-item">
+                            <strong>${ann.title}</strong>
+                            <p>${ann.content}</p>
+                        </div>
+                    `).join('');
+                }
+            } catch (error) {
+                console.error('加载公告失败:', error);
+            }
+        }
+        
+        // 加载排行榜
+        async function loadLeaderboard() {
+            try {
+                const response = await fetch(`${API_BASE}/gamehall/leaderboard?limit=5`);
+                const data = await response.json();
+                
+                if (data.success) {
+                    const leaderboard = document.getElementById('leaderboard');
+                    leaderboard.innerHTML = data.leaderboard.map((user, index) => `
+                        <div class="leaderboard-item">
+                            <span class="rank">${index + 1}</span>
+                            <img src="../avatars/${user.avatar}" alt="" class="avatar-small">
+                            <span class="name">${user.nickname}</span>
+                            <span class="score">${user.chips}</span>
+                        </div>
+                    `).join('');
+                }
+            } catch (error) {
+                console.error('加载排行榜失败:', error);
+            }
+        }
+        
+        // 进入游戏
+        function enterGame(gameCode) {
+            if (gameCode === 'poker') {
+                window.location.href = '../games/poker/lobby.html';
+            } else {
+                alert('该游戏即将上线，敬请期待！');
+            }
+        }
+        
+        // 退出登录
+        function logout() {
+            localStorage.removeItem('token');
+            localStorage.removeItem('user');
+            window.location.href = 'login.html';
+        }
+    </script>
+</body>
+</html>
