@@ -230,6 +230,40 @@
             box-shadow: none;
         }
 
+        .btn-add-bot {
+            padding: 15px 30px;
+            background: linear-gradient(135deg, #9b59b6, #8e44ad);
+            border: none;
+            border-radius: 8px;
+            color: white;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .btn-add-bot:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(155, 89, 182, 0.4);
+        }
+
+        .btn-add-bot:disabled {
+            background: rgba(255,255,255,0.1);
+            color: rgba(255,255,255,0.3);
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        .seat.bot {
+            border-color: #9b59b6;
+            background: rgba(155, 89, 182, 0.1);
+        }
+
+        .seat-avatar.bot-avatar {
+            background: linear-gradient(135deg, #9b59b6, #8e44ad);
+        }
+
         .waiting-tip {
             text-align: center;
             color: rgba(255,255,255,0.5);
@@ -680,17 +714,19 @@
                 if (player) {
                     const isPlayerHost = player.userId === currentRoom.ownerId;
                     const isPlayerReady = player.isReady;
+                    const isBot = player.isBot;
                     
                     seatsHTML += `
-                        <div class="seat ${isMyself ? 'myself' : ''} ${isPlayerReady ? 'ready' : ''}">
+                        <div class="seat ${isMyself ? 'myself' : ''} ${isPlayerReady ? 'ready' : ''} ${isBot ? 'bot' : ''}">
                             ${isPlayerHost ? '<div class="seat-host">房主</div>' : ''}
-                            <div class="seat-avatar">
-                                <img src="/avatars/${player.avatar}" alt="">
+                            ${isBot ? '<div class="seat-host" style="background: linear-gradient(135deg, #9b59b6, #8e44ad);">人机</div>' : ''}
+                            <div class="seat-avatar ${isBot ? 'bot-avatar' : ''}">
+                                ${isBot ? `<img src="/avatars/${player.avatar}" alt="">` : `<img src="/avatars/${player.avatar}" alt="">`}
                             </div>
                             <div class="seat-name">${escapeHtml(player.nickname)}</div>
                             <div class="seat-chips">💰 ${player.chips}</div>
                             <div class="seat-status ${isPlayerReady ? 'ready' : ''}">
-                                ${isPlayerReady ? '已准备' : '等待中'}
+                                ${isBot ? '已准备' : (isPlayerReady ? '已准备' : '等待中')}
                             </div>
                         </div>
                     `;
@@ -720,11 +756,17 @@
                 // 房主显示开始游戏按钮 - 房主不需要准备，只需要其他所有玩家准备
                 const otherPlayers = players.filter(p => String(p.userId) !== String(currentRoom.ownerId));
                 const allOthersReady = players.length >= 2 && otherPlayers.length > 0 && otherPlayers.every(p => p.isReady === true);
+                const canAddBot = players.length < currentRoom.maxPlayers;
                 
                 console.log('房主按钮 - 总玩家:', players.length, '非房主:', otherPlayers.length, '都可开始:', allOthersReady);
                 console.log('所有玩家:', players.map(p => ({n: p.nickname, id: p.userId, ready: p.isReady, isOwner: String(p.userId) === String(currentRoom.ownerId)})));
                 
                 container.innerHTML = `
+                    <button class="btn-add-bot" 
+                            onclick="addBot()" 
+                            ${!canAddBot ? 'disabled' : ''}>
+                        🤖 添加人机
+                    </button>
                     <button class="btn btn-start" 
                             onclick="startGame()" 
                             ${!allOthersReady ? 'disabled' : ''}>
@@ -764,6 +806,30 @@
         function startGame() {
             socket.emit('start-game', { roomId });
         }
+
+        // 添加人机
+        function addBot() {
+            socket.emit('add-bot', { roomId });
+        }
+
+        // 人机加入成功
+        socket.on('bot-joined', (data) => {
+            console.log('人机加入:', data);
+            if (currentRoom) {
+                // 检查是否已存在该人机
+                const existingIndex = currentRoom.players.findIndex(p => String(p.userId) === String(data.player.userId));
+                if (existingIndex < 0) {
+                    currentRoom.players.push(data.player);
+                    renderSeats();
+                    renderButtons();
+                }
+            }
+        });
+
+        // 添加人机成功
+        socket.on('add-bot-success', (data) => {
+            console.log('添加人机成功:', data);
+        });
 
         // 显示离开弹窗
         function leaveRoom() {

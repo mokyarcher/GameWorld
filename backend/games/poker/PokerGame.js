@@ -245,6 +245,7 @@ class PokerGame {
       countdownInterval: null,
       hasActed: false,
       isReady: playerData.isReady || false,
+      isBot: playerData.isBot || false,
       // 操作倒计时相关
       actionTimer: null,
       actionCountdownInterval: null,
@@ -314,6 +315,7 @@ class PokerGame {
         allIn: p.allIn,
         disconnected: p.disconnected,
         isReady: p.isReady || false,
+        isBot: p.isBot || false,
         hand: [] // 公开状态不显示手牌
       })),
       communityCards: this.communityCards,

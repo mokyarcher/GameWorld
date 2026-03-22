@@ -7,6 +7,56 @@ const socketMap = new Map();
 const gameDecisionTimers = new Map();
 const playerChoices = new Map();
 
+// 人机名称库
+const botNames = ['小白', '阿强', '大壮', '铁柱', '狗子', '二蛋', '胖虎', '阿明', '老王', '老李'];
+
+// 人机头像库（放在 frontend/avatars/bots/ 目录下，支持1-20号头像）
+const botAvatars = Array.from({length: 20}, (_, i) => `bots/bot_${i + 1}.png`);
+
+// 记录已使用的头像（每个房间独立）
+const roomUsedAvatars = new Map();
+
+// 生成人机玩家
+function createBotPlayer(seatNumber, roomId) {
+  const randomName = botNames[Math.floor(Math.random() * botNames.length)];
+  const randomId = 'bot_' + Date.now() + '_' + Math.floor(Math.random() * 1000);
+  
+  // 为当前房间获取已使用的头像
+  const usedAvatars = roomUsedAvatars.get(roomId) || new Set();
+  
+  // 过滤出可用的头像
+  const availableAvatars = botAvatars.filter(avatar => !usedAvatars.has(avatar));
+  
+  // 如果所有头像都已使用，则重置
+  let selectedAvatar;
+  if (availableAvatars.length === 0) {
+    usedAvatars.clear();
+    selectedAvatar = botAvatars[Math.floor(Math.random() * botAvatars.length)];
+  } else {
+    selectedAvatar = availableAvatars[Math.floor(Math.random() * availableAvatars.length)];
+  }
+  
+  // 记录已使用的头像
+  usedAvatars.add(selectedAvatar);
+  roomUsedAvatars.set(roomId, usedAvatars);
+  
+  return {
+    userId: randomId,
+    username: randomName,
+    nickname: randomName + '(人机)',
+    avatar: selectedAvatar,
+    chips: 100000,
+    seatNumber: seatNumber,
+    socketId: null,
+    isReady: true, // 人机自动准备
+    isBot: true,   // 标记为人机
+    folded: false,
+    allIn: false,
+    currentBet: 0,
+    disconnected: false
+  };
+}
+
 async function startNewRound(roomId, game, io) {
   console.log('========== startNewRound ==========');
   
@@ -102,6 +152,182 @@ function clearPlayerActionTimer(player) {
   }
 }
 
+// 人机自动决策
+async function botAction(game, io, player) {
+  const roomId = game.roomId;
+  const playerIndex = game.players.indexOf(player);
+  
+  // 延迟1-3秒后决策，模拟思考时间
+  const thinkTime = 1000 + Math.floor(Math.random() * 2000);
+  await new Promise(resolve => setTimeout(resolve, thinkTime));
+  
+  // 如果已经不是当前玩家了（比如超时了），则不做任何操作
+  if (game.currentPlayer !== playerIndex || player.folded || player.allIn) {
+    return;
+  }
+  
+  const toCall = game.currentBet - player.currentBet;
+  const handStrength = Math.random(); // 随机模拟手牌强度
+  
+  let action, amount = 0;
+  
+  if (toCall === 0) {
+    // 不需要跟注
+    if (handStrength > 0.7 && player.chips >= game.bigBlind * 2) {
+      // 手牌好，加注
+      action = 'raise';
+      const minRaise = game.currentBet + game.lastRaise;
+      const maxRaise = player.chips;
+      amount = Math.min(minRaise + Math.floor(Math.random() * minRaise), maxRaise);
+      if (amount >= player.chips) {
+        action = 'allin';
+        amount = player.chips;
+      }
+    } else {
+      // 手牌一般，看牌
+      action = 'check';
+    }
+  } else {
+    // 需要跟注
+    const callRatio = toCall / player.chips;
+    
+    if (callRatio > 0.5 && handStrength < 0.6) {
+      // 下注太大且手牌不好，弃牌
+      action = 'fold';
+    } else if (handStrength > 0.8 && player.chips > toCall * 3) {
+      // 手牌很好，加注
+      action = 'raise';
+      amount = Math.min(toCall * 2 + game.lastRaise, player.chips);
+      if (amount >= player.chips) {
+        action = 'allin';
+        amount = player.chips;
+      }
+    } else if (player.chips >= toCall) {
+      // 跟注
+      action = 'call';
+      amount = toCall;
+    } else {
+      // 筹码不够，全下
+      action = 'allin';
+      amount = player.chips;
+    }
+  }
+  
+  console.log('Bot action:', player.nickname, action, amount);
+  
+  // 执行操作
+  if (action === 'fold') {
+    player.folded = true;
+    player.hasActed = true;
+    
+    io.in(roomId).emit('action-broadcast', {
+      userId: player.userId,
+      username: player.nickname,
+      action: 'fold',
+      amount: 0,
+      pot: game.pot,
+      message: `${player.nickname} 弃牌`
+    });
+  } else if (action === 'check') {
+    player.hasActed = true;
+    
+    io.in(roomId).emit('action-broadcast', {
+      userId: player.userId,
+      username: player.nickname,
+      action: 'check',
+      amount: 0,
+      pot: game.pot,
+      message: `${player.nickname} 看牌`
+    });
+  } else if (action === 'call') {
+    player.chips -= amount;
+    player.currentBet += amount;
+    game.pot += amount;
+    player.hasActed = true;
+    
+    io.in(roomId).emit('action-broadcast', {
+      userId: player.userId,
+      username: player.nickname,
+      action: 'call',
+      amount: amount,
+      pot: game.pot,
+      message: `${player.nickname} 跟注 ${amount}`
+    });
+  } else if (action === 'raise') {
+    player.chips -= amount;
+    player.currentBet += amount;
+    game.pot += amount;
+    game.currentBet = player.currentBet;
+    game.lastRaise = amount - toCall;
+    player.hasActed = true;
+    
+    // 重置其他玩家的行动状态
+    game.players.forEach(p => {
+      if (p.userId !== player.userId && !p.folded && !p.allIn) {
+        p.hasActed = false;
+      }
+    });
+    
+    io.in(roomId).emit('action-broadcast', {
+      userId: player.userId,
+      username: player.nickname,
+      action: 'raise',
+      amount: amount,
+      pot: game.pot,
+      message: `${player.nickname} 加注 ${amount}`
+    });
+  } else if (action === 'allin') {
+    player.chips -= amount;
+    player.currentBet += amount;
+    game.pot += amount;
+    player.allIn = true;
+    
+    if (player.currentBet > game.currentBet) {
+      game.currentBet = player.currentBet;
+      game.lastRaise = amount - toCall;
+      // 重置其他玩家的行动状态
+      game.players.forEach(p => {
+        if (p.userId !== player.userId && !p.folded && !p.allIn) {
+          p.hasActed = false;
+        }
+      });
+    }
+    
+    io.in(roomId).emit('action-broadcast', {
+      userId: player.userId,
+      username: player.nickname,
+      action: 'allin',
+      amount: amount,
+      pot: game.pot,
+      message: `${player.nickname} 全下 ${amount}`
+    });
+  }
+  
+  // 检查是否只剩一个未弃牌玩家
+  const notFoldedPlayers = game.getNotFoldedPlayers();
+  if (notFoldedPlayers.length === 1) {
+    console.log('Only one player left after bot action, end game');
+    setTimeout(() => {
+      endGame(io, roomId, game, notFoldedPlayers[0]);
+    }, 1000);
+    return;
+  }
+  
+  // 进入下一轮或通知下一个玩家
+  if (game.shouldAdvanceRound()) {
+    setTimeout(() => {
+      advanceRound(io, roomId, game);
+    }, 1000);
+  } else {
+    const nextPlayer = game.findNextActivePlayer(game.currentPlayer);
+    if (nextPlayer >= 0) {
+      game.currentPlayer = nextPlayer;
+      broadcastGameState(io, roomId, game);
+      notifyCurrentPlayer(game, io);
+    }
+  }
+}
+
 function notifyCurrentPlayer(game, io) {
   const player = game.players[game.currentPlayer];
   console.log('notifyCurrentPlayer - current player:', player?.nickname, 'position:', game.currentPlayer);
@@ -115,6 +341,13 @@ function notifyCurrentPlayer(game, io) {
   
   if (player.disconnected) {
     console.log('player disconnected, pause action countdown:', player.nickname);
+    return;
+  }
+  
+  // 如果是人机，自动决策
+  if (player.isBot) {
+    console.log('bot turn:', player.nickname);
+    botAction(game, io, player);
     return;
   }
   
@@ -324,6 +557,19 @@ async function processGameDecisions(io, roomId, game) {
   
   game.players.forEach(p => {
     const choice = roomChoices.get(p.userId);
+    
+    // 人机自动继续（如果筹码足够）
+    if (p.isBot) {
+      if (p.chips >= 1000) {
+        console.log(`bot ${p.nickname} auto continue with chips ${p.chips}`);
+        continuingPlayers.push(p);
+      } else {
+        console.log(`bot ${p.nickname} chips ${p.chips} < 1000, leave`);
+        leavingPlayers.push(p);
+      }
+      return;
+    }
+    
     // 明确选择继续且筹码足够
     if (choice === 'continue' && p.chips >= 1000) {
       continuingPlayers.push(p);
@@ -833,6 +1079,57 @@ function pokerSocket(io) {
       } catch (error) {
         console.error('ready failed:', error);
         socket.emit('error', { message: 'Ready failed' });
+      }
+    });
+    
+    // 添加人机
+    socket.on('add-bot', async (data) => {
+      try {
+        const { roomId } = data;
+        const game = activeGames.get(roomId);
+        
+        if (!game) {
+          socket.emit('error', { message: 'Room not found' });
+          return;
+        }
+        
+        // 只有房主可以添加人机
+        if (socket.userId !== game.ownerId) {
+          socket.emit('error', { message: 'Only owner can add bot' });
+          return;
+        }
+        
+        // 检查房间是否已满
+        if (game.players.length >= game.maxPlayers) {
+          socket.emit('error', { message: 'Room is full' });
+          return;
+        }
+        
+        // 检查游戏是否已开始
+        if (game.status !== 'waiting') {
+          socket.emit('error', { message: 'Game already started' });
+          return;
+        }
+        
+        // 创建人机玩家
+        const botPlayer = createBotPlayer(game.players.length, roomId);
+        game.addPlayer(botPlayer);
+        
+        console.log('Bot added:', botPlayer.nickname, 'room:', roomId);
+        
+        // 广播人机加入
+        pokerNamespace.in(roomId).emit('bot-joined', { 
+          player: botPlayer, 
+          playerCount: game.players.length 
+        });
+        
+        // 更新房间列表
+        pokerNamespace.emit('rooms-updated');
+        
+        socket.emit('add-bot-success', { player: botPlayer });
+      } catch (error) {
+        console.error('add bot failed:', error);
+        socket.emit('error', { message: 'Add bot failed' });
       }
     });
     
