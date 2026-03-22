@@ -363,13 +363,13 @@ async function processGameDecisions(io, roomId, game) {
   gameDecisionTimers.delete(roomId);
   
   io.in(roomId).emit('new-round-countdown', {
-    seconds: 5,
-    message: 'New round starts in 5 seconds'
+    seconds: 3,
+    message: 'New round starts in 3 seconds'
   });
   
   setTimeout(() => {
     startNewRound(roomId, game, io);
-  }, 5000);
+  }, 3000);
 }
 
 async function handleDisconnectTimeout(io, roomId, game, playerIndex) {
@@ -402,8 +402,8 @@ async function handleDisconnectTimeout(io, roomId, game, playerIndex) {
     
     io.in(roomId).emit('game-ending-soon', {
       reason: 'insufficient players',
-      countdown: 5,
-      message: 'Not enough players, returning to lobby in 5 seconds'
+      countdown: 3,
+      message: 'Not enough players, returning to lobby in 3 seconds'
     });
     
     setTimeout(async () => {
@@ -419,7 +419,7 @@ async function handleDisconnectTimeout(io, roomId, game, playerIndex) {
         await db.run('DELETE FROM poker_rooms WHERE id = ?', [roomId]);
         await db.run('DELETE FROM poker_room_players WHERE room_id = ?', [roomId]);
       }
-    }, 5000);
+    }, 3000);
     
     return;
   }
@@ -865,13 +865,13 @@ function pokerSocket(io) {
           return;
         }
         
-        // 发送5秒开局倒计时
+        // 发送3秒开局倒计时
         pokerNamespace.in(roomId).emit('game-start-countdown', {
-          seconds: 5,
+          seconds: 3,
           message: '游戏即将开始'
         });
         
-        // 5秒后开始游戏
+        // 3秒后开始游戏
         setTimeout(async () => {
           game.dealer = -1;
           
@@ -924,7 +924,7 @@ function pokerSocket(io) {
           pokerNamespace.in(roomId).emit('public-state', game.toJSON());
           
           notifyCurrentPlayer(game, pokerNamespace);
-        }, 5000);
+        }, 3000);
       } catch (error) {
         console.error('start game failed:', error);
         socket.emit('error', { message: 'Start game failed' });
