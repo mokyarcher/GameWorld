@@ -16,6 +16,173 @@
 
 ---
 
+## [v1.2.0] - 2026-03-22
+
+### 断线倒计时显示 (feat)
+
+#### 功能描述
+- **断线倒计时显示**
+  - 玩家掉线后显示60秒倒计时
+  - 红色背景条显示在掉线玩家头像上方
+  - 每秒更新剩余时间
+  - 倒计时结束后自动标记为弃牌
+
+#### 技术实现
+```javascript
+// 前端: game.html
+- .disconnect-timer 样式（红色渐变背景）
+- socket.on('player-disconnected') 接收断线事件
+- 每秒更新倒计时显示
+- 倒计时结束自动清理
+```
+
+---
+
+### 玩家操作显示 (feat)
+
+#### 功能描述
+- **操作内容显示**
+  - 玩家执行操作后显示操作内容（弃牌/看牌/跟注/加注/全下）
+  - 显示在玩家头像右侧
+  - 1秒后自动消失
+  - 不同操作类型使用不同颜色区分
+
+#### 操作类型颜色
+| 操作 | 颜色 |
+|------|------|
+| 弃牌(fold) | 灰色渐变 #7f8c8d → #95a5a6 |
+| 看牌(check) | 蓝色渐变 #3498db → #2980b9 |
+| 跟注(call) | 紫色渐变 #9b59b6 → #8e44ad |
+| 加注(raise) | 橙色渐变 #f39c12 → #e67e22 |
+| 全下(allin) | 红色渐变 #e74c3c → #c0392b |
+
+#### 技术实现
+```javascript
+// 后端: poker.socket.js
+- 广播 'action-broadcast' 事件
+- 包含 action, amount, userId
+
+// 前端: game.html
+- .player-action-display 样式
+- playerActions 对象存储当前操作
+- setTimeout 1秒后自动清除
+```
+
+---
+
+### 扑克牌设计优化 (design)
+
+#### 牌面样式重构
+- **真实扑克牌样式**
+  - 白色渐变背景（模拟纸质质感）
+  - 圆角边框: 10px
+  - 双层阴影效果
+
+- **角标设计**
+  - 左上角: 点数 + 花色
+  - 右下角: 旋转180度的点数 + 花色
+  - 字体大小: 0.7em（手牌）/ 0.55em（公共牌）
+
+- **中心花色**
+  - 手牌: 1.5em
+  - 公共牌: 1.2em（稍小）
+  - 透明度: 0.9
+
+#### 公共牌优化
+- **尺寸调整**
+  - 宽度: clamp(40px, 10vw, 60px)
+  - 高度: clamp(56px, 14vw, 84px)
+  - 与手牌尺寸保持一致
+
+- **中心Logo缩小**
+  - 中心花色图标缩小至1.2em
+  - 更紧凑的视觉效果
+
+#### 结算牌样式
+- **普通白色样式**
+  - 结算时显示的牌使用标准白色背景
+  - 与游戏过程中的牌样式一致
+  - 类名: .result-card
+
+---
+
+### 游戏记录框优化 (design)
+
+#### 尺寸调整
+- **宽度优化**
+  - 原: 固定200px
+  - 新: clamp(120px, 25vw, 180px)
+  - 更适应不同屏幕尺寸
+
+---
+
+### 游戏逻辑修复 (fix)
+
+#### 弃牌玩家跳过
+- **问题描述**
+  - 弃牌或全下的玩家仍被轮到行动
+  - 导致游戏流程卡顿
+
+- **修复方案**
+  ```javascript
+  // backend/games/poker/poker.socket.js
+  function notifyCurrentPlayer(game, io) {
+    const player = game.players[game.currentPlayer];
+    if (!player) return;
+    
+    // 跳过弃牌或全下的玩家
+    if (player.folded || player.allIn) {
+      const nextPlayer = game.findNextActivePlayer(game.currentPlayer);
+      if (nextPlayer >= 0) {
+        game.currentPlayer = nextPlayer;
+        notifyCurrentPlayer(game, io);
+      }
+      return;
+    }
+    // ...后续逻辑
+  }
+  ```
+
+#### 手牌评估Bug修复
+- **问题描述**
+  - 牌型判断函数中 cards[0] 可能为 undefined
+  - 导致服务器报错
+
+- **修复方案**
+  ```javascript
+  // backend/games/poker/PokerGame.js
+  function isFlush(cards) {
+    if (!cards || cards.length < 5) return false;
+    const suit = cards[0].suit;
+    return cards.every(c => c.suit === suit);
+  }
+  // 其他牌型函数类似添加长度检查
+  ```
+
+---
+
+### 返回大厅按钮 (feat)
+
+#### 功能描述
+- **德州扑克大厅返回按钮**
+  - 在德州扑克游戏大厅添加返回游戏世界大厅的按钮
+  - 紫色渐变样式，与整体UI协调
+  - 位于顶部用户操作区
+
+#### 技术实现
+```html
+<!-- frontend/games/poker/lobby.html -->
+<button class="btn-back" onclick="backToGameHall()">🏠 返回大厅</button>
+```
+
+```javascript
+function backToGameHall() {
+    window.location.href = '../../pages/gamehall.html';
+}
+```
+
+---
+
 ## [v1.1.0] - 2026-03-22
 
 ### 人机对战系统 (feat)
@@ -242,3 +409,13 @@
 ---
 
 *最后更新: 2026-03-22*
+
+---
+
+## 版本统计
+
+| 版本 | 日期 | 主要更新 |
+|------|------|----------|
+| v1.2.0 | 2026-03-22 | 断线倒计时、操作显示、牌面优化、Bug修复 |
+| v1.1.0 | 2026-03-22 | 人机对战系统、UI/UX全面优化 |
+| v1.0.0 | 2026-03-21 | 基础游戏功能上线 |

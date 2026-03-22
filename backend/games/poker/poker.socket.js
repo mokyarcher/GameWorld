@@ -1200,6 +1200,70 @@ function pokerSocket(io) {
       }
     });
     
+    // 踢出人机
+    socket.on('kick-bot', async (data) => {
+      try {
+        const { roomId, botUserId } = data;
+        const game = activeGames.get(roomId);
+        
+        if (!game) {
+          socket.emit('error', { message: 'Room not found' });
+          return;
+        }
+        
+        // 只有房主可以踢出人机
+        if (socket.userId !== game.ownerId) {
+          socket.emit('error', { message: 'Only owner can kick bot' });
+          return;
+        }
+        
+        // 检查游戏是否已开始
+        if (game.status !== 'waiting') {
+          socket.emit('error', { message: 'Game already started' });
+          return;
+        }
+        
+        // 查找人机
+        const botIndex = game.players.findIndex(p => p.userId === botUserId && p.isBot);
+        if (botIndex < 0) {
+          socket.emit('error', { message: 'Bot not found' });
+          return;
+        }
+        
+        const botPlayer = game.players[botIndex];
+        console.log('Kicking bot:', botPlayer.nickname, 'room:', roomId);
+        
+        // 移除人机
+        game.players.splice(botIndex, 1);
+        
+        // 释放头像
+        const usedAvatars = roomUsedAvatars.get(roomId);
+        if (usedAvatars) {
+          usedAvatars.delete(botPlayer.avatar);
+        }
+        
+        // 重新分配座位号
+        game.players.forEach((p, index) => {
+          p.seatNumber = index;
+        });
+        
+        // 广播人机被踢出
+        pokerNamespace.in(roomId).emit('bot-kicked', { 
+          botUserId: botUserId,
+          botName: botPlayer.nickname,
+          playerCount: game.players.length 
+        });
+        
+        // 更新房间列表
+        pokerNamespace.emit('rooms-updated');
+        
+        socket.emit('kick-bot-success', { botName: botPlayer.nickname });
+      } catch (error) {
+        console.error('kick bot failed:', error);
+        socket.emit('error', { message: 'Kick bot failed' });
+      }
+    });
+    
     socket.on('start-game', async (data) => {
       try {
         const { roomId } = data;

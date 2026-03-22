@@ -258,10 +258,40 @@
         .seat.bot {
             border-color: #9b59b6;
             background: rgba(155, 89, 182, 0.1);
+            position: relative;
         }
 
         .seat-avatar.bot-avatar {
             background: linear-gradient(135deg, #9b59b6, #8e44ad);
+        }
+
+        .kick-bot-btn {
+            position: absolute;
+            top: 5px;
+            right: 5px;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #e74c3c, #c0392b);
+            border: none;
+            color: white;
+            font-size: 14px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            transition: all 0.3s;
+            z-index: 10;
+        }
+
+        .seat.bot:hover .kick-bot-btn {
+            opacity: 1;
+        }
+
+        .kick-bot-btn:hover {
+            transform: scale(1.1);
+            box-shadow: 0 2px 8px rgba(231, 76, 60, 0.5);
         }
 
         .waiting-tip {
@@ -720,6 +750,7 @@
                         <div class="seat ${isMyself ? 'myself' : ''} ${isPlayerReady ? 'ready' : ''} ${isBot ? 'bot' : ''}">
                             ${isPlayerHost ? '<div class="seat-host">房主</div>' : ''}
                             ${isBot ? '<div class="seat-host" style="background: linear-gradient(135deg, #9b59b6, #8e44ad);">人机</div>' : ''}
+                            ${isHost && isBot ? `<button class="kick-bot-btn" onclick="kickBot('${player.userId}')" title="踢出人机">×</button>` : ''}
                             <div class="seat-avatar ${isBot ? 'bot-avatar' : ''}">
                                 ${isBot ? `<img src="/avatars/${player.avatar}" alt="">` : `<img src="/avatars/${player.avatar}" alt="">`}
                             </div>
@@ -812,6 +843,63 @@
             socket.emit('add-bot', { roomId });
         }
 
+        // 待踢出的人机ID
+        let pendingKickBotId = null;
+
+        // 踢出人机
+        function kickBot(botUserId) {
+            pendingKickBotId = botUserId;
+            showConfirmModal('确定要踢出这个人机吗？', () => {
+                if (pendingKickBotId) {
+                    socket.emit('kick-bot', { roomId, botUserId: pendingKickBotId });
+                    pendingKickBotId = null;
+                }
+            });
+        }
+
+        // 显示确认弹窗（确认/取消）
+        function showConfirmModal(message, onConfirm) {
+            const modal = document.getElementById('gameModal');
+            const icon = document.getElementById('modalIcon');
+            const title = document.getElementById('modalTitle');
+            const msg = document.getElementById('modalMessage');
+            const singleBtn = document.getElementById('modalSingleBtn');
+            const dualBtn = document.getElementById('modalDualBtn');
+            const confirmBtn = document.getElementById('modalConfirmBtn');
+            const cancelBtn = document.getElementById('modalCancelBtn');
+            
+            // 显示双按钮，隐藏单按钮
+            singleBtn.style.display = 'none';
+            dualBtn.style.display = 'flex';
+            
+            msg.textContent = message;
+            icon.textContent = '⚠️';
+            title.textContent = '确认';
+            
+            // 设置确认按钮样式
+            confirmBtn.className = 'game-modal-btn error';
+            confirmBtn.textContent = '确定';
+            
+            // 设置取消按钮样式
+            cancelBtn.className = 'game-modal-btn';
+            cancelBtn.textContent = '取消';
+            
+            modal.classList.add('show');
+            
+            // 存储确认回调
+            window.modalConfirmCallback = onConfirm;
+        }
+
+        // 确认弹窗 - 确定
+        function confirmModal() {
+            const modal = document.getElementById('gameModal');
+            modal.classList.remove('show');
+            if (window.modalConfirmCallback) {
+                window.modalConfirmCallback();
+                window.modalConfirmCallback = null;
+            }
+        }
+
         // 人机加入成功
         socket.on('bot-joined', (data) => {
             console.log('人机加入:', data);
@@ -829,6 +917,26 @@
         // 添加人机成功
         socket.on('add-bot-success', (data) => {
             console.log('添加人机成功:', data);
+        });
+
+        // 人机被踢出
+        socket.on('bot-kicked', (data) => {
+            console.log('人机被踢出:', data);
+            if (currentRoom) {
+                currentRoom.players = currentRoom.players.filter(p => p.userId !== data.botUserId);
+                // 重新分配座位号
+                currentRoom.players.forEach((p, index) => {
+                    p.seatNumber = index;
+                });
+                renderSeats();
+                renderButtons();
+            }
+        });
+
+        // 踢出人机成功
+        socket.on('kick-bot-success', (data) => {
+            console.log('踢出人机成功:', data);
+            showModal(`已成功踢出 ${data.botName}`, 'success');
         });
 
         // 显示离开弹窗
@@ -862,7 +970,13 @@
             <div class="game-modal-icon" id="modalIcon">ℹ️</div>
             <div class="game-modal-title" id="modalTitle">提示</div>
             <div class="game-modal-message" id="modalMessage">消息内容</div>
-            <button class="game-modal-btn" id="modalBtn" onclick="closeModal()">确定</button>
+            <div id="modalSingleBtn">
+                <button class="game-modal-btn" id="modalBtn" onclick="closeModal()">确定</button>
+            </div>
+            <div id="modalDualBtn" style="display: none; gap: 15px; justify-content: center;">
+                <button class="game-modal-btn" id="modalConfirmBtn" onclick="confirmModal()">确定</button>
+                <button class="game-modal-btn" id="modalCancelBtn" onclick="closeModal()">取消</button>
+            </div>
         </div>
     </div>
 
@@ -874,6 +988,12 @@
             const title = document.getElementById('modalTitle');
             const msg = document.getElementById('modalMessage');
             const btn = document.getElementById('modalBtn');
+            const singleBtn = document.getElementById('modalSingleBtn');
+            const dualBtn = document.getElementById('modalDualBtn');
+            
+            // 显示单按钮，隐藏双按钮
+            singleBtn.style.display = 'block';
+            dualBtn.style.display = 'none';
             
             msg.textContent = message;
             
