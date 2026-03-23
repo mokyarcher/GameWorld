@@ -1004,6 +1004,12 @@
             showModal(data.message, 'error');
         });
 
+        // 房间被房主删除
+        socket.on('room-deleted-by-owner', (data) => {
+            alert(data.message);
+            window.location.href = 'lobby.html';
+        });
+
         // 更新房间信息
         function updateRoomInfo() {
             if (!currentRoom) return;

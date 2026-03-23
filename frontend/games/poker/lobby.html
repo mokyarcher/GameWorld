@@ -208,7 +208,7 @@
             background: rgba(0,0,0,0.3);
             padding: 20px;
             display: grid;
-            grid-template-columns: 2fr 0.8fr 0.8fr 0.6fr 0.6fr 120px;
+            grid-template-columns: 2fr 0.8fr 0.8fr 0.6fr 0.6fr 180px;
             gap: 10px;
             font-weight: bold;
             color: rgba(255,255,255,0.7);
@@ -217,7 +217,7 @@
         .room-item {
             padding: 20px;
             display: grid;
-            grid-template-columns: 2fr 0.8fr 0.8fr 0.6fr 0.6fr 120px;
+            grid-template-columns: 2fr 0.8fr 0.8fr 0.6fr 0.6fr 180px;
             gap: 10px;
             align-items: center;
             border-bottom: 1px solid rgba(255,255,255,0.05);
@@ -254,6 +254,23 @@
         .btn-join:disabled {
             background: rgba(255,255,255,0.1);
             cursor: not-allowed;
+        }
+
+        .btn-delete-room {
+            padding: 8px 15px;
+            background: linear-gradient(135deg, #e74c3c, #c0392b);
+            border: none;
+            border-radius: 6px;
+            color: white;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 0.85rem;
+            margin-left: 8px;
+        }
+
+        .btn-delete-room:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(231, 76, 60, 0.4);
         }
 
         .empty-state {
@@ -852,6 +869,7 @@
 
             container.innerHTML = rooms.map(room => {
                 const isPlaying = room.status === 'playing';
+                const isOwner = String(room.ownerId) === String(user.id);
                 return `
                     <div class="room-item ${isPlaying ? 'playing' : ''}">
                         <div>
@@ -867,6 +885,7 @@
                                 ${room.playerCount >= room.maxPlayers || isPlaying ? 'disabled' : ''}>
                                 ${room.playerCount >= room.maxPlayers ? '已满' : isPlaying ? '游戏中' : '加入'}
                             </button>
+                            ${isOwner ? `<button class="btn-delete-room" onclick="deleteRoom('${room.id}')">🗑️ 删除</button>` : ''}
                         </div>
                     </div>
                 `;
@@ -897,6 +916,31 @@
                 userId: user.id
             });
         }
+
+        // 删除房间
+        function deleteRoom(roomId) {
+            if (!confirm('确定要删除这个房间吗？房间内的所有玩家将被移出。')) {
+                return;
+            }
+            socket.emit('delete-room', {
+                roomId: roomId,
+                userId: user.id
+            });
+        }
+
+        // 删除房间结果
+        socket.on('room-deleted', (data) => {
+            showModal(data.message, 'success');
+            // 清除本地存储的进行中游戏信息
+            activeGameInfo = null;
+            document.getElementById('reconnectBtn').style.display = 'none';
+            // 刷新房间列表
+            socket.emit('get-rooms');
+        });
+
+        socket.on('delete-room-error', (data) => {
+            showModal(data.message, 'error');
+        });
 
         // 显示/隐藏弹窗
         function showCreateModal() {

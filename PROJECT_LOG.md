@@ -84,6 +84,23 @@
   - 添加调试日志：在 `renderPlayerSeats` 中输出 `disconnectCountdown` 值便于调试
 - **文件**：`frontend/games/poker/game.html`
 
+#### 15. 新增房主删除房间功能（2026-03-23）
+- **功能**：房主退出房间后回到大厅，可以在房间列表中删除自己创建的房间
+- **实现**：
+  - `lobby.html`：房间列表操作列宽度从 120px 调整为 180px，添加红色删除按钮（仅房主可见）
+  - `lobby.html`：添加 `deleteRoom()` 函数，发送 `delete-room` 事件到后端
+  - `lobby.html`：添加 `room-deleted` 和 `delete-room-error` 事件监听
+  - `poker.socket.js`：
+    - `get-rooms` 事件：返回房间列表时增加 `ownerId` 字段
+    - 新增 `delete-room` 事件处理：验证房主身份，清理房间资源，从数据库删除记录，通知所有玩家
+  - `room.html`：添加 `room-deleted-by-owner` 事件监听，房间被删除时弹出提示并跳转回大厅
+- **优化**（2026-03-23）：删除房间后自动隐藏重连按钮
+  - `lobby.html`：`room-deleted` 事件处理中清除 `activeGameInfo` 并隐藏重连按钮
+- **文件**：
+  - `frontend/games/poker/lobby.html`
+  - `frontend/games/poker/room.html`
+  - `backend/games/poker/poker.socket.js`
+
 ---
 
 ## 技术栈

@@ -774,6 +774,7 @@ function pokerSocket(io) {
         id: game.roomId,
         name: game.roomName,
         owner: game.ownerName,
+        ownerId: game.ownerId,
         smallBlind: game.smallBlind,
         bigBlind: game.bigBlind,
         maxPlayers: game.maxPlayers,
@@ -782,6 +783,58 @@ function pokerSocket(io) {
       }));
       console.log('return room list:', roomList);
       socket.emit('rooms-list', roomList);
+    });
+    
+    // 房主删除房间
+    socket.on('delete-room', (data) => {
+      const { roomId, userId } = data;
+      const userIdStr = String(userId);
+      const game = activeGames.get(roomId);
+      
+      if (!game) {
+        socket.emit('delete-room-error', { message: '房间不存在' });
+        return;
+      }
+      
+      // 检查是否是房主
+      if (String(game.ownerId) !== userIdStr) {
+        socket.emit('delete-room-error', { message: '只有房主可以删除房间' });
+        return;
+      }
+      
+      // 通知房间内所有玩家房间被删除
+      pokerNamespace.in(roomId).emit('room-deleted-by-owner', {
+        message: '房间已被房主删除'
+      });
+      
+      // 清理房间资源
+      if (game.players) {
+        game.players.forEach(player => {
+          const playerSocket = socketMap.get(String(player.userId));
+          if (playerSocket) {
+            playerSocket.leave(roomId);
+          }
+        });
+      }
+      
+      // 从数据库删除房间
+      try {
+        db.prepare('DELETE FROM poker_rooms WHERE room_id = ?').run(roomId);
+        db.prepare('DELETE FROM poker_players WHERE room_id = ?').run(roomId);
+      } catch (err) {
+        console.error('删除房间数据库记录失败:', err);
+      }
+      
+      // 从内存中删除
+      activeGames.delete(roomId);
+      
+      // 通知删除者成功
+      socket.emit('room-deleted', { message: '房间已删除' });
+      
+      // 广播房间列表更新
+      pokerNamespace.emit('rooms-updated');
+      
+      console.log(`房间 ${roomId} 被房主 ${userIdStr} 删除`);
     });
     
     socket.on('check-active-game', (data) => {
