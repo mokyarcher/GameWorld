@@ -1098,9 +1098,28 @@ function pokerSocket(io) {
               console.log('player left room (game not started), remove player:', player.nickname);
               game.players.splice(playerIndex, 1);
               
+              // 检查剩余玩家是否都是人机
+              const humanPlayers = game.players.filter(p => !p.userId.toString().startsWith('bot_'));
+              const onlyBotsLeft = game.players.length > 0 && humanPlayers.length === 0;
+              
               if (game.players.length === 0) {
                 activeGames.delete(roomId);
                 await db.run('DELETE FROM poker_rooms WHERE id = ?', [roomId]);
+              } else if (onlyBotsLeft) {
+                // 只剩人机，立即解散房间
+                console.log('[AutoDisband] 玩家离开，房间只剩人机，立即解散:', roomId);
+                
+                // 清理房间资源
+                roomUsedAvatars.delete(roomId);
+                activeGames.delete(roomId);
+                
+                // 删除数据库记录
+                await db.run('DELETE FROM poker_room_players WHERE room_id = ?', [roomId]);
+                await db.run('DELETE FROM poker_rooms WHERE id = ?', [roomId]);
+                
+                // 通知大厅更新房间列表
+                pokerNamespace.emit('rooms-updated');
+                
               } else if (game.players.length === 1) {
                 // 只剩一个人，解散房间
                 console.log('only one player left, disbanding room');
