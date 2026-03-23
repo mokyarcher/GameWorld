@@ -273,6 +273,7 @@
             font-size: 1.5rem;
             margin-bottom: 10px;
             overflow: hidden;
+            position: relative;
         }
 
         .seat-avatar img {
@@ -280,6 +281,8 @@
             height: 100%;
             object-fit: cover;
             border-radius: 50%;
+            position: relative;
+            z-index: 1;
         }
 
         .seat-avatar.empty-avatar {
@@ -342,6 +345,43 @@
 
         .seat-status.ready {
             background: #27ae60;
+        }
+
+        .seat-status.disconnected {
+            background: #e74c3c;
+            animation: pulse-red 1s ease-in-out infinite;
+        }
+
+        .seat.disconnected {
+            border-color: #e74c3c;
+            opacity: 0.8;
+        }
+
+        .seat-avatar.disconnected-avatar {
+            position: relative;
+        }
+        
+        .seat-avatar.disconnected-avatar::after {
+            display: none !important;
+        }
+        
+        /* 隐藏 game.html 遗留的 disconnect-badge */
+        .disconnect-badge {
+            display: none !important;
+        }
+
+        .disconnect-countdown {
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: #e74c3c;
+            text-shadow: 0 0 10px rgba(231, 76, 60, 0.8);
+            margin-bottom: 5px;
+            animation: pulse-red 1s ease-in-out infinite;
+        }
+
+        @keyframes pulse-red {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.6; }
         }
 
         .actions {
@@ -813,6 +853,36 @@
                 }
             }
         });
+        
+        // 玩家掉线
+        socket.on('player-disconnected', (data) => {
+            console.log('[DEBUG] 玩家掉线事件:', data);
+            if (currentRoom) {
+                console.log('[DEBUG] 当前房间玩家:', currentRoom.players.map(p => ({id: p.userId, name: p.nickname})));
+                const player = currentRoom.players.find(p => String(p.userId) === String(data.userId));
+                if (player) {
+                    console.log('[DEBUG] 找到掉线玩家:', player.nickname);
+                    player.disconnected = true;
+                    renderSeats();
+                    // 显示系统消息
+                    addChatMessage('系统', data.message, true);
+                } else {
+                    console.log('[DEBUG] 未找到掉线玩家, userId:', data.userId);
+                }
+            }
+        });
+        
+        // 掉线倒计时
+        socket.on('disconnect-countdown', (data) => {
+            console.log('[DEBUG] 掉线倒计时事件:', data);
+            if (currentRoom) {
+                const player = currentRoom.players.find(p => String(p.userId) === String(data.userId));
+                if (player) {
+                    player.disconnectCountdown = data.secondsLeft;
+                    renderSeats();
+                }
+            }
+        });
 
         // 游戏开始
         // 游戏开始倒计时
@@ -964,20 +1034,28 @@
                     const isPlayerHost = player.userId === currentRoom.ownerId;
                     const isPlayerReady = player.isReady;
                     const isBot = player.isBot;
+                    const isDisconnected = player.disconnected;
+                    const disconnectCountdown = player.disconnectCountdown;
+                    
+                    // 调试信息
+                    if (isDisconnected) {
+                        console.log(`[DEBUG] 渲染掉线玩家: ${player.nickname}, disconnected=${isDisconnected}, countdown=${disconnectCountdown}`);
+                    }
                     
                     seatsHTML += `
-                        <div class="seat ${isMyself ? 'myself' : ''} ${isPlayerReady ? 'ready' : ''} ${isBot ? 'bot' : ''}">
+                        <div class="seat ${isMyself ? 'myself' : ''} ${isPlayerReady ? 'ready' : ''} ${isBot ? 'bot' : ''} ${isDisconnected ? 'disconnected' : ''}">
                             ${isPlayerHost ? '<div class="seat-host">房主</div>' : ''}
                             ${isBot ? '<div class="seat-host" style="background: linear-gradient(135deg, #9b59b6, #8e44ad);">人机</div>' : ''}
                             ${isHost && isBot ? `<button class="kick-bot-btn" onclick="kickBot('${player.userId}')" title="踢出人机">×</button>` : ''}
-                            <div class="seat-avatar ${isBot ? 'bot-avatar' : ''}" 
+                            <div class="seat-avatar ${isBot ? 'bot-avatar' : ''} ${isDisconnected ? 'disconnected-avatar' : ''}" 
                                  ${!isBot && !isMyself ? `onclick="showAddFriendOption('${player.userId}', '${escapeHtml(player.nickname)}', '${player.avatar}')" style="cursor: pointer;" title="点击添加好友"` : ''}>
                                 ${isBot ? `<img src="/avatars/${player.avatar}" alt="">` : `<img src="/avatars/${player.avatar}" alt="">`}
                             </div>
-                            <div class="seat-name">${escapeHtml(player.nickname)}</div>
+                            <div class="seat-name">${escapeHtml(player.nickname)}${isDisconnected ? ' [掉线]' : ''}</div>
                             <div class="seat-chips">💰 ${player.chips}</div>
-                            <div class="seat-status ${isPlayerReady ? 'ready' : ''}">
-                                ${isBot ? '已准备' : (isPlayerReady ? '已准备' : '等待中')}
+                            ${isDisconnected && disconnectCountdown ? `<div class="disconnect-countdown">${disconnectCountdown}</div>` : ''}
+                            <div class="seat-status ${isPlayerReady ? 'ready' : ''} ${isDisconnected ? 'disconnected' : ''}">
+                                ${isDisconnected ? '掉线中' : (isBot ? '已准备' : (isPlayerReady ? '已准备' : '等待中'))}
                             </div>
                         </div>
                     `;
@@ -1211,6 +1289,19 @@
         // 踢出人机成功
         socket.on('kick-bot-success', (data) => {
             console.log('踢出人机成功:', data);
+        });
+
+        // 房主变更
+        socket.on('host-changed', (data) => {
+            console.log('房主变更:', data);
+            if (currentRoom) {
+                currentRoom.ownerId = data.newHostId;
+                // 更新当前用户是否是房主
+                isHost = String(currentRoom.ownerId) === String(user.id);
+                renderSeats();
+                renderButtons();
+                showGameModal(data.message, 'info');
+            }
         });
 
         // 显示离开弹窗

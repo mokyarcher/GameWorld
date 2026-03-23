@@ -864,7 +864,7 @@ function pokerSocket(io) {
         socket.join(roomId);
         socket.roomId = roomId;
         socket.userId = userId;
-        socketMap.set(socket.id, { roomId, userId });
+        socketMap.set(socket.id, { roomId, userId: String(userId) });
         
         socket.emit('room-created', { roomId, room: game.toJSON() });
         pokerNamespace.emit('rooms-updated');
@@ -947,7 +947,7 @@ function pokerSocket(io) {
           socket.join(roomId);
           socket.roomId = roomId;
           socket.userId = userId;
-          socketMap.set(socket.id, { roomId, userId });
+          socketMap.set(socket.id, { roomId, userId: String(userId) });
           
           if (game.status === 'playing') {
             socket.emit('joined-room', { roomId, room: game.toJSON(), player, isReconnected: true });
@@ -990,7 +990,12 @@ function pokerSocket(io) {
           return;
         }
         
-        const seatNumber = game.players.length;
+        // 找到第一个空座位
+        let seatNumber = 0;
+        const occupiedSeats = new Set(game.players.map(p => p.seatNumber));
+        while (occupiedSeats.has(seatNumber)) {
+          seatNumber++;
+        }
         
         const player = {
           userId: String(userId),
@@ -1004,8 +1009,8 @@ function pokerSocket(io) {
         };
         
         game.addPlayer(player);
-        console.log('player joined room:', player.nickname, 'userId:', userId, 'current players:', game.players.length);
-        console.log('room players:', game.players.map(p => ({ id: p.userId, name: p.nickname })));
+        console.log('player joined room:', player.nickname, 'userId:', userId, 'seatNumber:', seatNumber, 'current players:', game.players.length);
+        console.log('room players:', game.players.map(p => ({ id: p.userId, name: p.nickname, seat: p.seatNumber })));
         
         await db.run(
           'INSERT INTO poker_room_players (room_id, user_id, seat_number, is_host) VALUES (?, ?, ?, ?)',
@@ -1015,7 +1020,7 @@ function pokerSocket(io) {
         socket.join(roomId);
         socket.roomId = roomId;
         socket.userId = userId;
-        socketMap.set(socket.id, { roomId, userId });
+        socketMap.set(socket.id, { roomId, userId: String(userId) });
         
         socket.emit('joined-room', { roomId, room: game.toJSON(), player });
         socket.to(roomId).emit('player-joined', { player, playerCount: game.players.length });
@@ -1096,6 +1101,10 @@ function pokerSocket(io) {
               
             } else {
               console.log('player left room (game not started), remove player:', player.nickname);
+              
+              // 检查是否是房主离开
+              const isOwnerLeaving = player.userId === game.ownerId;
+              
               game.players.splice(playerIndex, 1);
               
               // 检查剩余玩家是否都是人机
@@ -1120,30 +1129,46 @@ function pokerSocket(io) {
                 // 通知大厅更新房间列表
                 pokerNamespace.emit('rooms-updated');
                 
-              } else if (game.players.length === 1) {
-                // 只剩一个人，解散房间
-                console.log('only one player left, disbanding room');
-                await db.run('DELETE FROM poker_room_players WHERE room_id = ? AND user_id = ?', [roomId, userId]);
-                pokerNamespace.in(roomId).emit('insufficient-players', {
-                  message: '人数不足，房间已解散'
-                });
-                setTimeout(async () => {
-                  activeGames.delete(roomId);
-                  await db.run('DELETE FROM poker_rooms WHERE id = ?', [roomId]);
-                  await db.run('DELETE FROM poker_room_players WHERE room_id = ?', [roomId]);
-                }, 3000);
               } else {
+                // 有其他玩家在房间
                 await db.run('DELETE FROM poker_room_players WHERE room_id = ? AND user_id = ?', [roomId, userId]);
+                
+                // 如果房主离开，将房主身份转移给最靠前的真人玩家
+                if (isOwnerLeaving && humanPlayers.length > 0) {
+                  // 找到最靠前的真人玩家（座位号最小的）
+                  const newOwner = humanPlayers.reduce((min, p) => p.seatNumber < min.seatNumber ? p : min, humanPlayers[0]);
+                  game.ownerId = newOwner.userId;
+                  
+                  console.log(`[HostTransfer] 房主 ${player.nickname} 离开，房主身份已转移给 ${newOwner.nickname}`);
+                  
+                  // 通知所有玩家房主变更
+                  pokerNamespace.in(roomId).emit('host-changed', {
+                    newHostId: newOwner.userId,
+                    newHostName: newOwner.nickname,
+                    message: `${newOwner.nickname} 成为新房主`
+                  });
+                  
+                  // 发送系统消息
+                  pokerNamespace.in(roomId).emit('chat-message', {
+                    nickname: '系统',
+                    message: `${player.nickname} 离开了房间，${newOwner.nickname} 成为新房主`,
+                    isSystem: true,
+                    timestamp: Date.now()
+                  });
+                  
+                  // 更新数据库中的房主
+                  await db.run('UPDATE poker_rooms SET owner_id = ? WHERE id = ?', [newOwner.userId, roomId]);
+                } else {
+                  // 发送系统消息
+                  pokerNamespace.in(roomId).emit('chat-message', {
+                    nickname: '系统',
+                    message: `${player.nickname} 离开了房间`,
+                    isSystem: true,
+                    timestamp: Date.now()
+                  });
+                }
+                
                 socket.to(roomId).emit('player-left', { userId, playerCount: game.players.length });
-                
-                // 发送系统消息
-                pokerNamespace.in(roomId).emit('chat-message', {
-                  nickname: '系统',
-                  message: `${player.nickname} 离开了房间`,
-                  isSystem: true,
-                  timestamp: Date.now()
-                });
-                
                 pokerNamespace.emit('rooms-updated');
               }
             }
@@ -1547,6 +1572,16 @@ function pokerSocket(io) {
       console.log('========== join game done ==========');
     });
     
+    // 处理获取房间状态请求
+    socket.on('get-room-state', async (data) => {
+      const { roomId } = data;
+      const game = activeGames.get(roomId);
+      
+      if (game) {
+        socket.emit('room-state', { room: game.toJSON() });
+      }
+    });
+    
     socket.on('player-choice', async (data) => {
       const { roomId, userId: rawUserId, choice } = data;
       const userId = String(rawUserId);
@@ -1758,7 +1793,7 @@ function pokerSocket(io) {
             if (player.disconnected) {
               console.log('broadcast player disconnected:', player.nickname);
               pokerNamespace.in(roomId).emit('player-disconnected', {
-                userId,
+                userId: String(userId),
                 message: `${player.nickname || player.username} disconnected, auto fold in 60s`
               });
               broadcastGameState(pokerNamespace, roomId, game);
@@ -1770,7 +1805,7 @@ function pokerSocket(io) {
             countdown--;
             if (player.disconnected) {
               pokerNamespace.in(roomId).emit('disconnect-countdown', {
-                userId,
+                userId: String(userId),
                 secondsLeft: countdown
               });
             }

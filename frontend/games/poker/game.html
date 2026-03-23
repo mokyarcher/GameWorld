@@ -582,6 +582,24 @@
             border-color: #e74c3c;
             box-shadow: 0 0 15px rgba(231,76,60,0.6);
         }
+        
+        /* 掉线倒计时 - 显示在头像下方 */
+        .disconnect-timer {
+            position: absolute;
+            bottom: -28px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: linear-gradient(135deg, #e74c3c, #c0392b);
+            color: white;
+            font-size: 0.8rem;
+            font-weight: 700;
+            padding: 4px 12px;
+            border-radius: 12px;
+            box-shadow: 0 3px 12px rgba(231, 76, 60, 0.5);
+            animation: timer-pulse 1s infinite;
+            white-space: nowrap;
+            z-index: 25;
+        }
 
         .player-avatar.bot {
             border-color: #9b59b6;
@@ -609,21 +627,7 @@
         }
 
         .disconnect-badge {
-            position: absolute;
-            bottom: -5px;
-            left: -5px;
-            width: 22px;
-            height: 22px;
-            background: linear-gradient(135deg, #e74c3c, #c0392b);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 0.7rem;
-            color: white;
-            border: 2px solid #fff;
-            box-shadow: 0 3px 10px rgba(231,76,60,0.5);
-            z-index: 5;
+            display: none !important;
         }
 
         /* 玩家操作显示 - 显示在头像右侧 */
@@ -1445,8 +1449,29 @@
         // 游戏状态更新
         socket.on('game-state', (data) => {
             console.log('收到 game-state:', data);
+            
+            // 保留现有的 disconnectCountdown 值
+            const existingDisconnectCountdowns = {};
+            if (gameState && gameState.players) {
+                gameState.players.forEach(p => {
+                    if (p.disconnectCountdown !== undefined) {
+                        existingDisconnectCountdowns[p.userId] = p.disconnectCountdown;
+                    }
+                });
+            }
+            
             gameState = data;
             mySeatIndex = data.yourSeat;
+            
+            // 恢复 disconnectCountdown 值
+            if (gameState && gameState.players) {
+                gameState.players.forEach(p => {
+                    if (existingDisconnectCountdowns[p.userId] !== undefined) {
+                        p.disconnectCountdown = existingDisconnectCountdowns[p.userId];
+                    }
+                });
+            }
+            
             console.log('我的座位:', mySeatIndex, '当前行动玩家:', data.currentPlayer);
             console.log('玩家列表:', data.players?.map(p => ({id: p.userId, seat: p.seatNumber})));
             updateGameUI();
@@ -1671,7 +1696,14 @@
 
         // 掉线倒计时
         socket.on('disconnect-countdown', (data) => {
-            updatePlayerTimer(data.userId, data.secondsLeft);
+            console.log('[DEBUG] 收到掉线倒计时:', data);
+            if (gameState && gameState.players) {
+                const player = gameState.players.find(p => String(p.userId) === String(data.userId));
+                if (player) {
+                    player.disconnectCountdown = data.secondsLeft;
+                    renderPlayerSeats();
+                }
+            }
         });
 
         // 玩家被移除（超时未重连）
@@ -2084,7 +2116,7 @@ socket.on('game-ending-soon', (data) => {
                 const countdown = actionCountdowns[player.userId];
                 const showTimer = isActive && !isDisconnected && countdown !== undefined && countdown > 0;
                 
-                console.log(`玩家 ${index}(${player.nickname}): isMe=${isMe}, isActive=${isActive}, hand=${player.hand?.length}, disconnected=${isDisconnected}`);
+                console.log(`玩家 ${index}(${player.nickname}): isMe=${isMe}, isActive=${isActive}, hand=${player.hand?.length}, disconnected=${isDisconnected}, disconnectCountdown=${player.disconnectCountdown}`);
 
                 // 位置标记
                 let positionBadge = '';
@@ -2098,6 +2130,9 @@ socket.on('game-ending-soon', (data) => {
                 
                 // 倒计时显示
                 const timerHTML = showTimer ? `<div class="player-timer ${countdown <= 10 ? 'danger' : countdown <= 20 ? 'warning' : ''}" id="timer-${player.userId}">${countdown}s</div>` : '';
+                
+                // 掉线倒计时显示
+                const disconnectTimerHTML = isDisconnected && player.disconnectCountdown ? `<div class="disconnect-timer" id="disconnect-timer-${player.userId}">${player.disconnectCountdown}s</div>` : '';
                 
                 // 玩家操作显示
                 const playerAction = playerActions[player.userId];
@@ -2150,9 +2185,9 @@ socket.on('game-ending-soon', (data) => {
                                 ${actionDisplayHTML}
                                 <div class="player-avatar ${isActive ? 'active' : ''} ${isFolded ? 'folded' : ''} ${isDisconnected ? 'disconnected' : ''} ${isBot ? 'bot' : ''}">
                                     <img src="/avatars/${player.avatar || 'default.png'}" alt="">
-                                    ${isDisconnected ? '<div class="disconnect-badge">⚠</div>' : ''}
                                     ${isBot ? '<div class="bot-badge">🤖</div>' : ''}
                                 </div>
+                                ${disconnectTimerHTML}
                                 <div class="player-name">${escapeHtml(player.nickname || player.username)} (你)</div>
                                 <div class="player-chips">💰 ${player.chips}</div>
                                 ${player.currentBet > 0 ? `<div class="player-bet">${player.currentBet}</div>` : ''}
@@ -2169,9 +2204,9 @@ socket.on('game-ending-soon', (data) => {
                                 ${actionDisplayHTML}
                                 <div class="player-avatar ${isActive ? 'active' : ''} ${isFolded ? 'folded' : ''} ${isDisconnected ? 'disconnected' : ''} ${isBot ? 'bot' : ''}">
                                     <img src="/avatars/${player.avatar || 'default.png'}" alt="">
-                                    ${isDisconnected ? '<div class="disconnect-badge">⚠</div>' : ''}
                                     ${isBot ? '<div class="bot-badge">🤖</div>' : ''}
                                 </div>
+                                ${disconnectTimerHTML}
                                 <div class="player-name">${escapeHtml(player.nickname || player.username)}</div>
                                 <div class="player-chips">💰 ${player.chips}</div>
                                 ${player.currentBet > 0 ? `<div class="player-bet">${player.currentBet}</div>` : ''}
