@@ -685,6 +685,22 @@
             </div>
         </div>
     </div>
+    
+    <!-- 添加好友弹窗 -->
+    <div class="modal" id="addFriendModal">
+        <div class="modal-content" style="text-align: center;">
+            <div class="modal-header">添加好友</div>
+            <div style="margin: 20px 0;">
+                <img id="addFriendAvatar" src="" alt="" style="width: 60px; height: 60px; border-radius: 50%; border: 2px solid #ffd700;">
+                <div id="addFriendName" style="margin-top: 10px; font-size: 1.1rem; color: #fff;"></div>
+            </div>
+            <div class="modal-text" id="addFriendText">确定要添加该玩家为好友吗？</div>
+            <div class="modal-actions">
+                <button class="btn-confirm" onclick="confirmAddFriend()">确定</button>
+                <button class="btn-cancel" onclick="hideAddFriendModal()">取消</button>
+            </div>
+        </div>
+    </div>
 
     <script src="/socket.io/socket.io.js"></script>
     <script src="../../js/onlineTracker.js"></script>
@@ -954,7 +970,8 @@
                             ${isPlayerHost ? '<div class="seat-host">房主</div>' : ''}
                             ${isBot ? '<div class="seat-host" style="background: linear-gradient(135deg, #9b59b6, #8e44ad);">人机</div>' : ''}
                             ${isHost && isBot ? `<button class="kick-bot-btn" onclick="kickBot('${player.userId}')" title="踢出人机">×</button>` : ''}
-                            <div class="seat-avatar ${isBot ? 'bot-avatar' : ''}">
+                            <div class="seat-avatar ${isBot ? 'bot-avatar' : ''}" 
+                                 ${!isBot && !isMyself ? `onclick="showAddFriendOption('${player.userId}', '${escapeHtml(player.nickname)}', '${player.avatar}')" style="cursor: pointer;" title="点击添加好友"` : ''}>
                                 ${isBot ? `<img src="/avatars/${player.avatar}" alt="">` : `<img src="/avatars/${player.avatar}" alt="">`}
                             </div>
                             <div class="seat-name">${escapeHtml(player.nickname)}</div>
@@ -1210,6 +1227,52 @@
         function confirmLeaveRoom() {
             socket.emit('leave-room', { roomId, userId: user.id });
             window.location.href = 'lobby.html';
+        }
+        
+        // 添加好友相关变量
+        let targetFriendId = null;
+        
+        // 显示添加好友选项
+        function showAddFriendOption(userId, nickname, avatar) {
+            targetFriendId = userId;
+            document.getElementById('addFriendAvatar').src = `/avatars/${avatar}`;
+            document.getElementById('addFriendName').textContent = nickname;
+            document.getElementById('addFriendModal').classList.add('show');
+        }
+        
+        // 隐藏添加好友弹窗
+        function hideAddFriendModal() {
+            document.getElementById('addFriendModal').classList.remove('show');
+            targetFriendId = null;
+        }
+        
+        // 确认添加好友
+        async function confirmAddFriend() {
+            if (!targetFriendId) return;
+            
+            try {
+                const response = await fetch(`${API_BASE}/friends/request`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${token}`
+                    },
+                    body: JSON.stringify({ friendId: targetFriendId })
+                });
+                
+                const data = await response.json();
+                
+                if (data.success) {
+                    showGameModal('好友请求已发送', 'success');
+                } else {
+                    showGameModal(data.message || '发送失败', 'error');
+                }
+            } catch (error) {
+                console.error('发送好友请求失败:', error);
+                showGameModal('网络错误，请重试', 'error');
+            }
+            
+            hideAddFriendModal();
         }
 
         function escapeHtml(text) {
