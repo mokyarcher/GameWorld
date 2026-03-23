@@ -661,6 +661,20 @@
             </div>
         </div>
     </div>
+    
+    <!-- 删除房间确认弹窗 -->
+    <div class="game-modal-overlay" id="deleteRoomModal">
+        <div class="game-modal-content">
+            <div class="game-modal-icon">🗑️</div>
+            <div class="game-modal-title">删除房间</div>
+            <div class="game-modal-message">确定要删除这个房间吗？<br>房间内的所有玩家将被移出。</div>
+            <div style="display: flex; gap: 15px; justify-content: center; margin-top: 20px;">
+                <button class="game-modal-btn" style="background: linear-gradient(135deg, #e74c3c, #c0392b);" onclick="confirmDeleteRoom()">删除</button>
+                <button class="game-modal-btn" onclick="hideDeleteRoomModal()">取消</button>
+            </div>
+        </div>
+    </div>
+    
     <div class="header">
         <div class="logo">♠ 贵州扑克</div>
         <div class="user-info">
@@ -994,15 +1008,31 @@
             });
         }
 
+        // 删除房间相关变量
+        let roomToDelete = null;
+        
         // 删除房间
         function deleteRoom(roomId) {
-            if (!confirm('确定要删除这个房间吗？房间内的所有玩家将被移出。')) {
-                return;
+            roomToDelete = roomId;
+            document.getElementById('deleteRoomModal').classList.add('show');
+        }
+        
+        // 确认删除房间
+        function confirmDeleteRoom() {
+            if (roomToDelete) {
+                socket.emit('delete-room', {
+                    roomId: roomToDelete,
+                    userId: user.id
+                });
+                roomToDelete = null;
             }
-            socket.emit('delete-room', {
-                roomId: roomId,
-                userId: user.id
-            });
+            hideDeleteRoomModal();
+        }
+        
+        // 隐藏删除房间弹窗
+        function hideDeleteRoomModal() {
+            document.getElementById('deleteRoomModal').classList.remove('show');
+            roomToDelete = null;
         }
 
         // 删除房间结果

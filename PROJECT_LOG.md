@@ -96,6 +96,11 @@
   - `room.html`：添加 `room-deleted-by-owner` 事件监听，房间被删除时弹出提示并跳转回大厅
 - **优化**（2026-03-23）：删除房间后自动隐藏重连按钮
   - `lobby.html`：`room-deleted` 事件处理中清除 `activeGameInfo` 并隐藏重连按钮
+- **优化**（2026-03-23）：删除房间确认弹窗样式统一
+  - `lobby.html`：添加 `deleteRoomModal` 弹窗，使用与邀请弹窗统一的深色风格
+  - `lobby.html`：添加 `roomToDelete` 变量存储待删除房间 ID
+  - `lobby.html`：添加 `confirmDeleteRoom()` 和 `hideDeleteRoomModal()` 函数
+  - 移除浏览器默认的 `confirm()` 白色弹窗
 - **文件**：
   - `frontend/games/poker/lobby.html`
   - `frontend/games/poker/room.html`
