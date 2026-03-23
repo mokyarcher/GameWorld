@@ -214,7 +214,34 @@
         }
 
         .seat.empty {
-            border-style: dashed;
+            border: 2px dashed rgba(100, 200, 255, 0.4);
+            background: linear-gradient(145deg, rgba(30, 60, 90, 0.4), rgba(20, 40, 60, 0.3));
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .seat.empty::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(100, 200, 255, 0.1) 0%, transparent 70%);
+            animation: pulse-glow 4s ease-in-out infinite;
+        }
+        
+        @keyframes pulse-glow {
+            0%, 100% { opacity: 0.3; transform: scale(0.8); }
+            50% { opacity: 0.6; transform: scale(1); }
+        }
+        
+        .seat.empty:hover {
+            border-color: rgba(100, 200, 255, 0.8);
+            background: linear-gradient(145deg, rgba(40, 80, 120, 0.5), rgba(30, 60, 90, 0.4));
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(100, 200, 255, 0.2);
         }
 
         .seat.myself {
@@ -256,11 +283,43 @@
         }
 
         .seat-avatar.empty-avatar {
-            background: rgba(255,255,255,0.05);
-            color: rgba(255,255,255,0.4);
-            border: 2px dashed rgba(255,255,255,0.2);
-            font-size: 2rem;
-            font-weight: 300;
+            background: linear-gradient(145deg, rgba(100, 180, 255, 0.15), rgba(80, 160, 230, 0.1));
+            color: rgba(100, 200, 255, 0.9);
+            border: 2px solid rgba(100, 200, 255, 0.4);
+            font-size: 1.8rem;
+            font-weight: 400;
+            box-shadow: 
+                0 0 15px rgba(100, 200, 255, 0.2),
+                inset 0 0 20px rgba(100, 200, 255, 0.1);
+            transition: all 0.3s ease;
+            position: relative;
+        }
+        
+        .seat-avatar.empty-avatar::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 60%;
+            height: 60%;
+            background: radial-gradient(circle, rgba(100, 200, 255, 0.3) 0%, transparent 70%);
+            border-radius: 50%;
+            animation: avatar-pulse 4s ease-in-out infinite;
+        }
+        
+        @keyframes avatar-pulse {
+            0%, 100% { opacity: 0.4; transform: translate(-50%, -50%) scale(0.9); }
+            50% { opacity: 0.8; transform: translate(-50%, -50%) scale(1.1); }
+        }
+        
+        .seat.empty:hover .seat-avatar.empty-avatar {
+            background: linear-gradient(145deg, rgba(100, 200, 255, 0.25), rgba(80, 180, 255, 0.2));
+            border-color: rgba(100, 220, 255, 0.7);
+            box-shadow: 
+                0 0 25px rgba(100, 200, 255, 0.4),
+                inset 0 0 30px rgba(100, 200, 255, 0.2);
+            transform: scale(1.05);
         }
 
         .seat-name {
@@ -908,8 +967,8 @@
                 } else {
                     seatsHTML += `
                         <div class="seat empty" onclick="inviteFriendToSeat(${i})" style="cursor: pointer;" title="点击邀请好友">
-                            <div class="seat-avatar empty-avatar">+</div>
-                            <div class="seat-status">点击邀请</div>
+                            <div class="seat-avatar empty-avatar">👥</div>
+                            <div class="seat-status" style="color: rgba(100, 200, 255, 0.8); font-size: 0.85rem; font-weight: 500;">邀请好友</div>
                         </div>
                     `;
                 }
