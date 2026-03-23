@@ -7,6 +7,9 @@ const path = require('path');
 const db = require('../database/db');
 const userController = require('../modules/user/user.controller');
 const gamehallController = require('../modules/gamehall/gamehall.controller');
+const { router: adminController, initAdminAccount } = require('../modules/admin/admin.controller');
+const friendsController = require('../modules/friends/friends.controller');
+const { router: onlineController, userOnline, userOffline, updateLocation } = require('../modules/online/online.controller');
 
 const app = express();
 const server = http.createServer(app);
@@ -43,13 +46,39 @@ async function startServer() {
   // API 路由
   app.use('/api/user', userController);
   app.use('/api/gamehall', gamehallController);
+  app.use('/api/admin', adminController);
+  app.use('/api/friends', friendsController);
+  app.use('/api/online', onlineController);
+  
+  // 初始化管理员账户
+  await initAdminAccount();
   
   // Socket.io 连接处理
   io.on('connection', (socket) => {
     console.log('用户已连接:', socket.id);
     
+    // 用户认证并上线
+    socket.on('user-online', (data) => {
+      const { userId, location } = data;
+      if (userId) {
+        userOnline(userId, socket.id, location || 'unknown');
+        socket.userId = userId;
+      }
+    });
+    
+    // 更新位置
+    socket.on('update-location', (data) => {
+      const { location } = data;
+      if (socket.userId && location) {
+        updateLocation(socket.userId, location);
+      }
+    });
+    
     socket.on('disconnect', () => {
       console.log('用户已断开:', socket.id);
+      if (socket.userId) {
+        userOffline(socket.userId);
+      }
     });
   });
   

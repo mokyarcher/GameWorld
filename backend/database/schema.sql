@@ -9,6 +9,7 @@ CREATE TABLE IF NOT EXISTS users (
     avatar TEXT DEFAULT 'default.png',
     chips INTEGER DEFAULT 1000,
     is_guest BOOLEAN DEFAULT 0,
+    is_admin BOOLEAN DEFAULT 0,
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
     last_login DATETIME DEFAULT CURRENT_TIMESTAMP
 );

@@ -599,6 +599,22 @@
         </div>
     </div>
 
+    <!-- 邀请好友弹窗 -->
+    <div class="modal" id="inviteModal">
+        <div class="modal-content" style="max-width: 500px; max-height: 80vh;">
+            <div class="modal-header">👥 邀请好友</div>
+            <div style="padding: 20px;">
+                <div style="margin-bottom: 15px; color: rgba(255,255,255,0.7);">选择好友加入房间：</div>
+                <div id="inviteFriendsList" style="max-height: 400px; overflow-y: auto;">
+                    <div style="text-align: center; padding: 40px; color: rgba(255,255,255,0.5);">加载中...</div>
+                </div>
+            </div>
+            <div class="modal-actions">
+                <button class="btn-cancel" onclick="hideInviteModal()">关闭</button>
+            </div>
+        </div>
+    </div>
+
     <!-- 离开确认弹窗 -->
     <div class="modal" id="leaveModal">
         <div class="modal-content">
@@ -612,10 +628,16 @@
     </div>
 
     <script src="/socket.io/socket.io.js"></script>
+    <script src="../../js/onlineTracker.js"></script>
     <script>
         // 自动检测 Socket.io 地址（支持本地和局域网访问）
         const socket = io(`${window.location.protocol}//${window.location.host}/poker`);
         const user = JSON.parse(localStorage.getItem('user') || '{}');
+        
+        // 初始化在线状态追踪
+        if (user.id) {
+            OnlineTracker.init(user.id, 'poker_room');
+        }
         const urlParams = new URLSearchParams(window.location.search);
         const roomId = urlParams.get('roomId');
 
@@ -885,9 +907,9 @@
                     `;
                 } else {
                     seatsHTML += `
-                        <div class="seat empty">
+                        <div class="seat empty" onclick="inviteFriendToSeat(${i})" style="cursor: pointer;" title="点击邀请好友">
                             <div class="seat-avatar empty-avatar">+</div>
-                            <div class="seat-status">空座位</div>
+                            <div class="seat-status">点击邀请</div>
                         </div>
                     `;
                 }
@@ -1136,6 +1158,179 @@
             div.textContent = text;
             return div.innerHTML;
         }
+
+        // 邀请好友相关变量
+        let selectedSeatIndex = null;
+        const API_BASE = `${window.location.protocol}//${window.location.host}/api`;
+        const token = localStorage.getItem('token');
+
+        // 点击空座位邀请好友
+        function inviteFriendToSeat(seatIndex) {
+            // 只有房主可以邀请
+            if (!isHost) {
+                showGameModal('只有房主可以邀请好友', 'info');
+                return;
+            }
+            
+            selectedSeatIndex = seatIndex;
+            loadFriendsForInvite();
+            document.getElementById('inviteModal').classList.add('show');
+        }
+
+        // 隐藏邀请弹窗
+        function hideInviteModal() {
+            document.getElementById('inviteModal').classList.remove('show');
+            selectedSeatIndex = null;
+        }
+
+        // 加载好友列表
+        async function loadFriendsForInvite() {
+            const container = document.getElementById('inviteFriendsList');
+            container.innerHTML = '<div style="text-align: center; padding: 40px; color: rgba(255,255,255,0.5);">加载中...</div>';
+            
+            try {
+                // 获取好友列表
+                const friendsRes = await fetch(`${API_BASE}/friends/list`, {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+                const friendsData = await friendsRes.json();
+                
+                if (!friendsData.success || friendsData.friends.length === 0) {
+                    container.innerHTML = '<div style="text-align: center; padding: 40px; color: rgba(255,255,255,0.5);">暂无好友<br>先去添加一些好友吧！</div>';
+                    return;
+                }
+                
+                // 获取好友在线状态
+                const friendIds = friendsData.friends.map(f => String(f.id));
+                const statusRes = await fetch(`${API_BASE}/online/status/batch`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${token}`
+                    },
+                    body: JSON.stringify({ userIds: friendIds })
+                });
+                const statusData = await statusRes.json();
+                
+                // 合并状态
+                friendsData.friends.forEach(friend => {
+                    const status = statusData.statuses?.[friend.id];
+                    if (status) {
+                        friend.isOnline = status.isOnline;
+                        friend.location = status.location;
+                        friend.locationName = status.locationName;
+                    }
+                });
+                
+                // 过滤可邀请的好友（在线且不在游戏中）
+                const currentPlayerIds = currentRoom?.players?.map(p => String(p.userId)) || [];
+                const availableFriends = friendsData.friends.filter(f => {
+                    // 不在当前房间
+                    if (currentPlayerIds.includes(String(f.id))) return false;
+                    // 在线
+                    if (!f.isOnline) return false;
+                    // 不在其他游戏房间中
+                    if (f.location && (f.location.includes('poker_room') || f.location.includes('poker_game'))) return false;
+                    return true;
+                });
+                
+                if (availableFriends.length === 0) {
+                    container.innerHTML = '<div style="text-align: center; padding: 40px; color: rgba(255,255,255,0.5);">暂无可邀请的好友<br>好友可能离线或在其他游戏中</div>';
+                    return;
+                }
+                
+                // 渲染好友列表
+                container.innerHTML = availableFriends.map(friend => {
+                    const safeNickname = escapeHtml(friend.nickname).replace(/'/g, "\\'").replace(/"/g, '&quot;');
+                    return `
+                    <div class="friend-invite-item" 
+                         data-friend-id="${friend.id}"
+                         data-friend-name="${safeNickname}"
+                         style="display: flex; align-items: center; padding: 12px; background: rgba(255,255,255,0.05); border-radius: 8px; margin-bottom: 10px; cursor: pointer; transition: all 0.3s;">
+                        <img src="/avatars/${friend.avatar}" style="width: 45px; height: 45px; border-radius: 50%; margin-right: 15px; border: 2px solid #27ae60;">
+                        <div style="flex: 1;">
+                            <div style="font-weight: 600; margin-bottom: 3px;">${escapeHtml(friend.nickname)}</div>
+                            <div style="font-size: 0.85rem; color: rgba(255,255,255,0.6);">
+                                <span style="color: #27ae60;">●</span> ${friend.locationName || '在线'}
+                            </div>
+                        </div>
+                        <button class="invite-btn" style="padding: 8px 20px; background: linear-gradient(135deg, #27ae60, #2ecc71); border: none; border-radius: 6px; color: white; font-weight: 600; cursor: pointer;">
+                            邀请
+                        </button>
+                    </div>
+                `}).join('');
+                
+                // 绑定点击事件
+                container.querySelectorAll('.friend-invite-item').forEach(item => {
+                    item.addEventListener('click', function(e) {
+                        if (e.target.classList.contains('invite-btn') || e.target.closest('.invite-btn')) {
+                            const friendId = parseInt(this.dataset.friendId);
+                            const friendName = this.dataset.friendName;
+                            sendInviteToFriend(friendId, friendName);
+                        }
+                    });
+                    item.addEventListener('mouseenter', function() {
+                        this.style.background = 'rgba(255,255,255,0.1)';
+                    });
+                    item.addEventListener('mouseleave', function() {
+                        this.style.background = 'rgba(255,255,255,0.05)';
+                    });
+                });
+                
+            } catch (error) {
+                console.error('加载好友失败:', error);
+                container.innerHTML = '<div style="text-align: center; padding: 40px; color: #e74c3c;">加载失败，请重试</div>';
+            }
+        }
+
+        // 发送邀请给好友
+        function sendInviteToFriend(friendId, friendName) {
+            console.log('[Invite] 点击邀请好友:', friendId, friendName);
+            
+            if (selectedSeatIndex === null) {
+                console.error('[Invite] 未选择座位');
+                return;
+            }
+            
+            if (!socket || !socket.connected) {
+                console.error('[Invite] Socket 未连接');
+                showGameModal('网络连接异常，请刷新页面重试', 'error');
+                return;
+            }
+            
+            if (!roomId) {
+                console.error('[Invite] roomId 未定义');
+                return;
+            }
+            
+            const inviterName = user.nickname || user.username;
+            console.log('[Invite] 发送邀请数据:', {
+                roomId: roomId,
+                friendId: friendId,
+                seatIndex: selectedSeatIndex,
+                inviterName: inviterName
+            });
+            
+            // 通过 Socket 发送邀请
+            socket.emit('invite-friend', {
+                roomId: roomId,
+                friendId: friendId,
+                seatIndex: selectedSeatIndex,
+                inviterName: inviterName
+            });
+            
+            showGameModal(`已邀请 ${friendName} 加入房间`, 'success');
+            hideInviteModal();
+        }
+
+        // 监听邀请响应
+        socket.on('invite-result', (data) => {
+            if (data.success) {
+                showGameModal(data.message, 'success');
+            } else {
+                showGameModal(data.message || '邀请失败', 'error');
+            }
+        });
 
         // 初始渲染
         renderSeats();

@@ -34,7 +34,26 @@ async function init() {
     }
   }
   
+  // 数据库迁移：添加 is_admin 列（如果不存在）
+  await migrateAddAdminColumn();
+  
   console.log('数据库初始化完成');
+}
+
+// 迁移：添加 is_admin 列
+async function migrateAddAdminColumn() {
+  try {
+    // 检查列是否存在
+    const tableInfo = await all("PRAGMA table_info(users)");
+    const hasAdminColumn = tableInfo.some(col => col.name === 'is_admin');
+    
+    if (!hasAdminColumn) {
+      await run('ALTER TABLE users ADD COLUMN is_admin BOOLEAN DEFAULT 0');
+      console.log('[DB] 已添加 is_admin 列');
+    }
+  } catch (err) {
+    console.error('[DB] 迁移失败:', err.message);
+  }
 }
 
 // 封装 Promise 风格的数据库操作

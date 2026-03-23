@@ -554,6 +554,19 @@
             <button class="game-modal-btn" id="modalBtn" onclick="closeModal()">确定</button>
         </div>
     </div>
+    
+    <!-- 邀请弹窗 -->
+    <div class="game-modal-overlay" id="inviteModal">
+        <div class="game-modal-content">
+            <div class="game-modal-icon">📨</div>
+            <div class="game-modal-title">游戏邀请</div>
+            <div class="game-modal-message" id="inviteInfo"></div>
+            <div style="display: flex; gap: 15px; justify-content: center; margin-top: 20px;">
+                <button class="game-modal-btn" style="background: linear-gradient(135deg, #27ae60, #2ecc71);" onclick="acceptInvite()">接受</button>
+                <button class="game-modal-btn" style="background: linear-gradient(135deg, #e74c3c, #c0392b);" onclick="rejectInvite()">拒绝</button>
+            </div>
+        </div>
+    </div>
     <div class="header">
         <div class="logo">♠ 贵州扑克</div>
         <div class="user-info">
@@ -671,6 +684,7 @@
     </div>
 
     <script src="/socket.io/socket.io.js"></script>
+    <script src="../../js/onlineTracker.js"></script>
     <script>
         // 自动检测 API 地址（支持本地和局域网访问）
         const API_BASE = `${window.location.protocol}//${window.location.host}/api`;
@@ -689,10 +703,17 @@
             if (headerAvatarImg) {
                 headerAvatarImg.src = `/avatars/${avatarFilename}`;
             }
+            
+            // 初始化在线状态追踪
+            OnlineTracker.init(user.id, 'poker_lobby');
         }
 
         // 存储活跃游戏信息
         let activeGameInfo = null;
+        
+        // 邀请相关变量（全局作用域，供 onclick 调用）
+        let currentInvite = null;
+        let inviteSocket = null;
 
         // Socket.io 连接
         const socket = io(`${window.location.protocol}//${window.location.host}/poker`);
@@ -758,6 +779,15 @@
 
         socket.on('error', (data) => {
             showModal(data.message, 'error');
+        });
+        
+        // 监听好友邀请
+        inviteSocket = socket;
+        const inviteEventName = `invite-${user.id}`;
+        console.log('[Invite] 监听邀请事件:', inviteEventName);
+        socket.on(inviteEventName, (data) => {
+            console.log('[Invite] 收到邀请:', data);
+            showInviteModal(data);
         });
 
         // 显示自定义弹窗
@@ -966,6 +996,40 @@
         setInterval(() => {
             socket.emit('get-rooms');
         }, 5000);
+        
+        // 邀请相关函数（定义在全局作用域供 onclick 调用）
+        function showInviteModal(inviteData) {
+            currentInvite = inviteData;
+            
+            const infoHtml = `
+                <div style="margin-bottom: 10px;"><strong>${inviteData.inviterName}</strong> 邀请你加入游戏</div>
+                <div style="color: #aaa; font-size: 0.9rem;">房间: ${inviteData.roomName}</div>
+                <div style="color: #aaa; font-size: 0.9rem;">盲注: ${inviteData.smallBlind}/${inviteData.bigBlind}</div>
+            `;
+            
+            document.getElementById('inviteInfo').innerHTML = infoHtml;
+            document.getElementById('inviteModal').classList.add('show');
+        }
+        
+        function hideInviteModal() {
+            document.getElementById('inviteModal').classList.remove('show');
+            currentInvite = null;
+        }
+        
+        function acceptInvite() {
+            console.log('[Invite] 接受邀请, currentInvite:', currentInvite);
+            if (!currentInvite) {
+                console.error('[Invite] 没有可接受的邀请');
+                return;
+            }
+            const roomId = currentInvite.roomId;
+            hideInviteModal();
+            window.location.href = `room.html?roomId=${roomId}`;
+        }
+        
+        function rejectInvite() {
+            hideInviteModal();
+        }
     </script>
 </body>
 </html>

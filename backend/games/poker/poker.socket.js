@@ -1770,6 +1770,70 @@ function pokerSocket(io) {
       
       socketMap.delete(socket.id);
     });
+    
+    // 邀请好友加入房间
+    socket.on('invite-friend', async (data) => {
+      try {
+        const { roomId, friendId, seatIndex, inviterName } = data;
+        
+        console.log(`[Invite] ${inviterName} 邀请好友 ${friendId} 加入房间 ${roomId}, 座位 ${seatIndex}`);
+        
+        const game = activeGames.get(roomId);
+        if (!game) {
+          socket.emit('invite-result', { success: false, message: '房间不存在' });
+          return;
+        }
+        
+        // 检查房间状态
+        if (game.status !== 'waiting') {
+          socket.emit('invite-result', { success: false, message: '房间已开始游戏，无法邀请' });
+          return;
+        }
+        
+        // 检查座位是否已被占用
+        const existingPlayer = game.players.find(p => p.seatNumber === seatIndex);
+        if (existingPlayer) {
+          socket.emit('invite-result', { success: false, message: '该座位已被占用' });
+          return;
+        }
+        
+        // 检查好友是否已在房间
+        const friendInRoom = game.players.find(p => String(p.userId) === String(friendId));
+        if (friendInRoom) {
+          socket.emit('invite-result', { success: false, message: '好友已在房间中' });
+          return;
+        }
+        
+        // 获取好友信息
+        const friend = await db.get('SELECT * FROM users WHERE id = ?', [friendId]);
+        if (!friend) {
+          socket.emit('invite-result', { success: false, message: '好友不存在' });
+          return;
+        }
+        
+        // 向好友发送邀请通知（确保 friendId 是字符串类型以匹配前端监听）
+        const targetFriendId = String(friendId);
+        console.log(`[Invite] 发送邀请通知到事件: invite-${targetFriendId}`);
+        pokerNamespace.emit(`invite-${targetFriendId}`, {
+          roomId: roomId,
+          roomName: game.roomName,
+          inviterName: inviterName,
+          seatIndex: seatIndex,
+          smallBlind: game.smallBlind,
+          bigBlind: game.bigBlind,
+          timestamp: Date.now()
+        });
+        
+        socket.emit('invite-result', { 
+          success: true, 
+          message: `已邀请 ${friend.nickname} 加入房间`
+        });
+        
+      } catch (error) {
+        console.error('[Invite] 邀请好友失败:', error);
+        socket.emit('invite-result', { success: false, message: '邀请发送失败' });
+      }
+    });
   });
 }
 

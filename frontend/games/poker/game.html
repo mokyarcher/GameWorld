@@ -1414,10 +1414,17 @@
     </div>
 
     <script src="/socket.io/socket.io.js"></script>
+    <script src="../../js/onlineTracker.js"></script>
     <script>
         // 自动检测 Socket.io 地址
         const socket = io(`${window.location.protocol}//${window.location.host}/poker`);
         const user = JSON.parse(localStorage.getItem('user') || '{}');
+        
+        // 初始化在线状态追踪
+        if (user.id) {
+            OnlineTracker.init(user.id, 'poker_game');
+        }
+        
         const urlParams = new URLSearchParams(window.location.search);
         const roomId = urlParams.get('roomId');
 

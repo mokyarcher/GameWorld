@@ -215,20 +215,38 @@ backend/games/
 
 ## 10. 启动命令
 
+### 手动启动（推荐）
+在 VS Code 终端中执行：
 ```bash
-# 开发模式
 cd backend
-npm install
 npm run dev
+```
 
-# 生产模式
+**说明：**
+- 使用 VS Code 终端启动可以实时查看控制台输出
+- 便于调试和监控服务器状态
+- 使用 `Ctrl+C` 停止服务器
+
+### 生产模式
+```bash
+cd backend
 npm start
 ```
 
-访问地址:
-- 登录页: http://localhost:3000/pages/login.html
-- 游戏大厅: http://localhost:3000/pages/gamehall.html
-- 扑克房间: http://localhost:3000/games/poker/lobby.html
+### 首次安装依赖
+```bash
+cd backend
+npm install
+```
+
+### 访问地址
+- 登录页: http://localhost:5555/pages/login.html
+- 游戏大厅: http://localhost:5555/pages/gamehall.html
+- 个人资料: http://localhost:5555/pages/profile.html
+- 好友系统: http://localhost:5555/pages/friends.html
+- 扑克房间: http://localhost:5555/games/poker/lobby.html
+- 扑克游戏: http://localhost:5555/games/poker/game.html
+- 管理后台: http://localhost:5555/pages/admin.html （仅管理员可见）
 
 ---
 
@@ -271,6 +289,22 @@ npm start
 | 开发指南 | `docs/DEVELOPMENT_GUIDE.md` | 开发规范、调试技巧 |
 | 设计语言 | `docs/DESIGN_LANGUAGE.md` | UI/UX规范、CSS样式 |
 | 变更日志 | `docs/CHANGELOG.md` | 版本更新记录 |
+
+---
+
+## 14. 更新记录
+
+| 时间 | 更新内容 |
+|------|----------|
+| 2026-03-23 | 新增管理员后台功能（用户管理、筹码管理） |
+| 2026-03-23 | 修复 admin.html 下拉框背景色与文字颜色冲突问题，背景改为 `#1a1a2e` |
+| 2026-03-23 | 新增用户个人资料页面（profile.html），支持修改昵称和头像 |
+| 2026-03-23 | 游戏大厅添加「资料」按钮和头像/昵称点击入口 |
+| 2026-03-23 | 新增好友系统（friends.html + friends.controller.js），支持通过用户名/ID添加好友 |
+| 2026-03-23 | 新增玩家在线状态追踪系统，支持查看好友实时位置和在线状态 |
+| 2026-03-23 | 新增位置显示：游戏大厅、德州扑克大厅/等待房间/游戏中、个人资料、好友页面 |
+| 2026-03-23 | 新增德州扑克房间邀请好友功能，房主可点击空座位邀请在线好友加入 |
+| 2026-03-23 | 修复邀请好友功能的代码重复问题，确保事件监听器正确注册 |
 
 ---
 
