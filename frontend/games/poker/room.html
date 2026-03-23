@@ -654,6 +654,150 @@
             color: white;
             box-shadow: 0 5px 20px rgba(231, 76, 60, 0.4);
         }
+
+        /* 平板适配 (768px - 1024px) */
+        @media (max-width: 1024px) and (min-width: 768px) {
+            .main-layout {
+                padding: 20px 15px;
+                gap: 20px;
+            }
+            
+            .container {
+                max-width: 100%;
+            }
+            
+            /* 座位网格调整 - 保持3列但缩小间距 */
+            .seats-grid {
+                gap: 12px;
+                margin-bottom: 25px;
+            }
+            
+            /* 座位尺寸缩小 */
+            .seat {
+                padding: 15px 10px;
+                min-height: 120px;
+                border-radius: 10px;
+            }
+            
+            /* 头像尺寸调整 */
+            .seat-avatar {
+                width: 45px;
+                height: 45px;
+                font-size: 1.3rem;
+                margin-bottom: 8px;
+            }
+            
+            .seat-avatar.empty-avatar {
+                font-size: 1.5rem;
+            }
+            
+            /* 玩家名称 */
+            .seat-name {
+                font-size: 0.9rem;
+            }
+            
+            .seat-chips {
+                font-size: 0.85rem;
+            }
+            
+            /* 房主标记 */
+            .seat-host {
+                font-size: 0.6rem;
+                padding: 2px 6px;
+                margin-bottom: 6px;
+            }
+            
+            /* 聊天框调整 */
+            .chat-box {
+                width: 260px;
+            }
+            
+            .chat-header {
+                padding: 12px;
+                font-size: 0.95rem;
+            }
+            
+            .chat-messages {
+                padding: 12px;
+                max-height: calc(100vh - 220px);
+            }
+            
+            .chat-input-area {
+                padding: 12px;
+            }
+            
+            .chat-input {
+                padding: 8px 12px;
+                font-size: 0.9rem;
+            }
+            
+            .chat-send-btn {
+                padding: 8px 15px;
+                font-size: 0.9rem;
+            }
+            
+            /* 操作按钮区域 */
+            .actions {
+                gap: 15px;
+                padding-top: 20px;
+                margin-bottom: 50px;
+            }
+            
+            .btn {
+                padding: 12px 35px;
+                font-size: 1rem;
+            }
+            
+            .btn-add-bot {
+                padding: 12px 25px;
+                font-size: 1rem;
+            }
+            
+            /* 顶部标题栏 */
+            .header {
+                padding: 12px 20px;
+            }
+            
+            .room-name {
+                font-size: 1.1rem;
+            }
+            
+            .room-settings {
+                font-size: 0.85rem;
+            }
+            
+            .room-header-avatar {
+                width: 45px;
+                height: 45px;
+            }
+        }
+
+        /* 小平板和大手机 (600px - 767px) */
+        @media (max-width: 767px) and (min-width: 600px) {
+            .main-layout {
+                flex-direction: column;
+                padding: 15px;
+                gap: 15px;
+            }
+            
+            .chat-box {
+                width: 100%;
+                height: 200px;
+            }
+            
+            .chat-messages {
+                max-height: 140px;
+            }
+            
+            .seats-grid {
+                gap: 10px;
+            }
+            
+            .seat {
+                min-height: 110px;
+                padding: 12px 8px;
+            }
+        }
     </style>
 </head>
 <body>

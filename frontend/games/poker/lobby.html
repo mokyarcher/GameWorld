@@ -559,6 +559,83 @@
             from { transform: scale(0.8); opacity: 0; }
             to { transform: scale(1); opacity: 1; }
         }
+
+        /* 平板适配 (768px - 1024px) */
+        @media (max-width: 1024px) and (min-width: 768px) {
+            .container {
+                padding: 20px;
+            }
+            
+            .room-list-header {
+                padding: 15px;
+                grid-template-columns: 2fr 0.8fr 0.8fr 0.6fr 0.6fr 180px;
+                font-size: 0.9rem;
+            }
+            
+            .room-item {
+                padding: 15px;
+                grid-template-columns: 2fr 0.8fr 0.8fr 0.6fr 0.6fr 180px;
+            }
+            
+            .room-name {
+                font-size: 0.95rem;
+            }
+            
+            .room-host {
+                font-size: 0.85rem;
+            }
+            
+            .btn-join, .btn-delete-room {
+                padding: 6px 12px;
+                font-size: 0.85rem;
+            }
+            
+            .actions {
+                gap: 12px;
+                margin-bottom: 20px;
+            }
+            
+            .btn-primary, .btn-secondary, .btn-rank, .btn-reconnect {
+                padding: 12px 24px;
+                font-size: 0.95rem;
+            }
+            
+            .header {
+                padding: 15px;
+            }
+            
+            .logo {
+                font-size: 1.3rem;
+            }
+            
+            .user-info {
+                gap: 15px;
+            }
+            
+            .user-avatar {
+                width: 45px;
+                height: 45px;
+            }
+        }
+
+        /* 小平板和大手机 (600px - 767px) */
+        @media (max-width: 767px) and (min-width: 600px) {
+            .room-list-header {
+                grid-template-columns: 1.5fr 0.7fr 0.7fr 0.5fr 0.5fr 150px;
+                font-size: 0.85rem;
+                padding: 12px;
+            }
+            
+            .room-item {
+                grid-template-columns: 1.5fr 0.7fr 0.7fr 0.5fr 0.5fr 150px;
+                padding: 12px;
+            }
+            
+            .btn-join, .btn-delete-room {
+                padding: 5px 10px;
+                font-size: 0.8rem;
+            }
+        }
     </style>
 </head>
 <body>
