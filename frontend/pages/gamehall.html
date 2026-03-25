@@ -316,6 +316,9 @@
             pointer-events: none;
         }
         
+        /* 最远侧的左右卡片 - 滑动时会靠近 */
+
+        
         /* 游戏背景图区域 */
         .carousel-item .game-bg {
             width: 100%;
@@ -611,6 +614,8 @@
                 filter: blur(1px);
             }
             
+
+            
             .carousel-item .game-icon-overlay {
                 font-size: 48px;
             }
@@ -666,6 +671,8 @@
                 opacity: 0.25;
                 filter: blur(2px);
             }
+            
+
             
             .carousel-item .game-icon-overlay {
                 font-size: 50px;
@@ -989,13 +996,7 @@
                         min_chips: 10,
                         max_players: 1
                     },
-                    {
-                        game_code: 'blackjack',
-                        game_name: '21点',
-                        description: '经典纸牌游戏，谁能最接近21点',
-                        min_chips: 200,
-                        max_players: 7
-                    }
+
                 ];
                 renderCarousel();
 
@@ -1061,6 +1062,7 @@
             if (normalizedDiff === -1) return 'prev';
             if (normalizedDiff === 2) return 'next-next';
             if (normalizedDiff === -2) return 'prev-prev';
+
             return 'hidden';
         }
         
@@ -1186,9 +1188,11 @@
                         translateX = startX + progress * (targetX - startX);
                         scale = startScale + progress * (targetScale - startScale);
                         rotateY = 55 - progress * 20; // 旋转角度减小
-                        // 右滑时：prev-prev 逐渐变清晰 (0.25 -> 0.7, blur 4px -> 1px)
-                        opacity = 0.25 + progress * 0.45;
-                        blur = 4 - progress * 3;
+                        // 右滑时：prev-prev 更快变清晰 (0.25 -> 1.0, blur 4px -> 0px)
+                        // 使用非线性曲线，前半段快速变清晰
+                        const clarityProgress = Math.min(1, progress * 1.5); // 加速变清晰
+                        opacity = 0.25 + clarityProgress * 0.75;
+                        blur = Math.max(0, 4 - clarityProgress * 4);
                     } else {
                         // 左滑：继续向左移动，保持模糊
                         translateX = startX - Math.abs(progress) * 50;
@@ -1210,25 +1214,30 @@
                     const startScale = 0.5; // 起始大小
                     const targetScale = 0.8; // next的大小
                     
-                    let translateX, scale, rotateY;
+                    let translateX, scale, rotateY, opacity, blur;
                     
                     if (progress < 0) {
-                        // 左滑：从远处向着next位置移动，逐渐变大
-                        // progress是负数，从0到-1，需要从380移动到200
+                        // 左滑：从远处向着next位置移动，逐渐变大变清晰
                         translateX = startX + Math.abs(progress) * (targetX - startX);
                         scale = startScale + Math.abs(progress) * (targetScale - startScale);
                         rotateY = -55 + Math.abs(progress) * 20; // 旋转角度减小
+                        // 左滑时：next-next 更快变清晰 (0.25 -> 1.0, blur 4px -> 0px)
+                        const clarityProgress = Math.min(1, Math.abs(progress) * 1.5);
+                        opacity = 0.25 + clarityProgress * 0.75;
+                        blur = Math.max(0, 4 - clarityProgress * 4);
                     } else {
-                        // 右滑：继续向右移动
+                        // 右滑：继续向右移动，保持模糊
                         translateX = startX + progress * 50;
                         scale = startScale;
                         rotateY = -55;
+                        opacity = 0.25;
+                        blur = 4;
                     }
                     
                     item.style.transform = `translateX(${translateX}px) scale(${scale}) rotateY(${rotateY}deg)`;
-                    item.style.opacity = '0.25';
+                    item.style.opacity = opacity;
                     item.style.zIndex = '1';
-                    item.style.filter = 'blur(4px)';
+                    item.style.filter = `blur(${blur}px)`;
                     
                 } else if (className.includes('prev')) {
                     // 左侧第一位卡片 - 始终在最上层
@@ -1488,7 +1497,7 @@
             items.forEach(item => {
                 const className = item.className;
                 
-                // prev-prev 和 next-next 不参与动画
+                // 外侧卡片不参与动画
                 if (className.includes('prev-prev') || className.includes('next-next')) {
                     item.style.transition = 'none';
                     item.style.opacity = '0';
@@ -1505,7 +1514,7 @@
             items.forEach(item => {
                 const className = item.className;
                 
-                // prev-prev 和 next-next 跳过
+                // 外侧卡片跳过
                 if (className.includes('prev-prev') || className.includes('next-next')) {
                     return;
                 }
