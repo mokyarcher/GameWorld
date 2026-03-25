@@ -940,13 +940,7 @@
                             min_chips: 10,
                             max_players: 1
                         },
-                        {
-                            game_code: 'blackjack',
-                            game_name: '21点',
-                            description: '经典纸牌游戏，谁能最接近21点',
-                            min_chips: 200,
-                            max_players: 7
-                        }
+
                     ];
                     
                     // 去重合并
@@ -1012,7 +1006,7 @@
                 'mahjong': 'linear-gradient(135deg, #8B0000 0%, #DC143C 50%, #FFD700 100%)',
                 'dice': 'linear-gradient(135deg, #0f2027 0%, #203a43 50%, #2c5364 100%)',
                 'slot': 'linear-gradient(135deg, #ff6b6b 0%, #feca57 50%, #ff9ff3 100%)',
-                'blackjack': 'linear-gradient(135deg, #000000 0%, #434343 50%, #000000 100%)',
+
                 'default': 'linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f0f23 100%)'
             };
             return backgrounds[gameCode] || backgrounds['default'];
@@ -1074,7 +1068,7 @@
                 'mahjong': '🀄',
                 'dice': '🎲',
                 'slot': '🎰',
-                'blackjack': '♠️',
+
                 'roulette': '🎯',
                 'baccarat': '💎',
                 'default': '🎮'
@@ -1175,68 +1169,90 @@
                     `;
                     
                 } else if (className.includes('prev-prev')) {
-                    // 更左侧的卡片 - 向着prev的位置移动，替代prev
-                    const startX = -380; // 起始位置
-                    const targetX = -200; // prev的位置
-                    const startScale = 0.5; // 起始大小
-                    const targetScale = 0.8; // prev的大小
+                    // 更左侧的卡片 - 循环滚动：左滑时绕到右侧替代next-next
                     
                     let translateX, scale, rotateY, opacity, blur;
                     
                     if (progress > 0) {
                         // 右滑：从远处向着prev位置移动，逐渐变大变清晰
+                        const startX = -380;
+                        const targetX = -200;
+                        const startScale = 0.5;
+                        const targetScale = 0.8;
                         translateX = startX + progress * (targetX - startX);
                         scale = startScale + progress * (targetScale - startScale);
-                        rotateY = 55 - progress * 20; // 旋转角度减小
-                        // 右滑时：prev-prev 更快变清晰 (0.25 -> 1.0, blur 4px -> 0px)
-                        // 使用非线性曲线，前半段快速变清晰
-                        const clarityProgress = Math.min(1, progress * 1.5); // 加速变清晰
+                        rotateY = 55 - progress * 20;
+                        const clarityProgress = Math.min(1, progress * 1.5);
                         opacity = 0.25 + clarityProgress * 0.75;
                         blur = Math.max(0, 4 - clarityProgress * 4);
+                    } else if (progress < -0.5) {
+                        // 左滑超过一半时：prev-prev 绕到右侧，准备替代 next-next
+                        const wrapProgress = (Math.abs(progress) - 0.5) * 2; // 0 -> 1
+                        const startX = -500; // 左侧远处
+                        const targetX = 380; // next-next的位置
+                        const startScale = 0.4;
+                        const targetScale = 0.5;
+                        translateX = startX + wrapProgress * (targetX - startX);
+                        scale = startScale + wrapProgress * (targetScale - startScale);
+                        rotateY = -55 + wrapProgress * 20;  // 绕到右边后，左边低右边高（跟next-next一样）
+                        opacity = wrapProgress * 0.25;
+                        blur = 6 - wrapProgress * 2;
                     } else {
-                        // 左滑：继续向左移动，保持模糊
-                        translateX = startX - Math.abs(progress) * 50;
-                        scale = startScale;
-                        rotateY = 55;
-                        opacity = 0.25;
-                        blur = 4;
+                        // 左滑前半段：继续向左移动，逐渐淡出
+                        translateX = -380 - Math.abs(progress) * 100;
+                        scale = 0.5 - Math.abs(progress) * 0.1;
+                        rotateY = 55 + Math.abs(progress) * 10;
+                        opacity = 0.25 - Math.abs(progress) * 0.25;
+                        blur = 4 + Math.abs(progress) * 2;
                     }
                     
                     item.style.transform = `translateX(${translateX}px) scale(${scale}) rotateY(${rotateY}deg)`;
                     item.style.opacity = opacity;
-                    item.style.zIndex = '1';
+                    item.style.zIndex = progress < -0.5 ? '0' : '1';
                     item.style.filter = `blur(${blur}px)`;
                     
                 } else if (className.includes('next-next')) {
-                    // 更右侧的卡片 - 向着next的位置移动，替代next
-                    const startX = 380; // 起始位置
-                    const targetX = 200; // next的位置
-                    const startScale = 0.5; // 起始大小
-                    const targetScale = 0.8; // next的大小
+                    // 更右侧的卡片 - 循环滚动：右滑时绕到左侧替代prev-prev
                     
                     let translateX, scale, rotateY, opacity, blur;
                     
                     if (progress < 0) {
                         // 左滑：从远处向着next位置移动，逐渐变大变清晰
+                        const startX = 380;
+                        const targetX = 200;
+                        const startScale = 0.5;
+                        const targetScale = 0.8;
                         translateX = startX + Math.abs(progress) * (targetX - startX);
                         scale = startScale + Math.abs(progress) * (targetScale - startScale);
-                        rotateY = -55 + Math.abs(progress) * 20; // 旋转角度减小
-                        // 左滑时：next-next 更快变清晰 (0.25 -> 1.0, blur 4px -> 0px)
+                        rotateY = -55 + Math.abs(progress) * 20;
                         const clarityProgress = Math.min(1, Math.abs(progress) * 1.5);
                         opacity = 0.25 + clarityProgress * 0.75;
                         blur = Math.max(0, 4 - clarityProgress * 4);
+                    } else if (progress > 0.5) {
+                        // 右滑超过一半时：next-next 绕到左侧，准备替代 prev-prev
+                        // 从右侧消失，从左侧出现
+                        const wrapProgress = (progress - 0.5) * 2; // 0 -> 1
+                        const startX = 500; // 右侧远处
+                        const targetX = -380; // prev-prev的位置
+                        const startScale = 0.4;
+                        const targetScale = 0.5;
+                        translateX = startX - wrapProgress * (startX - targetX);
+                        scale = startScale + wrapProgress * (targetScale - startScale);
+                        rotateY = 55 - wrapProgress * 20;  // 绕到左边后，左边高右边低（跟prev-prev一样）
+                        opacity = wrapProgress * 0.25;
+                        blur = 6 - wrapProgress * 2;
                     } else {
-                        // 右滑：继续向右移动，保持模糊
-                        translateX = startX + progress * 50;
-                        scale = startScale;
-                        rotateY = -55;
-                        opacity = 0.25;
-                        blur = 4;
+                        // 右滑前半段：继续向右移动，逐渐淡出
+                        translateX = 380 + progress * 100;
+                        scale = 0.5 - progress * 0.1;
+                        rotateY = -55 - progress * 10;
+                        opacity = 0.25 - progress * 0.25;
+                        blur = 4 + progress * 2;
                     }
                     
                     item.style.transform = `translateX(${translateX}px) scale(${scale}) rotateY(${rotateY}deg)`;
                     item.style.opacity = opacity;
-                    item.style.zIndex = '1';
+                    item.style.zIndex = progress > 0.5 ? '0' : '1';
                     item.style.filter = `blur(${blur}px)`;
                     
                 } else if (className.includes('prev')) {
@@ -1329,79 +1345,6 @@
                         item.style.borderColor = '';
                     }
                     
-                } else if (className.includes('prev')) {
-                    // 左侧第一位卡片 - 始终在最上层
-                    const baseX = -200;
-                    const translateX = baseX + progress * 200;
-                    
-                    let scale, rotateY, opacity;
-                    
-                    if (progress > 0) {
-                        // 右滑：从左边进入中心
-                        scale = 0.8 + progress * 0.35;
-                        rotateY = 35 - progress * 35;
-                        opacity = 1;
-                    } else {
-                        // 左滑：向左移动退场
-                        scale = 0.8 + progress * 0.1;
-                        rotateY = 35 - progress * 15;
-                        opacity = 1;
-                    }
-                    
-                    const zIndex = 25;
-                    
-                    item.style.transform = `translateX(${translateX}px) scale(${scale}) rotateY(${rotateY}deg)`;
-                    item.style.opacity = Math.max(0, opacity);
-                    item.style.zIndex = zIndex;
-                    if (progress > 0.3) {
-                        const glowProgress = (progress - 0.3) / 0.7;
-                        item.style.boxShadow = `
-                            0 0 ${30 + 30 * glowProgress}px rgba(102, 126, 234, ${0.3 + 0.3 * glowProgress}),
-                            0 15px 40px rgba(0,0,0,0.5),
-                            inset 0 1px 0 rgba(255,255,255,0.1)
-                        `;
-                        item.style.borderColor = `rgba(102, 126, 234, ${0.4 + 0.6 * glowProgress})`;
-                    } else {
-                        item.style.boxShadow = '';
-                        item.style.borderColor = '';
-                    }
-                    
-                } else if (className.includes('next')) {
-                    // 右侧第一位卡片 - 始终在最上层
-                    const baseX = 200;
-                    const translateX = baseX + progress * 200;
-                    
-                    let scale, rotateY, opacity;
-                    
-                    if (progress < 0) {
-                        // 左滑：从右边进入中心
-                        scale = 0.8 + Math.abs(progress) * 0.35;
-                        rotateY = -35 - progress * 35;
-                        opacity = 1;
-                    } else {
-                        // 右滑：向右移动退场
-                        scale = 0.8 - progress * 0.1;
-                        rotateY = -35 - progress * 15;
-                        opacity = 1;
-                    }
-                    
-                    const zIndex = 25;
-                    
-                    item.style.transform = `translateX(${translateX}px) scale(${scale}) rotateY(${rotateY}deg)`;
-                    item.style.opacity = Math.max(0, opacity);
-                    item.style.zIndex = zIndex;
-                    if (progress < -0.3) {
-                        const glowProgress = (Math.abs(progress) - 0.3) / 0.7;
-                        item.style.boxShadow = `
-                            0 0 ${30 + 30 * glowProgress}px rgba(102, 126, 234, ${0.3 + 0.3 * glowProgress}),
-                            0 15px 40px rgba(0,0,0,0.5),
-                            inset 0 1px 0 rgba(255,255,255,0.1)
-                        `;
-                        item.style.borderColor = `rgba(102, 126, 234, ${0.4 + 0.6 * glowProgress})`;
-                    } else {
-                        item.style.boxShadow = '';
-                        item.style.borderColor = '';
-                    }
                 }
             });
         }
@@ -1430,122 +1373,213 @@
         function animateTransition(direction) {
             const items = document.querySelectorAll('.carousel-item');
             
-            items.forEach(item => {
-                const className = item.className;
-                
-                if (className.includes('prev-prev') || className.includes('next-next')) {
-                    item.style.transition = 'none';
-                    item.style.opacity = '0';
-                    return;
-                }
-                
-                item.style.transition = 'all 0.6s cubic-bezier(0.23, 1, 0.32, 1)';
-            });
-            
-            document.body.offsetHeight;
-            
-            items.forEach(item => {
-                const className = item.className;
-                
-                if (className.includes('prev-prev') || className.includes('next-next')) {
-                    return;
-                }
-                
-                if (direction === 'next') {
-                    if (className.includes('active')) {
-                        item.style.transform = 'translateX(-200px) scale(0.8) rotateY(35deg)';
-                        item.style.opacity = '1';
-                        item.style.zIndex = '25';
-                    } else if (className.includes('next')) {
-                        item.style.transform = 'translateX(0) scale(1.15) rotateY(0deg)';
-                        item.style.opacity = '1';
-                        item.style.zIndex = '10';
-                    } else if (className.includes('prev')) {
-                        item.style.transform = 'translateX(-380px) scale(0.5) rotateY(55deg)';
-                        item.style.opacity = '0';
-                    }
-                } else {
-                    if (className.includes('active')) {
-                        item.style.transform = 'translateX(200px) scale(0.8) rotateY(-35deg)';
-                        item.style.opacity = '1';
-                        item.style.zIndex = '25';
-                    } else if (className.includes('prev')) {
-                        item.style.transform = 'translateX(0) scale(1.15) rotateY(0deg)';
-                        item.style.opacity = '1';
-                        item.style.zIndex = '10';
-                    } else if (className.includes('next')) {
-                        item.style.transform = 'translateX(380px) scale(0.5) rotateY(-55deg)';
-                        item.style.opacity = '0';
-                    }
-                }
-            });
-            
+            // 等待 0.5s 后再开始回缩动画（保持当前位置不变）
             setTimeout(() => {
-                if (direction === 'next') {
-                    currentGameIndex = (currentGameIndex + 1) % gamesData.length;
-                } else {
-                    currentGameIndex = (currentGameIndex - 1 + gamesData.length) % gamesData.length;
-                }
-                renderCarousel();
-            }, 600);
+                // 使用 requestAnimationFrame 确保在下一帧开始动画
+                requestAnimationFrame(() => {
+                    // 开始回缩动画 - 保持卡片角色不变，只回缩到标准位置
+                    items.forEach(item => {
+                        item.style.transition = 'all 0.6s cubic-bezier(0.23, 1, 0.32, 1)';
+                        // 重置可能由 handleTouchMove 设置的样式
+                        item.style.boxShadow = '';
+                        item.style.borderColor = '';
+                    });
+                    
+                    // 强制重绘，确保 transition 已应用
+                    document.body.offsetHeight;
+                    
+                    // 直接收缩到下一个状态的位置（不是回缩到当前位置）
+                    items.forEach(item => {
+                        const className = item.className;
+                        
+                        if (direction === 'next') {
+                            // 左滑手势（手指从右到左）：显示右边的牌
+                            if (className.includes('active')) {
+                                // active → prev 位置
+                                item.style.transform = 'translateX(-200px) scale(0.8) rotateY(35deg)';
+                                item.style.opacity = '1';
+                                item.style.zIndex = '25';
+                                item.style.filter = 'blur(0px)';
+                            } else if (className.includes('prev') && !className.includes('prev-prev')) {
+                                // prev → prev-prev 位置
+                                item.style.transform = 'translateX(-380px) scale(0.5) rotateY(55deg)';
+                                item.style.opacity = '0.25';
+                                item.style.zIndex = '1';
+                                item.style.filter = 'blur(4px)';
+                            } else if (className.includes('next') && !className.includes('next-next')) {
+                                // next → active 位置
+                                item.style.transform = 'translateX(0) scale(1.15) rotateY(0deg)';
+                                item.style.opacity = '1';
+                                item.style.zIndex = '10';
+                                item.style.filter = 'blur(0px)';
+                            } else if (className.includes('next-next')) {
+                                // next-next → next 位置
+                                item.style.transform = 'translateX(200px) scale(0.8) rotateY(-35deg)';
+                                item.style.opacity = '1';
+                                item.style.zIndex = '25';
+                                item.style.filter = 'blur(0px)';
+                            } else if (className.includes('prev-prev')) {
+                                // prev-prev → next-next 位置（绕回）
+                                item.style.transform = 'translateX(380px) scale(0.5) rotateY(-55deg)';
+                                item.style.opacity = '0.25';
+                                item.style.zIndex = '1';
+                                item.style.filter = 'blur(4px)';
+                            }
+                        } else {
+                            // 右滑手势（手指从左到右）：显示左边的牌
+                            if (className.includes('active')) {
+                                // active → next 位置
+                                item.style.transform = 'translateX(200px) scale(0.8) rotateY(-35deg)';
+                                item.style.opacity = '1';
+                                item.style.zIndex = '25';
+                                item.style.filter = 'blur(0px)';
+                            } else if (className.includes('next') && !className.includes('next-next')) {
+                                // next → next-next 位置
+                                item.style.transform = 'translateX(380px) scale(0.5) rotateY(-55deg)';
+                                item.style.opacity = '0.25';
+                                item.style.zIndex = '1';
+                                item.style.filter = 'blur(4px)';
+                            } else if (className.includes('prev') && !className.includes('prev-prev')) {
+                                // prev → active 位置
+                                item.style.transform = 'translateX(0) scale(1.15) rotateY(0deg)';
+                                item.style.opacity = '1';
+                                item.style.zIndex = '10';
+                                item.style.filter = 'blur(0px)';
+                            } else if (className.includes('prev-prev')) {
+                                // prev-prev → prev 位置
+                                item.style.transform = 'translateX(-200px) scale(0.8) rotateY(35deg)';
+                                item.style.opacity = '1';
+                                item.style.zIndex = '25';
+                                item.style.filter = 'blur(0px)';
+                            } else if (className.includes('next-next')) {
+                                // next-next → prev-prev 位置（绕回）
+                                item.style.transform = 'translateX(-380px) scale(0.5) rotateY(55deg)';
+                                item.style.opacity = '0.25';
+                                item.style.zIndex = '1';
+                                item.style.filter = 'blur(4px)';
+                            }
+                        }
+                    });
+                }); // requestAnimationFrame 结束
+                
+                // 回缩动画完成后，更新索引和class
+                setTimeout(() => {
+                    const items = document.querySelectorAll('.carousel-item');
+                    
+                    // 更新索引
+                    if (direction === 'next') {
+                        currentGameIndex = (currentGameIndex + 1) % gamesData.length;
+                    } else {
+                        currentGameIndex = (currentGameIndex - 1 + gamesData.length) % gamesData.length;
+                    }
+                    
+                    // 更新class（保持内联样式，用户看不到变化）
+                    items.forEach(item => {
+                        const currentClass = item.className;
+                        let newClass = currentClass;
+                        
+                        if (direction === 'next') {
+                            // 左滑：active→prev, prev→prev-prev, next→active, next-next→next, prev-prev→next-next
+                            if (currentClass.includes('active')) {
+                                newClass = currentClass.replace('active', 'prev');
+                            } else if (currentClass.includes('prev') && !currentClass.includes('prev-prev')) {
+                                newClass = currentClass.replace('prev', 'prev-prev');
+                            } else if (currentClass.includes('prev-prev')) {
+                                newClass = currentClass.replace('prev-prev', 'next-next');
+                            } else if (currentClass.includes('next') && !currentClass.includes('next-next')) {
+                                newClass = currentClass.replace('next', 'active');
+                            } else if (currentClass.includes('next-next')) {
+                                newClass = currentClass.replace('next-next', 'next');
+                            }
+                        } else {
+                            // 右滑：active→next, next→next-next, prev→active, prev-prev→prev, next-next→prev-prev
+                            if (currentClass.includes('active')) {
+                                newClass = currentClass.replace('active', 'next');
+                            } else if (currentClass.includes('next') && !currentClass.includes('next-next')) {
+                                newClass = currentClass.replace('next', 'next-next');
+                            } else if (currentClass.includes('next-next')) {
+                                newClass = currentClass.replace('next-next', 'prev-prev');
+                            } else if (currentClass.includes('prev') && !currentClass.includes('prev-prev')) {
+                                newClass = currentClass.replace('prev', 'active');
+                            } else if (currentClass.includes('prev-prev')) {
+                                newClass = currentClass.replace('prev-prev', 'prev');
+                            }
+                        }
+                        
+                        item.className = newClass;
+                    });
+                    
+                    // 强制重绘确保class更新
+                    document.body.offsetHeight;
+                    
+                    // 清理内联样式（CSS会接管，位置和当前一致）
+                    items.forEach(item => {
+                        item.style.transition = '';
+                        item.style.transform = '';
+                        item.style.opacity = '';
+                        item.style.zIndex = '';
+                        item.style.filter = '';
+                    });
+                }, 600);
+            }, 0); // 立即开始收缩动画
         }
-        
-        // 回弹动画 - 未触发切换阈值时回到原位
+    
+    // 回弹动画 - 未触发切换阈值时回到原位
         function animateReset() {
-            const items = document.querySelectorAll('.carousel-item');
-            
-            items.forEach(item => {
-                const className = item.className;
-                
-                // 外侧卡片不参与动画
-                if (className.includes('prev-prev') || className.includes('next-next')) {
-                    item.style.transition = 'none';
-                    item.style.opacity = '0';
-                    item.style.zIndex = '-1';
-                    return;
-                }
-                
-                item.style.transition = 'all 0.6s cubic-bezier(0.23, 1, 0.32, 1)';
-            });
-            
-            // 强制重绘
-            document.body.offsetHeight;
-            
-            items.forEach(item => {
-                const className = item.className;
-                
-                // 外侧卡片跳过
-                if (className.includes('prev-prev') || className.includes('next-next')) {
-                    return;
-                }
-                
-                if (className.includes('active')) {
-                    item.style.transform = 'translateX(0) scale(1.15) rotateY(0deg)';
-                    item.style.opacity = '1';
-                    item.style.zIndex = '10';
-                } else if (className.includes('prev')) {
-                    item.style.transform = 'translateX(-200px) scale(0.8) rotateY(35deg)';
-                    item.style.opacity = '1';
-                    item.style.zIndex = '25';
-                } else if (className.includes('next')) {
-                    item.style.transform = 'translateX(200px) scale(0.8) rotateY(-35deg)';
-                    item.style.opacity = '1';
-                    item.style.zIndex = '25';
-                }
-            });
-            
-            // 清理内联样式
-            setTimeout(() => {
-                items.forEach(item => {
-                    item.style.transition = '';
-                    item.style.transform = '';
-                    item.style.opacity = '';
-                    item.style.zIndex = '';
-                });
-            }, 600);
-        }
+        const items = document.querySelectorAll('.carousel-item');
         
-        // 加载公告
+        // 所有卡片都参与回弹动画
+        items.forEach(item => {
+            item.style.transition = 'all 0.6s cubic-bezier(0.23, 1, 0.32, 1)';
+        });
+        
+        // 强制重绘
+        document.body.offsetHeight;
+        
+        items.forEach(item => {
+            const className = item.className;
+            
+            if (className.includes('active')) {
+                item.style.transform = 'translateX(0) scale(1.15) rotateY(0deg)';
+                item.style.opacity = '1';
+                item.style.zIndex = '10';
+                item.style.filter = 'blur(0px)';
+            } else if (className.includes('prev')) {
+                item.style.transform = 'translateX(-200px) scale(0.8) rotateY(35deg)';
+                item.style.opacity = '1';
+                item.style.zIndex = '25';
+                item.style.filter = 'blur(0px)';
+            } else if (className.includes('next')) {
+                item.style.transform = 'translateX(200px) scale(0.8) rotateY(-35deg)';
+                item.style.opacity = '1';
+                item.style.zIndex = '25';
+                item.style.filter = 'blur(0px)';
+            } else if (className.includes('prev-prev')) {
+                item.style.transform = 'translateX(-380px) scale(0.5) rotateY(55deg)';
+                item.style.opacity = '0.25';
+                item.style.zIndex = '1';
+                item.style.filter = 'blur(4px)';
+            } else if (className.includes('next-next')) {
+                item.style.transform = 'translateX(380px) scale(0.5) rotateY(-55deg)';
+                item.style.opacity = '0.25';
+                item.style.zIndex = '1';
+                item.style.filter = 'blur(4px)';
+            }
+        });
+        
+        // 清理内联样式
+        setTimeout(() => {
+            items.forEach(item => {
+                item.style.transition = '';
+                item.style.transform = '';
+                item.style.opacity = '';
+                item.style.zIndex = '';
+                item.style.filter = '';
+            });
+        }, 600);
+    }
+    
+    // 加载公告
         async function loadAnnouncements() {
             try {
                 const response = await fetch(`${API_BASE}/gamehall/announcements`);
