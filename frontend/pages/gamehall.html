@@ -1116,15 +1116,26 @@
             }
         }
         
+        // 速度追踪变量
+        let lastTouchX = 0;
+        let lastTouchTime = 0;
+        let touchVelocity = 0; // 滑动速度（像素/毫秒）
+        
         // 触摸开始
         function handleTouchStart(e) {
             touchStartX = e.changedTouches[0].screenX;
             isDragging = true;
+            touchVelocity = 0;
+            
+            // 初始化速度追踪
+            lastTouchX = touchStartX;
+            lastTouchTime = Date.now();
             
             // 获取当前卡片元素
             const items = document.querySelectorAll('.carousel-item');
             items.forEach(item => {
                 item.style.transition = 'none';
+                item.style.willChange = 'transform, opacity'; // GPU 加速
             });
         }
         
@@ -1133,8 +1144,17 @@
             if (!isDragging) return;
             
             const currentX = e.changedTouches[0].screenX;
+            const currentTime = Date.now();
             const diff = currentX - touchStartX;
             const maxOffset = 200; // 最大偏移量
+            
+            // 计算速度（像素/毫秒）
+            const timeDelta = currentTime - lastTouchTime;
+            if (timeDelta > 0) {
+                touchVelocity = (currentX - lastTouchX) / timeDelta;
+            }
+            lastTouchX = currentX;
+            lastTouchTime = currentTime;
             
             // 限制偏移量
             const offset = Math.max(-maxOffset, Math.min(maxOffset, diff));
@@ -1358,11 +1378,27 @@
             
             const diff = touchStartX - touchEndX;
             const swipeThreshold = 50;
+            const velocityThreshold = 0.5; // 速度阈值（像素/毫秒）
             
-            // 判断是否触发切换
-            if (Math.abs(diff) > swipeThreshold) {
+            // 清理 will-change
+            const items = document.querySelectorAll('.carousel-item');
+            items.forEach(item => {
+                item.style.willChange = 'auto';
+            });
+            
+            // 根据位移或速度判断是否触发切换
+            const shouldSwitch = Math.abs(diff) > swipeThreshold || Math.abs(touchVelocity) > velocityThreshold;
+            
+            if (shouldSwitch) {
+                // 根据速度方向或位移方向确定切换方向
+                // touchVelocity > 0: 手指从左向右滑，显示左边牌(prev→active)
+                // touchVelocity < 0: 手指从右向左滑，显示右边牌(next→active)
+                const direction = touchVelocity !== 0 ? 
+                    (touchVelocity > 0 ? 'prev' : 'next') :
+                    (diff > 0 ? 'next' : 'prev');
+                
                 // 需要切换 - 播放平滑过渡动画
-                animateTransition(diff > 0 ? 'next' : 'prev');
+                animateTransition(direction);
             } else {
                 // 未触发阈值 - 回弹到原位
                 animateReset();
