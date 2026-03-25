@@ -174,6 +174,522 @@
         .invite-modal-content .invite-btn.reject:hover {
             background: rgba(255,255,255,0.2);
         }
+        
+        /* 滚轴式游戏选择器样式 - 精美版 */
+        .game-carousel-container {
+            position: relative;
+            width: 100%;
+            max-width: 700px;
+            margin: 0 auto;
+            padding: 30px 0;
+        }
+        
+        .game-carousel {
+            position: relative;
+            height: 450px;
+            overflow: visible;
+            perspective: 1200px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .carousel-track {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transform-style: preserve-3d;
+        }
+        
+        .carousel-item {
+            position: absolute;
+            width: 260px;
+            height: 380px;
+            border-radius: 24px;
+            background: linear-gradient(145deg, #1a1a2e 0%, #16213e 50%, #0f0f23 100%);
+            border: 3px solid rgba(102, 126, 234, 0.4);
+            box-shadow: 
+                0 20px 60px rgba(0,0,0,0.6),
+                0 0 0 1px rgba(255,215,0,0.1),
+                inset 0 1px 0 rgba(255,255,255,0.1);
+            cursor: pointer;
+            transition: all 0.6s cubic-bezier(0.23, 1, 0.32, 1);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
+            overflow: hidden;
+            user-select: none;
+            transform-origin: center center;
+        }
+        
+        /* 卡片光效 */
+        .carousel-item::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(
+                90deg,
+                transparent,
+                rgba(255,215,0,0.1),
+                transparent
+            );
+            transition: left 0.8s ease;
+            pointer-events: none;
+        }
+        
+        .carousel-item:hover::before {
+            left: 100%;
+        }
+        
+        /* 卡片边框发光 - 选中状态立即显示 */
+        .carousel-item::after {
+            content: '';
+            position: absolute;
+            inset: -2px;
+            border-radius: 26px;
+            background: linear-gradient(135deg, rgba(118, 75, 162, 0.4), transparent, rgba(102, 126, 234, 0.2));
+            z-index: -1;
+            opacity: 0;
+            /* 非active状态才有过渡，active立即显示 */
+            transition: opacity 0.1s ease;
+        }
+        
+        .carousel-item.active {
+            transform: translateX(0) scale(1.15) rotateY(0deg);
+            border-color: #667eea;
+            box-shadow: 
+                0 0 60px rgba(102, 126, 234, 0.6),
+                0 25px 80px rgba(0,0,0,0.7),
+                inset 0 1px 0 rgba(255,255,255,0.2);
+            z-index: 20;
+        }
+        
+        .carousel-item.active::after {
+            opacity: 1;
+            /* active状态无过渡，立即显示 */
+            transition: none;
+        }
+        
+        .carousel-item.prev {
+            transform: translateX(-200px) scale(0.8) rotateY(35deg);
+            opacity: 1;
+            filter: brightness(0.9);
+            z-index: 25;
+        }
+        
+        .carousel-item.next {
+            transform: translateX(200px) scale(0.8) rotateY(-35deg);
+            opacity: 1;
+            filter: brightness(0.9);
+            z-index: 25;
+        }
+        
+        .carousel-item.hidden {
+            transform: translateX(0) scale(0.5);
+            opacity: 0;
+            z-index: 0;
+            pointer-events: none;
+        }
+        
+        /* 更远的左侧卡片 - 始终在最外侧，不靠近中间 */
+        .carousel-item.prev-prev {
+            transform: translateX(-380px) scale(0.5) rotateY(55deg);
+            opacity: 0.25;
+            z-index: 1;
+            filter: blur(4px);
+            pointer-events: none;
+        }
+        
+        /* 更远的右侧卡片 - 始终在最外侧，不靠近中间 */
+        .carousel-item.next-next {
+            transform: translateX(380px) scale(0.5) rotateY(-55deg);
+            opacity: 0.25;
+            z-index: 1;
+            filter: blur(4px);
+            pointer-events: none;
+        }
+        
+        /* 游戏背景图区域 */
+        .carousel-item .game-bg {
+            width: 100%;
+            height: 75%;
+            position: relative;
+            overflow: hidden;
+            border-radius: 20px 20px 0 0;
+        }
+        
+        .carousel-item .game-bg::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background-size: cover;
+            background-position: center;
+            transition: transform 0.6s ease;
+        }
+        
+        .carousel-item:hover .game-bg::before {
+            transform: scale(1.1);
+        }
+        
+        /* 渐变遮罩 */
+        .carousel-item .game-bg::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(
+                180deg,
+                transparent 0%,
+                transparent 60%,
+                rgba(26,26,46,0.8) 100%
+            );
+        }
+        
+        /* 游戏图标 */
+        .carousel-item .game-icon-overlay {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 100px;
+            filter: drop-shadow(0 4px 20px rgba(0,0,0,0.5));
+            z-index: 2;
+        }
+        
+        /* 游戏名称区域 */
+        .carousel-item .game-info {
+            width: 100%;
+            height: 25%;
+            padding: 15px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(180deg, transparent 0%, rgba(0,0,0,0.3) 100%);
+        }
+        
+        .carousel-item .game-name {
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: #667eea;
+            text-align: center;
+            text-shadow: 0 0 20px rgba(255,215,0,0.5);
+            letter-spacing: 1px;
+        }
+        
+        /* 选中标记已移除 */
+        
+        /* 箭头按钮 - 精美版 - GameWorld 蓝紫主题 */
+        .carousel-arrow {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 50px;
+            height: 80px;
+            border-radius: 12px;
+            background: linear-gradient(145deg, #667eea, #764ba2);
+            border: 2px solid rgba(255,255,255,0.2);
+            color: white;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 
+                0 8px 25px rgba(102, 126, 234, 0.4),
+                inset 0 1px 0 rgba(255,255,255,0.3);
+            transition: all 0.3s cubic-bezier(0.23, 1, 0.32, 1);
+            z-index: 30;
+        }
+        
+        .carousel-arrow::before {
+            content: '';
+            position: absolute;
+            inset: -2px;
+            border-radius: 14px;
+            background: linear-gradient(135deg, rgba(118, 75, 162, 0.5), transparent, rgba(102, 126, 234, 0.3));
+            z-index: -1;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        
+        .carousel-arrow:hover::before {
+            opacity: 1;
+        }
+        
+        .carousel-arrow:hover {
+            transform: translateY(-50%) scale(1.05);
+            box-shadow: 
+                0 12px 35px rgba(102, 126, 234, 0.6),
+                inset 0 1px 0 rgba(255,255,255,0.3);
+        }
+        
+        .carousel-arrow:active {
+            transform: translateY(-50%) scale(0.98);
+            box-shadow: 
+                0 4px 15px rgba(102, 126, 234, 0.4),
+                inset 0 1px 0 rgba(255,255,255,0.3);
+        }
+        
+        .carousel-prev {
+            left: calc(50% - 200px);
+        }
+        
+        .carousel-next {
+            right: calc(50% - 200px);
+        }
+            z-index: 20;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 15px rgba(255,215,0,0.4);
+        }
+        
+        .carousel-arrow:hover {
+            transform: translateY(-50%) scale(1.1);
+            box-shadow: 0 6px 20px rgba(255,215,0,0.6);
+        }
+        
+        .carousel-arrow:active {
+            transform: translateY(-50%) scale(0.95);
+        }
+        
+        .carousel-prev {
+            left: 10px;
+        }
+        
+        .carousel-next {
+            right: 10px;
+        }
+        
+        /* 游戏信息区域已移除 */
+        
+        .btn-enter-game {
+            padding: 15px 50px;
+            font-size: 1.1rem;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            border-radius: 30px;
+            cursor: pointer;
+            font-weight: 700;
+            transition: all 0.3s;
+            box-shadow: 0 5px 20px rgba(255,215,0,0.4);
+        }
+        
+        .btn-enter-game:hover {
+            transform: translateY(-3px) scale(1.05);
+            box-shadow: 0 8px 30px rgba(102, 126, 234, 0.6);
+        }
+        
+        .carousel-indicators {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 20px;
+        }
+        
+        .carousel-indicator {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.3);
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .carousel-indicator.active {
+            background: #667eea;
+            box-shadow: 0 0 10px rgba(102, 126, 234, 0.6);
+            transform: scale(1.3);
+        }
+        
+        /* 触摸滑动支持 */
+        .game-carousel {
+            touch-action: pan-y;
+        }
+        
+        /* 平板适配 (768px - 1024px) - 布局保持与PC一致，只调整宽度和卡牌大小 */
+        @media (min-width: 769px) and (max-width: 1024px) {
+            .main-content {
+                padding: 20px;
+                gap: 20px;
+            }
+            
+            /* 侧边栏弄窄一点 */
+            .sidebar {
+                width: 220px;
+                min-width: 220px;
+            }
+            
+            /* 游戏区域向上移 */
+            .games-section {
+                margin-top: -30px;
+            }
+            
+            .panel {
+                padding: 15px;
+            }
+            
+            .panel h3 {
+                font-size: 15px;
+                margin-bottom: 12px;
+            }
+            
+            /* 公告样式 */
+            .announcement-item {
+                padding: 10px;
+            }
+            
+            .announcement-item strong {
+                font-size: 13px;
+            }
+            
+            .announcement-item p {
+                font-size: 12px;
+                line-height: 1.4;
+            }
+            
+            /* 排行榜样式 */
+            .leaderboard-item {
+                padding: 8px;
+                margin-bottom: 6px;
+            }
+            
+            .leaderboard-item .rank {
+                width: 20px;
+                height: 20px;
+                font-size: 11px;
+            }
+            
+            .leaderboard-item .name {
+                font-size: 12px;
+            }
+            
+            .leaderboard-item .score {
+                font-size: 11px;
+            }
+            
+            /* 游戏轮播区域 */
+            .game-carousel {
+                height: 320px;
+            }
+            
+            .carousel-item {
+                width: 170px;
+                height: 250px;
+                border-radius: 18px;
+            }
+            
+            .carousel-item.prev {
+                transform: translateX(-120px) scale(0.72) rotateY(30deg);
+                opacity: 0.5;
+            }
+            
+            .carousel-item.next {
+                transform: translateX(120px) scale(0.72) rotateY(-30deg);
+                opacity: 0.5;
+            }
+            
+            .carousel-item.prev-prev {
+                transform: translateX(-220px) scale(0.55) rotateY(45deg);
+                opacity: 0.3;
+                filter: blur(1px);
+            }
+            
+            .carousel-item.next-next {
+                transform: translateX(220px) scale(0.55) rotateY(-45deg);
+                opacity: 0.3;
+                filter: blur(1px);
+            }
+            
+            .carousel-item .game-icon-overlay {
+                font-size: 48px;
+            }
+            
+            .carousel-item .game-name {
+                font-size: 0.95rem;
+            }
+            
+            .carousel-arrow {
+                width: 34px;
+                height: 48px;
+                font-size: 18px;
+            }
+            
+            .carousel-prev {
+                left: calc(50% - 125px);
+            }
+            
+            .carousel-next {
+                right: calc(50% - 125px);
+            }
+        }
+        
+        /* 手机适配 */
+        @media (max-width: 768px) {
+            .game-carousel {
+                height: 320px;
+            }
+            
+            .carousel-item {
+                width: 160px;
+                height: 240px;
+            }
+            
+            .carousel-item.prev {
+                transform: translateX(-100px) scale(0.7) rotateY(25deg);
+                opacity: 0.5;
+            }
+            
+            .carousel-item.next {
+                transform: translateX(100px) scale(0.7) rotateY(-25deg);
+                opacity: 0.5;
+            }
+            
+            .carousel-item.prev-prev {
+                transform: translateX(-180px) scale(0.5) rotateY(40deg);
+                opacity: 0.25;
+                filter: blur(2px);
+            }
+            
+            .carousel-item.next-next {
+                transform: translateX(180px) scale(0.5) rotateY(-40deg);
+                opacity: 0.25;
+                filter: blur(2px);
+            }
+            
+            .carousel-item .game-icon-overlay {
+                font-size: 50px;
+            }
+            
+            .carousel-item .game-name {
+                font-size: 0.9rem;
+            }
+            
+            .carousel-arrow {
+                width: 32px;
+                height: 48px;
+                font-size: 18px;
+                border-radius: 8px;
+            }
+            
+            .carousel-prev {
+                left: calc(50% - 110px);
+            }
+            
+            .carousel-next {
+                right: calc(50% - 110px);
+            }
+        }
     </style>
 </head>
 <body>
@@ -211,11 +727,25 @@
                 </div>
             </aside>
             
-            <!-- 中间：游戏列表 -->
+            <!-- 中间：滚轴式游戏选择器 -->
             <section class="games-section">
-                <h2>选择游戏</h2>
-                <div id="gamesList" class="games-list">
-                    <p>加载中...</p>
+                <!-- 滚轴式游戏选择器 -->
+                <div class="game-carousel-container">
+                    <!-- 左箭头 -->
+                    <button class="carousel-arrow carousel-prev" onclick="prevGame()">‹</button>
+                    
+                    <!-- 游戏滚轴 -->
+                    <div class="game-carousel" id="gameCarousel">
+                        <div class="carousel-track" id="carouselTrack">
+                            <!-- 游戏卡片将动态生成 -->
+                        </div>
+                    </div>
+                    
+                    <!-- 右箭头 -->
+                    <button class="carousel-arrow carousel-next" onclick="nextGame()">›</button>
+                    
+                    <!-- 指示器 -->
+                    <div class="carousel-indicators" id="carouselIndicators"></div>
                 </div>
             </section>
         </main>
@@ -358,6 +888,13 @@
             }
         }
         
+        // 游戏数据
+        let gamesData = [];
+        let currentGameIndex = 0;
+        let touchStartX = 0;
+        let touchEndX = 0;
+        let isDragging = false;
+        
         // 加载游戏列表
         async function loadGames() {
             try {
@@ -365,22 +902,638 @@
                 const data = await response.json();
                 
                 if (data.success) {
-                    const gamesList = document.getElementById('gamesList');
-                    gamesList.innerHTML = data.games.map(game => `
-                        <div class="game-card" onclick="enterGame('${game.game_code}')">
-                            <div class="game-icon">🃏</div>
-                            <div class="game-info">
-                                <h3>${game.game_name}</h3>
-                                <p>${game.description}</p>
-                                <span class="game-meta">最低筹码: ${game.min_chips} | 最大人数: ${game.max_players}人</span>
-                            </div>
-                            <button class="btn btn-play">进入游戏</button>
-                        </div>
-                    `).join('');
+                    // 合并后端数据和测试数据
+                    const backendGames = data.games || [];
+                    const testGames = [
+                        {
+                            game_code: 'chess',
+                            game_name: '国际象棋',
+                            description: '经典策略棋类游戏，考验你的智慧和谋略',
+                            min_chips: 100,
+                            max_players: 2
+                        },
+                        {
+                            game_code: 'mahjong',
+                            game_name: '四川麻将',
+                            description: '血战到底，刺激对战，胡牌不停',
+                            min_chips: 500,
+                            max_players: 4
+                        },
+                        {
+                            game_code: 'dice',
+                            game_name: '骰子大战',
+                            description: '比拼运气与胆识，摇出你的幸运数字',
+                            min_chips: 50,
+                            max_players: 6
+                        },
+                        {
+                            game_code: 'slot',
+                            game_name: '幸运老虎机',
+                            description: '777大奖等你来拿，一夜暴富不是梦',
+                            min_chips: 10,
+                            max_players: 1
+                        },
+                        {
+                            game_code: 'blackjack',
+                            game_name: '21点',
+                            description: '经典纸牌游戏，谁能最接近21点',
+                            min_chips: 200,
+                            max_players: 7
+                        }
+                    ];
+                    
+                    // 去重合并
+                    const existingCodes = backendGames.map(g => g.game_code);
+                    const uniqueTestGames = testGames.filter(g => !existingCodes.includes(g.game_code));
+                    gamesData = [...backendGames, ...uniqueTestGames];
+                    
+                    renderCarousel();
+
                 }
             } catch (error) {
                 console.error('加载游戏列表失败:', error);
+                // 如果后端加载失败，使用测试数据
+                gamesData = [
+                    {
+                        game_code: 'poker',
+                        game_name: '德州扑克',
+                        description: '经典的德州扑克游戏，考验你的牌技和心理',
+                        min_chips: 1000,
+                        max_players: 9
+                    },
+                    {
+                        game_code: 'chess',
+                        game_name: '国际象棋',
+                        description: '经典策略棋类游戏，考验你的智慧和谋略',
+                        min_chips: 100,
+                        max_players: 2
+                    },
+                    {
+                        game_code: 'mahjong',
+                        game_name: '四川麻将',
+                        description: '血战到底，刺激对战，胡牌不停',
+                        min_chips: 500,
+                        max_players: 4
+                    },
+                    {
+                        game_code: 'dice',
+                        game_name: '骰子大战',
+                        description: '比拼运气与胆识，摇出你的幸运数字',
+                        min_chips: 50,
+                        max_players: 6
+                    },
+                    {
+                        game_code: 'slot',
+                        game_name: '幸运老虎机',
+                        description: '777大奖等你来拿，一夜暴富不是梦',
+                        min_chips: 10,
+                        max_players: 1
+                    },
+                    {
+                        game_code: 'blackjack',
+                        game_name: '21点',
+                        description: '经典纸牌游戏，谁能最接近21点',
+                        min_chips: 200,
+                        max_players: 7
+                    }
+                ];
+                renderCarousel();
+
             }
+        }
+        
+        // 渲染滚轴
+        // 获取游戏背景渐变
+        function getGameBackground(gameCode) {
+            const backgrounds = {
+                'poker': 'linear-gradient(135deg, #1e3c72 0%, #2a5298 50%, #7e22ce 100%)',
+                'chess': 'linear-gradient(135deg, #2c3e50 0%, #4a6741 50%, #8b7355 100%)',
+                'mahjong': 'linear-gradient(135deg, #8B0000 0%, #DC143C 50%, #FFD700 100%)',
+                'dice': 'linear-gradient(135deg, #0f2027 0%, #203a43 50%, #2c5364 100%)',
+                'slot': 'linear-gradient(135deg, #ff6b6b 0%, #feca57 50%, #ff9ff3 100%)',
+                'blackjack': 'linear-gradient(135deg, #000000 0%, #434343 50%, #000000 100%)',
+                'default': 'linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f0f23 100%)'
+            };
+            return backgrounds[gameCode] || backgrounds['default'];
+        }
+        
+        function renderCarousel() {
+            const track = document.getElementById('carouselTrack');
+            const indicators = document.getElementById('carouselIndicators');
+            
+            track.innerHTML = gamesData.map((game, index) => {
+                const bgStyle = getGameBackground(game.game_code);
+                return `
+                    <div class="carousel-item ${getItemClass(index)}" data-index="${index}" onclick="handleCardClick(${index})">
+                        <div class="game-bg" style="background: ${bgStyle}">
+                            <div class="game-icon-overlay">${getGameIcon(game.game_code)}</div>
+                        </div>
+                        <div class="game-info">
+                            <div class="game-name">${game.game_name}</div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+            
+            indicators.innerHTML = gamesData.map((_, index) => `
+                <div class="carousel-indicator ${index === currentGameIndex ? 'active' : ''}" onclick="selectGame(${index})"></div>
+            `).join('');
+            
+            // 添加触摸事件
+            const carousel = document.getElementById('gameCarousel');
+            carousel.addEventListener('touchstart', handleTouchStart, { passive: true });
+            carousel.addEventListener('touchmove', handleTouchMove, { passive: true });
+            carousel.addEventListener('touchend', handleTouchEnd, { passive: true });
+        }
+        
+        // 获取项目类名
+        function getItemClass(index) {
+            const diff = index - currentGameIndex;
+            const len = gamesData.length;
+            
+            // 处理环形索引
+            let normalizedDiff = diff;
+            if (diff > len / 2) normalizedDiff = diff - len;
+            if (diff < -len / 2) normalizedDiff = diff + len;
+            
+            if (normalizedDiff === 0) return 'active';
+            if (normalizedDiff === 1) return 'next';
+            if (normalizedDiff === -1) return 'prev';
+            if (normalizedDiff === 2) return 'next-next';
+            if (normalizedDiff === -2) return 'prev-prev';
+            return 'hidden';
+        }
+        
+        // 获取游戏图标
+        function getGameIcon(gameCode) {
+            const icons = {
+                'poker': '🃏',
+                'chess': '♟️',
+                'mahjong': '🀄',
+                'dice': '🎲',
+                'slot': '🎰',
+                'blackjack': '♠️',
+                'roulette': '🎯',
+                'baccarat': '💎',
+                'default': '🎮'
+            };
+            return icons[gameCode] || icons['default'];
+        }
+        
+        // 选择游戏
+        // 处理卡片点击
+        function handleCardClick(index) {
+            if (index === currentGameIndex) {
+                // 点击当前选中的卡片，直接进入游戏
+                enterGame(gamesData[index].game_code);
+            } else {
+                // 点击其他卡片，切换到该卡片
+                selectGame(index);
+            }
+        }
+        
+        function selectGame(index) {
+            currentGameIndex = index;
+            renderCarousel();
+        }
+        
+        // 上一个游戏
+        function prevGame() {
+            currentGameIndex = (currentGameIndex - 1 + gamesData.length) % gamesData.length;
+            renderCarousel();
+
+        }
+        
+        // 下一个游戏
+        function nextGame() {
+            currentGameIndex = (currentGameIndex + 1) % gamesData.length;
+            renderCarousel();
+
+        }
+        
+        // 更新选中游戏信息
+        // 进入选中的游戏
+        function enterSelectedGame() {
+            const game = gamesData[currentGameIndex];
+            if (game) {
+                enterGame(game.game_code);
+            }
+        }
+        
+        // 触摸开始
+        function handleTouchStart(e) {
+            touchStartX = e.changedTouches[0].screenX;
+            isDragging = true;
+            
+            // 获取当前卡片元素
+            const items = document.querySelectorAll('.carousel-item');
+            items.forEach(item => {
+                item.style.transition = 'none';
+            });
+        }
+        
+        // 触摸移动 - 实时跟随手指，左右卡片联动
+        function handleTouchMove(e) {
+            if (!isDragging) return;
+            
+            const currentX = e.changedTouches[0].screenX;
+            const diff = currentX - touchStartX;
+            const maxOffset = 200; // 最大偏移量
+            
+            // 限制偏移量
+            const offset = Math.max(-maxOffset, Math.min(maxOffset, diff));
+            
+            // 计算进度比例 (-1 到 1)
+            const progress = offset / maxOffset;
+            
+            // 获取所有卡片
+            const items = document.querySelectorAll('.carousel-item');
+            
+            items.forEach((item, index) => {
+                const className = item.className;
+                
+                if (className.includes('active')) {
+                    // 当前激活卡片：跟随手指移动，逐渐缩小缩回
+                    // 右滑时(progress>0)：向右边移动并缩小到next位置
+                    // 左滑时(progress<0)：向左边移动并缩小到prev位置
+                    const targetScale = 0.8; // 目标位置(prev/next)的缩放
+                    const startScale = 1.15; // 起始缩放
+                    const scale = startScale - Math.abs(progress) * (startScale - targetScale);
+                    const translateX = offset;
+                    const rotateY = -progress * 15;
+                    item.style.transform = `translateX(${translateX}px) scale(${scale}) rotateY(${rotateY}deg)`;
+                    item.style.opacity = 1 - Math.abs(progress) * 0.3;
+                    item.style.zIndex = 10;
+                    // 离开中心时淡化光效
+                    const glowOpacity = 1 - Math.abs(progress);
+                    item.style.boxShadow = `
+                        0 0 ${60 * glowOpacity}px rgba(102, 126, 234, ${0.6 * glowOpacity}),
+                        0 25px 80px rgba(0,0,0,0.7),
+                        inset 0 1px 0 rgba(255,255,255,0.2)
+                    `;
+                    
+                } else if (className.includes('prev-prev')) {
+                    // 更左侧的卡片 - 向着prev的位置移动，替代prev
+                    const startX = -380; // 起始位置
+                    const targetX = -200; // prev的位置
+                    const startScale = 0.5; // 起始大小
+                    const targetScale = 0.8; // prev的大小
+                    
+                    let translateX, scale, rotateY, opacity, blur;
+                    
+                    if (progress > 0) {
+                        // 右滑：从远处向着prev位置移动，逐渐变大变清晰
+                        translateX = startX + progress * (targetX - startX);
+                        scale = startScale + progress * (targetScale - startScale);
+                        rotateY = 55 - progress * 20; // 旋转角度减小
+                        // 右滑时：prev-prev 逐渐变清晰 (0.25 -> 0.7, blur 4px -> 1px)
+                        opacity = 0.25 + progress * 0.45;
+                        blur = 4 - progress * 3;
+                    } else {
+                        // 左滑：继续向左移动，保持模糊
+                        translateX = startX - Math.abs(progress) * 50;
+                        scale = startScale;
+                        rotateY = 55;
+                        opacity = 0.25;
+                        blur = 4;
+                    }
+                    
+                    item.style.transform = `translateX(${translateX}px) scale(${scale}) rotateY(${rotateY}deg)`;
+                    item.style.opacity = opacity;
+                    item.style.zIndex = '1';
+                    item.style.filter = `blur(${blur}px)`;
+                    
+                } else if (className.includes('next-next')) {
+                    // 更右侧的卡片 - 向着next的位置移动，替代next
+                    const startX = 380; // 起始位置
+                    const targetX = 200; // next的位置
+                    const startScale = 0.5; // 起始大小
+                    const targetScale = 0.8; // next的大小
+                    
+                    let translateX, scale, rotateY;
+                    
+                    if (progress < 0) {
+                        // 左滑：从远处向着next位置移动，逐渐变大
+                        // progress是负数，从0到-1，需要从380移动到200
+                        translateX = startX + Math.abs(progress) * (targetX - startX);
+                        scale = startScale + Math.abs(progress) * (targetScale - startScale);
+                        rotateY = -55 + Math.abs(progress) * 20; // 旋转角度减小
+                    } else {
+                        // 右滑：继续向右移动
+                        translateX = startX + progress * 50;
+                        scale = startScale;
+                        rotateY = -55;
+                    }
+                    
+                    item.style.transform = `translateX(${translateX}px) scale(${scale}) rotateY(${rotateY}deg)`;
+                    item.style.opacity = '0.25';
+                    item.style.zIndex = '1';
+                    item.style.filter = 'blur(4px)';
+                    
+                } else if (className.includes('prev')) {
+                    // 左侧第一位卡片 - 始终在最上层
+                    const baseX = -200;
+                    const translateX = baseX + progress * 200;
+                    
+                    let scale, rotateY, opacity, blur;
+                    
+                    if (progress > 0) {
+                        // 右滑：从左边进入中心，逐渐变大
+                        scale = 0.8 + progress * 0.35;
+                        rotateY = 35 - progress * 35;
+                        opacity = 1;
+                        blur = 0;
+                    } else {
+                        // 左滑或触摸时：向左移动退场，逐渐变模糊
+                        // 当progress接近0时（触摸开始），稍微变大抽出
+                        const touchScale = progress > -0.1 ? 0.85 : 0.8;
+                        scale = touchScale + progress * 0.1;
+                        rotateY = 35 - progress * 15;
+                        // 左滑时：prev 逐渐变模糊 (opacity 1->0.5, blur 0->2px)
+                        opacity = 1 - Math.abs(progress) * 0.5;
+                        blur = Math.abs(progress) * 2;
+                    }
+                    
+                    // 关键：始终保持高 z-index，确保在prev-prev之上
+                    const zIndex = 25;
+                    
+                    item.style.transform = `translateX(${translateX}px) scale(${scale}) rotateY(${rotateY}deg)`;
+                    item.style.opacity = Math.max(0.3, opacity);
+                    item.style.zIndex = zIndex;
+                    item.style.filter = `blur(${blur}px)`;
+                    // 即将进入中心时增强光效
+                    if (progress > 0.3) {
+                        const glowProgress = (progress - 0.3) / 0.7;
+                        item.style.boxShadow = `
+                            0 0 ${30 + 30 * glowProgress}px rgba(102, 126, 234, ${0.3 + 0.3 * glowProgress}),
+                            0 15px 40px rgba(0,0,0,0.5),
+                            inset 0 1px 0 rgba(255,255,255,0.1)
+                        `;
+                        item.style.borderColor = `rgba(102, 126, 234, ${0.4 + 0.6 * glowProgress})`;
+                    } else {
+                        item.style.boxShadow = '';
+                        item.style.borderColor = '';
+                    }
+                    
+                } else if (className.includes('next') && !className.includes('next-next')) {
+                    // 右侧第一位卡片 - 始终在最上层
+                    const baseX = 200;
+                    const translateX = baseX + progress * 200;
+                    
+                    let scale, rotateY, opacity, blur;
+                    
+                    if (progress < 0) {
+                        // 左滑：从右边进入中心，逐渐变大
+                        scale = 0.8 + Math.abs(progress) * 0.35;
+                        rotateY = -35 - progress * 35;
+                        opacity = 1;
+                        blur = 0;
+                    } else {
+                        // 右滑或触摸时：向右移动退场，逐渐变模糊
+                        // 当progress接近0时（触摸开始），稍微变大抽出
+                        const touchScale = progress < 0.1 ? 0.85 : 0.8;
+                        scale = touchScale - progress * 0.1;
+                        rotateY = -35 - progress * 15;
+                        // 右滑时：next 逐渐变模糊 (opacity 1->0.5, blur 0->2px)
+                        opacity = 1 - progress * 0.5;
+                        blur = progress * 2;
+                    }
+                    
+                    // 关键：始终保持高 z-index，确保在next-next之上
+                    const zIndex = 25;
+                    
+                    item.style.transform = `translateX(${translateX}px) scale(${scale}) rotateY(${rotateY}deg)`;
+                    item.style.opacity = Math.max(0.3, opacity);
+                    item.style.zIndex = zIndex;
+                    item.style.filter = `blur(${blur}px)`;
+                    // 即将进入中心时增强光效
+                    if (progress < -0.3) {
+                        const glowProgress = (Math.abs(progress) - 0.3) / 0.7;
+                        item.style.boxShadow = `
+                            0 0 ${30 + 30 * glowProgress}px rgba(102, 126, 234, ${0.3 + 0.3 * glowProgress}),
+                            0 15px 40px rgba(0,0,0,0.5),
+                            inset 0 1px 0 rgba(255,255,255,0.1)
+                        `;
+                        item.style.borderColor = `rgba(102, 126, 234, ${0.4 + 0.6 * glowProgress})`;
+                    } else {
+                        item.style.boxShadow = '';
+                        item.style.borderColor = '';
+                    }
+                    
+                } else if (className.includes('prev')) {
+                    // 左侧第一位卡片 - 始终在最上层
+                    const baseX = -200;
+                    const translateX = baseX + progress * 200;
+                    
+                    let scale, rotateY, opacity;
+                    
+                    if (progress > 0) {
+                        // 右滑：从左边进入中心
+                        scale = 0.8 + progress * 0.35;
+                        rotateY = 35 - progress * 35;
+                        opacity = 1;
+                    } else {
+                        // 左滑：向左移动退场
+                        scale = 0.8 + progress * 0.1;
+                        rotateY = 35 - progress * 15;
+                        opacity = 1;
+                    }
+                    
+                    const zIndex = 25;
+                    
+                    item.style.transform = `translateX(${translateX}px) scale(${scale}) rotateY(${rotateY}deg)`;
+                    item.style.opacity = Math.max(0, opacity);
+                    item.style.zIndex = zIndex;
+                    if (progress > 0.3) {
+                        const glowProgress = (progress - 0.3) / 0.7;
+                        item.style.boxShadow = `
+                            0 0 ${30 + 30 * glowProgress}px rgba(102, 126, 234, ${0.3 + 0.3 * glowProgress}),
+                            0 15px 40px rgba(0,0,0,0.5),
+                            inset 0 1px 0 rgba(255,255,255,0.1)
+                        `;
+                        item.style.borderColor = `rgba(102, 126, 234, ${0.4 + 0.6 * glowProgress})`;
+                    } else {
+                        item.style.boxShadow = '';
+                        item.style.borderColor = '';
+                    }
+                    
+                } else if (className.includes('next')) {
+                    // 右侧第一位卡片 - 始终在最上层
+                    const baseX = 200;
+                    const translateX = baseX + progress * 200;
+                    
+                    let scale, rotateY, opacity;
+                    
+                    if (progress < 0) {
+                        // 左滑：从右边进入中心
+                        scale = 0.8 + Math.abs(progress) * 0.35;
+                        rotateY = -35 - progress * 35;
+                        opacity = 1;
+                    } else {
+                        // 右滑：向右移动退场
+                        scale = 0.8 - progress * 0.1;
+                        rotateY = -35 - progress * 15;
+                        opacity = 1;
+                    }
+                    
+                    const zIndex = 25;
+                    
+                    item.style.transform = `translateX(${translateX}px) scale(${scale}) rotateY(${rotateY}deg)`;
+                    item.style.opacity = Math.max(0, opacity);
+                    item.style.zIndex = zIndex;
+                    if (progress < -0.3) {
+                        const glowProgress = (Math.abs(progress) - 0.3) / 0.7;
+                        item.style.boxShadow = `
+                            0 0 ${30 + 30 * glowProgress}px rgba(102, 126, 234, ${0.3 + 0.3 * glowProgress}),
+                            0 15px 40px rgba(0,0,0,0.5),
+                            inset 0 1px 0 rgba(255,255,255,0.1)
+                        `;
+                        item.style.borderColor = `rgba(102, 126, 234, ${0.4 + 0.6 * glowProgress})`;
+                    } else {
+                        item.style.boxShadow = '';
+                        item.style.borderColor = '';
+                    }
+                }
+            });
+        }
+        
+        // 触摸结束
+        function handleTouchEnd(e) {
+            if (!isDragging) return;
+            
+            isDragging = false;
+            touchEndX = e.changedTouches[0].screenX;
+            
+            const diff = touchStartX - touchEndX;
+            const swipeThreshold = 50;
+            
+            // 判断是否触发切换
+            if (Math.abs(diff) > swipeThreshold) {
+                // 需要切换 - 播放平滑过渡动画
+                animateTransition(diff > 0 ? 'next' : 'prev');
+            } else {
+                // 未触发阈值 - 回弹到原位
+                animateReset();
+            }
+        }
+        
+        // 平滑过渡动画 - 快速滑动时也有动画效果
+        function animateTransition(direction) {
+            const items = document.querySelectorAll('.carousel-item');
+            
+            items.forEach(item => {
+                const className = item.className;
+                
+                if (className.includes('prev-prev') || className.includes('next-next')) {
+                    item.style.transition = 'none';
+                    item.style.opacity = '0';
+                    return;
+                }
+                
+                item.style.transition = 'all 0.6s cubic-bezier(0.23, 1, 0.32, 1)';
+            });
+            
+            document.body.offsetHeight;
+            
+            items.forEach(item => {
+                const className = item.className;
+                
+                if (className.includes('prev-prev') || className.includes('next-next')) {
+                    return;
+                }
+                
+                if (direction === 'next') {
+                    if (className.includes('active')) {
+                        item.style.transform = 'translateX(-200px) scale(0.8) rotateY(35deg)';
+                        item.style.opacity = '1';
+                        item.style.zIndex = '25';
+                    } else if (className.includes('next')) {
+                        item.style.transform = 'translateX(0) scale(1.15) rotateY(0deg)';
+                        item.style.opacity = '1';
+                        item.style.zIndex = '10';
+                    } else if (className.includes('prev')) {
+                        item.style.transform = 'translateX(-380px) scale(0.5) rotateY(55deg)';
+                        item.style.opacity = '0';
+                    }
+                } else {
+                    if (className.includes('active')) {
+                        item.style.transform = 'translateX(200px) scale(0.8) rotateY(-35deg)';
+                        item.style.opacity = '1';
+                        item.style.zIndex = '25';
+                    } else if (className.includes('prev')) {
+                        item.style.transform = 'translateX(0) scale(1.15) rotateY(0deg)';
+                        item.style.opacity = '1';
+                        item.style.zIndex = '10';
+                    } else if (className.includes('next')) {
+                        item.style.transform = 'translateX(380px) scale(0.5) rotateY(-55deg)';
+                        item.style.opacity = '0';
+                    }
+                }
+            });
+            
+            setTimeout(() => {
+                if (direction === 'next') {
+                    currentGameIndex = (currentGameIndex + 1) % gamesData.length;
+                } else {
+                    currentGameIndex = (currentGameIndex - 1 + gamesData.length) % gamesData.length;
+                }
+                renderCarousel();
+            }, 600);
+        }
+        
+        // 回弹动画 - 未触发切换阈值时回到原位
+        function animateReset() {
+            const items = document.querySelectorAll('.carousel-item');
+            
+            items.forEach(item => {
+                const className = item.className;
+                
+                // prev-prev 和 next-next 不参与动画
+                if (className.includes('prev-prev') || className.includes('next-next')) {
+                    item.style.transition = 'none';
+                    item.style.opacity = '0';
+                    item.style.zIndex = '-1';
+                    return;
+                }
+                
+                item.style.transition = 'all 0.6s cubic-bezier(0.23, 1, 0.32, 1)';
+            });
+            
+            // 强制重绘
+            document.body.offsetHeight;
+            
+            items.forEach(item => {
+                const className = item.className;
+                
+                // prev-prev 和 next-next 跳过
+                if (className.includes('prev-prev') || className.includes('next-next')) {
+                    return;
+                }
+                
+                if (className.includes('active')) {
+                    item.style.transform = 'translateX(0) scale(1.15) rotateY(0deg)';
+                    item.style.opacity = '1';
+                    item.style.zIndex = '10';
+                } else if (className.includes('prev')) {
+                    item.style.transform = 'translateX(-200px) scale(0.8) rotateY(35deg)';
+                    item.style.opacity = '1';
+                    item.style.zIndex = '25';
+                } else if (className.includes('next')) {
+                    item.style.transform = 'translateX(200px) scale(0.8) rotateY(-35deg)';
+                    item.style.opacity = '1';
+                    item.style.zIndex = '25';
+                }
+            });
+            
+            // 清理内联样式
+            setTimeout(() => {
+                items.forEach(item => {
+                    item.style.transition = '';
+                    item.style.transform = '';
+                    item.style.opacity = '';
+                    item.style.zIndex = '';
+                });
+            }, 600);
         }
         
         // 加载公告
@@ -391,12 +1544,16 @@
                 
                 if (data.success) {
                     const announcements = document.getElementById('announcements');
-                    announcements.innerHTML = data.announcements.map(ann => `
-                        <div class="announcement-item">
-                            <strong>${ann.title}</strong>
-                            <p>${ann.content}</p>
-                        </div>
-                    `).join('');
+                    // 只显示最新一条公告
+                    const latestAnn = data.announcements[0];
+                    if (latestAnn) {
+                        announcements.innerHTML = `
+                            <div class="announcement-item">
+                                <strong>${latestAnn.title}</strong>
+                                <p>${latestAnn.content}</p>
+                            </div>
+                        `;
+                    }
                 }
             } catch (error) {
                 console.error('加载公告失败:', error);
@@ -406,7 +1563,7 @@
         // 加载排行榜
         async function loadLeaderboard() {
             try {
-                const response = await fetch(`${API_BASE}/gamehall/leaderboard?limit=5`);
+                const response = await fetch(`${API_BASE}/gamehall/leaderboard?limit=3`);
                 const data = await response.json();
                 
                 if (data.success) {
