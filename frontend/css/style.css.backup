@@ -230,10 +230,10 @@ body {
 }
 
 .chips {
-    font-size: 18px;
-    font-weight: 700;
-    color: #ffd700;
-    text-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
+    background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-weight: 600;
 }
 
 .main-content {

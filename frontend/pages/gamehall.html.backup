@@ -804,18 +804,11 @@
     <div class="gamehall-container">
         <!-- 顶部导航 -->
         <header class="header">
-            <!-- 左侧：头像、昵称、筹码 -->
-            <div class="header-left" style="display: flex; align-items: center; gap: 10px;">
-                <img id="userAvatar" src="../avatars/default.png" alt="头像" class="avatar" onclick="goToProfile()" style="cursor: pointer;" title="点击修改资料">
-                <span id="userNickname" onclick="goToProfile()" style="cursor: pointer; font-size: 18px; font-weight: 800;" title="点击修改资料">玩家</span>
-                <span class="chips" style="font-size: 18px; font-weight: 700; color: #ffd700; text-shadow: 0 0 10px rgba(255, 215, 0, 0.5);">💰 <span id="userChips">0</span></span>
-            </div>
-            
-            <!-- 中间：GameWorld Logo -->
-            <div class="logo" style="position: absolute; left: 50%; transform: translateX(-50%); margin-top: 25px; font-weight: 800;">🎮 GameWorld</div>
-            
-            <!-- 右侧：按钮 -->
-            <div class="header-right" style="display: flex; align-items: center;">
+            <div class="logo" style="align-self: center;">🎮 GameWorld</div>
+            <div class="user-info">
+                <img id="userAvatar" src="../avatars/default.png" alt="头像" class="avatar" onclick="goToProfile()" style="cursor: pointer; align-self: center;" title="点击修改资料">
+                <span id="userNickname" onclick="goToProfile()" style="cursor: pointer; align-self: center;" title="点击修改资料">玩家</span>
+                <span class="chips" style="align-self: center;">💰 <span id="userChips">0</span></span>
                 <button id="adminBtn" onclick="goToAdmin()" class="glass-btn admin" style="display:none;"><span class="btn-text">管理</span></button>
                 <button onclick="goToFriends()" class="glass-btn friends"><span class="btn-text">好友</span></button>
                 <button onclick="goToProfile()" class="glass-btn profile"><span class="btn-text">资料</span></button>
@@ -993,22 +986,11 @@
             window.location.href = 'friends.html';
         }
         
-        // 格式化筹码显示 - 用 M 代表百万
-        function formatChips(chips) {
-            const num = parseInt(chips) || 0;
-            if (num >= 1000000) {
-                return (num / 1000000).toFixed(1) + 'M';
-            } else if (num >= 1000) {
-                return (num / 1000).toFixed(1) + 'K';
-            }
-            return num.toString();
-        }
-        
         // 加载用户信息
         async function loadUserInfo() {
             const user = JSON.parse(localStorage.getItem('user') || '{}');
             document.getElementById('userNickname').textContent = user.nickname || user.username || '玩家';
-            document.getElementById('userChips').textContent = formatChips(user.chips || 0);
+            document.getElementById('userChips').textContent = user.chips || 0;
             if (user.avatar) {
                 document.getElementById('userAvatar').src = `../avatars/${user.avatar}`;
             }
@@ -1158,12 +1140,6 @@
             carousel.addEventListener('touchstart', handleTouchStart, { passive: true });
             carousel.addEventListener('touchmove', handleTouchMove, { passive: true });
             carousel.addEventListener('touchend', handleTouchEnd, { passive: true });
-            
-            // 添加鼠标事件（模拟滑动）
-            carousel.addEventListener('mousedown', handleMouseDown);
-            carousel.addEventListener('mousemove', handleMouseMove);
-            carousel.addEventListener('mouseup', handleMouseUp);
-            carousel.addEventListener('mouseleave', handleMouseUp);
         }
         
         // 获取项目类名
@@ -1245,237 +1221,6 @@
         let lastTouchX = 0;
         let lastTouchTime = 0;
         let touchVelocity = 0; // 滑动速度（像素/毫秒）
-        
-        // 鼠标事件变量
-        let isMouseDown = false;
-        let mouseStartX = 0;
-        let lastMouseX = 0;
-        let mouseVelocity = 0;
-        
-        // 鼠标按下 - 模拟触摸开始
-        function handleMouseDown(e) {
-            e.preventDefault();
-            isMouseDown = true;
-            mouseStartX = e.screenX;
-            lastMouseX = mouseStartX;
-            mouseVelocity = 0;
-            
-            // 复用触摸开始的逻辑
-            touchStartX = mouseStartX;
-            isDragging = true;
-            touchVelocity = 0;
-            lastTouchX = touchStartX;
-            lastTouchTime = Date.now();
-            
-            const items = document.querySelectorAll('.carousel-item');
-            items.forEach(item => {
-                item.style.transition = 'none';
-                item.style.willChange = 'transform, opacity';
-            });
-        }
-        
-        // 鼠标移动 - 模拟触摸移动
-        function handleMouseMove(e) {
-            if (!isMouseDown) return;
-            e.preventDefault();
-            
-            const currentX = e.screenX;
-            const currentTime = Date.now();
-            
-            // 计算速度
-            const timeDelta = currentTime - lastTouchTime;
-            if (timeDelta > 0) {
-                touchVelocity = (currentX - lastTouchX) / timeDelta;
-            }
-            lastTouchX = currentX;
-            lastTouchTime = currentTime;
-            
-            // 复用触摸移动的逻辑
-            const diff = currentX - touchStartX;
-            const maxOffset = 200;
-            const offset = Math.max(-maxOffset, Math.min(maxOffset, diff));
-            const progress = offset / maxOffset;
-            
-            const items = document.querySelectorAll('.carousel-item');
-            items.forEach((item, index) => {
-                const className = item.className;
-                
-                if (className.includes('active')) {
-                    const targetScale = 0.8;
-                    const startScale = 1.15;
-                    const scale = startScale - Math.abs(progress) * (startScale - targetScale);
-                    const translateX = offset;
-                    const rotateY = -progress * 15;
-                    item.style.transform = `translateX(${translateX}px) scale(${scale}) rotateY(${rotateY}deg)`;
-                    item.style.opacity = 1 - Math.abs(progress) * 0.3;
-                    item.style.zIndex = 10;
-                } else if (className.includes('prev-prev')) {
-                    let translateX, scale, rotateY, opacity, blur;
-                    if (progress > 0) {
-                        const startX = -380;
-                        const targetX = -200;
-                        const startScale = 0.5;
-                        const targetScale = 0.8;
-                        translateX = startX + progress * (targetX - startX);
-                        scale = startScale + progress * (targetScale - startScale);
-                        rotateY = 55 - progress * 20;
-                        const clarityProgress = Math.min(1, progress * 1.5);
-                        opacity = 0.25 + clarityProgress * 0.75;
-                        blur = Math.max(0, 4 - clarityProgress * 4);
-                    } else if (progress < -0.5) {
-                        const wrapProgress = (Math.abs(progress) - 0.5) * 2;
-                        const startX = -500;
-                        const targetX = 380;
-                        const startScale = 0.4;
-                        const targetScale = 0.5;
-                        translateX = startX + wrapProgress * (targetX - startX);
-                        scale = startScale + wrapProgress * (targetScale - startScale);
-                        rotateY = -55 + wrapProgress * 20;
-                        opacity = wrapProgress * 0.25;
-                        blur = 6 - wrapProgress * 2;
-                    } else {
-                        translateX = -380 - Math.abs(progress) * 100;
-                        scale = 0.5 - Math.abs(progress) * 0.1;
-                        rotateY = 55 + Math.abs(progress) * 10;
-                        opacity = 0.25 - Math.abs(progress) * 0.25;
-                        blur = 4 + Math.abs(progress) * 2;
-                    }
-                    item.style.transform = `translateX(${translateX}px) scale(${scale}) rotateY(${rotateY}deg)`;
-                    item.style.opacity = opacity;
-                    item.style.zIndex = progress < -0.5 ? '0' : '1';
-                    item.style.filter = `blur(${blur}px)`;
-                } else if (className.includes('next-next')) {
-                    let translateX, scale, rotateY, opacity, blur;
-                    if (progress < 0) {
-                        const startX = 380;
-                        const targetX = 200;
-                        const startScale = 0.5;
-                        const targetScale = 0.8;
-                        translateX = startX + Math.abs(progress) * (targetX - startX);
-                        scale = startScale + Math.abs(progress) * (targetScale - startScale);
-                        rotateY = -55 + Math.abs(progress) * 20;
-                        const clarityProgress = Math.min(1, Math.abs(progress) * 1.5);
-                        opacity = 0.25 + clarityProgress * 0.75;
-                        blur = Math.max(0, 4 - clarityProgress * 4);
-                    } else if (progress > 0.5) {
-                        const wrapProgress = (progress - 0.5) * 2;
-                        const startX = 500;
-                        const targetX = -380;
-                        const startScale = 0.4;
-                        const targetScale = 0.5;
-                        translateX = startX - wrapProgress * (startX - targetX);
-                        scale = startScale + wrapProgress * (targetScale - startScale);
-                        rotateY = 55 - wrapProgress * 20;
-                        opacity = wrapProgress * 0.25;
-                        blur = 6 - wrapProgress * 2;
-                    } else {
-                        translateX = 380 + progress * 100;
-                        scale = 0.5 - progress * 0.1;
-                        rotateY = -55 - progress * 10;
-                        opacity = 0.25 - progress * 0.25;
-                        blur = 4 + progress * 2;
-                    }
-                    item.style.transform = `translateX(${translateX}px) scale(${scale}) rotateY(${rotateY}deg)`;
-                    item.style.opacity = opacity;
-                    item.style.zIndex = progress > 0.5 ? '0' : '1';
-                    item.style.filter = `blur(${blur}px)`;
-                } else if (className.includes('prev') && !className.includes('prev-prev')) {
-                    const baseX = -200;
-                    const translateX = baseX + progress * 200;
-                    let scale, rotateY, opacity, blur;
-                    if (progress > 0) {
-                        scale = 0.8 + progress * 0.35;
-                        rotateY = 35 - progress * 35;
-                        opacity = 1;
-                        blur = 0;
-                    } else {
-                        const touchScale = progress > -0.1 ? 0.85 : 0.8;
-                        scale = touchScale + progress * 0.1;
-                        rotateY = 35 - progress * 15;
-                        opacity = 1 - Math.abs(progress) * 0.5;
-                        blur = Math.abs(progress) * 2;
-                    }
-                    const zIndex = 25;
-                    item.style.transform = `translateX(${translateX}px) scale(${scale}) rotateY(${rotateY}deg)`;
-                    item.style.opacity = Math.max(0.3, opacity);
-                    item.style.zIndex = zIndex;
-                    item.style.filter = `blur(${blur}px)`;
-                    if (progress > 0.3) {
-                        const glowProgress = (progress - 0.3) / 0.7;
-                        item.style.boxShadow = `
-                            0 0 ${30 + 30 * glowProgress}px rgba(102, 126, 234, ${0.3 + 0.3 * glowProgress}),
-                            0 15px 40px rgba(0,0,0,0.5),
-                            inset 0 1px 0 rgba(255,255,255,0.1)
-                        `;
-                        item.style.borderColor = `rgba(102, 126, 234, ${0.4 + 0.6 * glowProgress})`;
-                    } else {
-                        item.style.boxShadow = '';
-                        item.style.borderColor = '';
-                    }
-                } else if (className.includes('next') && !className.includes('next-next')) {
-                    const baseX = 200;
-                    const translateX = baseX + progress * 200;
-                    let scale, rotateY, opacity, blur;
-                    if (progress < 0) {
-                        scale = 0.8 + Math.abs(progress) * 0.35;
-                        rotateY = -35 - progress * 35;
-                        opacity = 1;
-                        blur = 0;
-                    } else {
-                        const touchScale = progress < 0.1 ? 0.85 : 0.8;
-                        scale = touchScale - progress * 0.1;
-                        rotateY = -35 - progress * 15;
-                        opacity = 1 - progress * 0.5;
-                        blur = progress * 2;
-                    }
-                    const zIndex = 25;
-                    item.style.transform = `translateX(${translateX}px) scale(${scale}) rotateY(${rotateY}deg)`;
-                    item.style.opacity = Math.max(0.3, opacity);
-                    item.style.zIndex = zIndex;
-                    item.style.filter = `blur(${blur}px)`;
-                    if (progress < -0.3) {
-                        const glowProgress = (Math.abs(progress) - 0.3) / 0.7;
-                        item.style.boxShadow = `
-                            0 0 ${30 + 30 * glowProgress}px rgba(102, 126, 234, ${0.3 + 0.3 * glowProgress}),
-                            0 15px 40px rgba(0,0,0,0.5),
-                            inset 0 1px 0 rgba(255,255,255,0.1)
-                        `;
-                        item.style.borderColor = `rgba(102, 126, 234, ${0.4 + 0.6 * glowProgress})`;
-                    } else {
-                        item.style.boxShadow = '';
-                        item.style.borderColor = '';
-                    }
-                }
-            });
-        }
-        
-        // 鼠标释放 - 模拟触摸结束
-        function handleMouseUp(e) {
-            if (!isMouseDown) return;
-            isMouseDown = false;
-            
-            const diff = touchStartX - lastTouchX;
-            const swipeThreshold = 50;
-            const velocityThreshold = 0.5;
-            
-            // 清理 will-change
-            const items = document.querySelectorAll('.carousel-item');
-            items.forEach(item => {
-                item.style.willChange = 'auto';
-            });
-            
-            // 根据位移或速度判断是否触发切换
-            const shouldSwitch = Math.abs(diff) > swipeThreshold || Math.abs(touchVelocity) > velocityThreshold;
-            
-            if (shouldSwitch) {
-                const direction = touchVelocity !== 0 ? 
-                    (touchVelocity > 0 ? 'prev' : 'next') :
-                    (diff > 0 ? 'next' : 'prev');
-                animateTransition(direction);
-            } else {
-                animateReset();
-            }
-        }
         
         // 触摸开始
         function handleTouchStart(e) {
