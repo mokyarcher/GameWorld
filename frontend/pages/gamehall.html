@@ -208,9 +208,9 @@
             position: absolute;
             width: 260px;
             height: 380px;
-            border-radius: 24px;
+            border-radius: 8px;
             background: linear-gradient(145deg, #1a1a2e 0%, #16213e 50%, #0f0f23 100%);
-            border: 3px solid rgba(102, 126, 234, 0.4);
+            border: none;
             box-shadow: 
                 0 20px 60px rgba(0,0,0,0.6),
                 0 0 0 1px rgba(255,215,0,0.1),
@@ -319,73 +319,16 @@
         /* 最远侧的左右卡片 - 滑动时会靠近 */
 
         
-        /* 游戏背景图区域 */
-        .carousel-item .game-bg {
+        /* 卡牌图片 */
+        .carousel-item .card-image {
             width: 100%;
-            height: 75%;
-            position: relative;
-            overflow: hidden;
-            border-radius: 20px 20px 0 0;
-        }
-        
-        .carousel-item .game-bg::before {
-            content: '';
-            position: absolute;
-            inset: 0;
-            background-size: cover;
-            background-position: center;
-            transition: transform 0.6s ease;
-        }
-        
-        .carousel-item:hover .game-bg::before {
-            transform: scale(1.1);
-        }
-        
-        /* 渐变遮罩 */
-        .carousel-item .game-bg::after {
-            content: '';
-            position: absolute;
-            inset: 0;
-            background: linear-gradient(
-                180deg,
-                transparent 0%,
-                transparent 60%,
-                rgba(26,26,46,0.8) 100%
-            );
-        }
-        
-        /* 游戏图标 */
-        .carousel-item .game-icon-overlay {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            font-size: 100px;
-            filter: drop-shadow(0 4px 20px rgba(0,0,0,0.5));
-            z-index: 2;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 8px;
+            display: block;
         }
         
         /* 游戏名称区域 */
-        .carousel-item .game-info {
-            width: 100%;
-            height: 25%;
-            padding: 15px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            background: linear-gradient(180deg, transparent 0%, rgba(0,0,0,0.3) 100%);
-        }
-        
-        .carousel-item .game-name {
-            font-size: 1.4rem;
-            font-weight: 700;
-            color: #667eea;
-            text-align: center;
-            text-shadow: 0 0 20px rgba(255,215,0,0.5);
-            letter-spacing: 1px;
-        }
-        
         /* 选中标记已移除 */
         
         /* 箭头按钮 - 精美版 - GameWorld 蓝紫主题 */
@@ -720,6 +663,7 @@
             background: linear-gradient(45deg, #00ccff, #0e1538, #0e1538, #d400d4);
             transition: 0.5s;
             opacity: 0;
+            border-radius: 8px;
         }
         
         .glass-btn::before {
@@ -757,6 +701,7 @@
             letter-spacing: 2px;
             color: #fff;
             border: 1px solid #040a29;
+            border-radius: 8px;
             overflow: hidden;
             transition: all 0.3s ease;
         }
@@ -846,18 +791,12 @@
             <section class="games-section">
                 <!-- 滚轴式游戏选择器 -->
                 <div class="game-carousel-container">
-                    <!-- 左箭头 -->
-                    <button class="carousel-arrow carousel-prev" onclick="prevGame()">‹</button>
-                    
                     <!-- 游戏滚轴 -->
                     <div class="game-carousel" id="gameCarousel">
                         <div class="carousel-track" id="carouselTrack">
                             <!-- 游戏卡片将动态生成 -->
                         </div>
                     </div>
-                    
-                    <!-- 右箭头 -->
-                    <button class="carousel-arrow carousel-next" onclick="nextGame()">›</button>
                     
                     <!-- 指示器 -->
                     <div class="carousel-indicators" id="carouselIndicators"></div>
@@ -1118,17 +1057,17 @@
         
         // 渲染滚轴
         // 获取游戏背景渐变
-        function getGameBackground(gameCode) {
-            const backgrounds = {
-                'poker': 'linear-gradient(135deg, #1e3c72 0%, #2a5298 50%, #7e22ce 100%)',
-                'chess': 'linear-gradient(135deg, #2c3e50 0%, #4a6741 50%, #8b7355 100%)',
-                'mahjong': 'linear-gradient(135deg, #8B0000 0%, #DC143C 50%, #FFD700 100%)',
-                'dice': 'linear-gradient(135deg, #0f2027 0%, #203a43 50%, #2c5364 100%)',
-                'slot': 'linear-gradient(135deg, #ff6b6b 0%, #feca57 50%, #ff9ff3 100%)',
-
-                'default': 'linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f0f23 100%)'
+        // 获取游戏卡牌图片路径
+        function getGameCardImage(gameCode) {
+            const images = {
+                'poker-classic': '../images/cards/poker-classic.jpg',
+                'poker-texas': '../images/cards/poker-texas.jpg',
+                'poker-omaha': '../images/cards/poker-omaha.jpg',
+                'poker-pineapple': '../images/cards/poker-pineapple.jpg',
+                'poker-shortdeck': '../images/cards/poker-shortdeck.jpg',
+                'default': '../images/cards/poker-classic.jpg'
             };
-            return backgrounds[gameCode] || backgrounds['default'];
+            return images[gameCode] || images['default'];
         }
         
         function renderCarousel() {
@@ -1136,15 +1075,10 @@
             const indicators = document.getElementById('carouselIndicators');
             
             track.innerHTML = gamesData.map((game, index) => {
-                const bgStyle = getGameBackground(game.game_code);
+                const cardImage = getGameCardImage(game.game_code);
                 return `
                     <div class="carousel-item ${getItemClass(index)}" data-index="${index}" onclick="handleCardClick(${index})">
-                        <div class="game-bg" style="background: ${bgStyle}">
-                            <div class="game-icon-overlay">${getGameIcon(game.game_code)}</div>
-                        </div>
-                        <div class="game-info">
-                            <div class="game-name">${game.game_name}</div>
-                        </div>
+                        <img class="card-image" src="${cardImage}" alt="${game.game_name}">
                     </div>
                 `;
             }).join('');
