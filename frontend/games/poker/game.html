@@ -13,12 +13,12 @@
 
         body {
             font-family: 'Microsoft YaHei', sans-serif;
-            background: linear-gradient(135deg, #0d2818 0%, #1a3d2a 50%, #0d2818 100%);
+            background: linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 50%, #0a0a0a 100%);
             height: 100vh;
-            height: 100dvh; /* 动态视口高度，适配移动端 */
+            height: 100dvh;
             color: white;
             overflow: hidden;
-            touch-action: none; /* 防止触摸缩放 */
+            touch-action: none;
         }
 
         .game-container {
@@ -31,13 +31,13 @@
 
         /* 顶部信息栏 */
         .top-bar {
-            background: linear-gradient(180deg, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0.4) 100%);
+            background: linear-gradient(180deg, rgba(20,20,20,0.95) 0%, rgba(10,10,10,0.9) 100%);
             padding: 12px 20px;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            border-bottom: 2px solid rgba(255,215,0,0.4);
-            box-shadow: 0 5px 30px rgba(0,0,0,0.6);
+            border-bottom: 2px solid rgba(220,20,60,0.4);
+            box-shadow: 0 5px 30px rgba(0,0,0,0.8);
             flex-shrink: 0;
             min-height: 60px;
         }
@@ -51,38 +51,94 @@
 
         .room-name {
             font-size: clamp(1rem, 3vw, 1.5rem);
-            color: #ffd700;
+            color: #fff;
             font-weight: bold;
-            text-shadow: 0 0 15px rgba(255,215,0,0.6);
+            letter-spacing: 2px;
+        }
+        
+        .room-name::before {
+            content: 'GAME';
+            font-size: 10px;
+            font-weight: 800;
+            letter-spacing: 2px;
+            color: #dc143c;
+            background: rgba(220, 20, 60, 0.1);
+            padding: 2px 6px;
+            border-radius: 4px;
+            border: 1px solid rgba(220, 20, 60, 0.3);
+            margin-right: 10px;
+            vertical-align: middle;
         }
 
         .blinds-info {
             color: rgba(255,255,255,0.9);
             font-size: clamp(0.8rem, 2.2vw, 1rem);
-            background: linear-gradient(135deg, rgba(0,0,0,0.4), rgba(0,0,0,0.2));
+            background: linear-gradient(135deg, rgba(220,20,60,0.1), rgba(139,0,0,0.05));
             padding: 6px 14px;
             border-radius: 20px;
-            border: 1px solid rgba(255,255,255,0.1);
+            border: 1px solid rgba(220,20,60,0.3);
         }
 
-        .btn-exit {
-            padding: 10px 20px;
-            background: linear-gradient(135deg, rgba(231,76,60,0.95), rgba(192,57,43,0.95));
-            border: none;
-            border-radius: 8px;
-            color: white;
+        /* 顶部右侧按钮组 - 徽章风格 */
+        .top-actions {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        /* 徽章风格按钮 - 红色渐变背景 */
+        .badge-btn {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 6px 16px;
+            background: linear-gradient(145deg, rgba(220, 20, 60, 0.9) 0%, rgba(139, 0, 0, 0.95) 100%) !important;
+            border: 2px solid rgba(220, 20, 60, 0.5) !important;
+            border-radius: 10px !important;
             cursor: pointer;
-            font-size: clamp(0.85rem, 2.2vw, 1rem);
-            font-weight: 600;
             transition: all 0.3s ease;
-            white-space: nowrap;
-            box-shadow: 0 4px 15px rgba(231,76,60,0.4);
-            border: 1px solid rgba(255,255,255,0.1);
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 0 20px rgba(220, 20, 60, 0.4) !important;
+            color: #fff !important;
         }
 
-        .btn-exit:hover {
-            transform: translateY(-2px) scale(1.02);
-            box-shadow: 0 8px 25px rgba(231,76,60,0.6);
+        .badge-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.5), transparent);
+            opacity: 0.8;
+        }
+
+        .badge-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 30px rgba(220, 20, 60, 0.6) !important;
+            border-color: rgba(220, 20, 60, 0.8) !important;
+        }
+
+        .badge-btn:active {
+            transform: translateY(-1px);
+        }
+
+        .badge-btn .btn-label {
+            font-size: 8px;
+            font-weight: 800;
+            letter-spacing: 2px;
+            color: rgba(255,255,255,0.7);
+            margin-bottom: 2px;
+            display: block;
+        }
+
+        .badge-btn .btn-text {
+            font-size: 13px;
+            font-weight: 800;
+            color: #fff !important;
+            text-shadow: 0 0 10px rgba(255,255,255,0.3);
+            display: block;
         }
 
 
@@ -108,62 +164,98 @@
             transform: translate(-50%, -50%);
             max-width: 1100px;
             max-height: 580px;
-            /* 牌桌台面渐变 - 从中心向外 */
-            background: radial-gradient(
-                ellipse at center, 
-                #2d5a3d 0%,
-                #1a3d2a 60%,
-                #0d2818 100%
-            );
+            /* 底色渐变 - 黑红主题 */
+            background: 
+                radial-gradient(
+                    ellipse at 30% 20%,
+                    rgba(220,20,60,0.05) 0%,
+                    transparent 40%
+                ),
+                radial-gradient(
+                    ellipse at 70% 80%,
+                    rgba(0,0,0,0.4) 0%,
+                    transparent 50%
+                ),
+                radial-gradient(
+                    ellipse at center, 
+                    #2a2a2a 0%,
+                    #1a1a1a 40%,
+                    #0f0f0f 70%,
+                    #050505 100%
+                );
             /* 扁椭椭圆 - 设计规范 */
             border-radius: 50% / 40%;
-            /* 多层边框 */
-            box-shadow: 
-                inset 0 0 100px rgba(0,0,0,0.5),
-                0 20px 60px rgba(0,0,0,0.8),
-                0 0 0 12px #2a1810,
-                0 0 0 18px #1a0f0a;
             display: flex;
             justify-content: center;
             align-items: center;
+            z-index: 1;
         }
 
-        /* 木纹边框效果 */
+        /* 碳纤维纹理层 - 红黑交替线条 */
+        .carbon-fiber {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            border-radius: 50% / 40%;
+            background: 
+                /* 红黑交替线条 - 左上到右下（45度） */
+                repeating-linear-gradient(
+                    45deg,
+                    transparent,
+                    transparent 4px,
+                    rgba(0,0,0,0.5) 4px,
+                    rgba(0,0,0,0.5) 5px,
+                    transparent 5px,
+                    transparent 8px,
+                    rgba(220,20,60,0.6) 8px,
+                    rgba(220,20,60,0.6) 9px
+                );
+            z-index: 0;
+            pointer-events: none;
+            opacity: 0.85;
+        }
+
+        /* 桌子边沿 - 立体木纹/金属边框效果 */
         .poker-table::before {
             content: '';
             position: absolute;
-            top: -12px;
-            left: -12px;
-            right: -12px;
-            bottom: -12px;
-            background: repeating-linear-gradient(
-                90deg, 
-                #3d2817 0px, 
-                #5a3d2a 2px, 
-                #3d2817 4px
-            );
+            top: -20px;
+            left: -20px;
+            right: -20px;
+            bottom: -20px;
+            background: 
+                linear-gradient(
+                    135deg,
+                    #2a2a2a 0%,
+                    #3a3a3a 25%,
+                    #2a2a2a 50%,
+                    #1a1a1a 75%,
+                    #2a2a2a 100%
+                );
             border-radius: 50% / 40%;
-            z-index: -1;
-            box-shadow: 0 10px 40px rgba(0,0,0,0.6);
+            z-index: -2;
+            box-shadow: 
+                0 0 0 2px rgba(220,20,60,0.3),
+                0 0 0 4px rgba(0,0,0,0.5),
+                0 0 40px rgba(0,0,0,0.9),
+                0 20px 60px rgba(0,0,0,0.8);
         }
 
-        /* 桌面高光 */
+        /* 桌子边沿内侧装饰线 */
         .poker-table::after {
             content: '';
             position: absolute;
-            top: 10%;
-            left: 20%;
-            right: 20%;
-            height: 30%;
-            background: radial-gradient(
-                ellipse at center, 
-                rgba(255,255,255,0.08) 0%, 
-                transparent 70%
-            );
-            border-radius: 50%;
+            top: -8px;
+            left: -8px;
+            right: -8px;
+            bottom: -8px;
+            border: 1px solid rgba(220,20,60,0.2);
+            border-radius: 50% / 40%;
+            z-index: -1;
             pointer-events: none;
         }
-
 
         /* 底池区域 - 设计规范 */
         .pot-area {
@@ -173,28 +265,35 @@
             transform: translateX(-50%);
             text-align: center;
             z-index: 10;
-            background: linear-gradient(180deg, rgba(0,0,0,0.5), rgba(0,0,0,0.35));
+            background: linear-gradient(180deg, rgba(20,20,20,0.8), rgba(10,10,10,0.7));
             padding: 10px 25px;
             border-radius: 20px;
-            border: 1px solid rgba(255,215,0,0.3);
+            border: 1px solid rgba(220,20,60,0.4);
             box-shadow: 
-                0 4px 15px rgba(0,0,0,0.4),
-                inset 0 1px 0 rgba(255,255,255,0.1);
+                0 4px 15px rgba(0,0,0,0.5),
+                inset 0 1px 0 rgba(255,255,255,0.05),
+                0 0 20px rgba(220,20,60,0.1);
         }
 
-        /* 筹码堆叠装饰 */
+        /* 筹码标签 */
         .pot-area::before {
-            content: '🪙';
+            content: 'POT';
             position: absolute;
-            left: -12px;
+            left: -35px;
             top: 50%;
             transform: translateY(-50%);
-            font-size: 18px;
-            filter: drop-shadow(0 2px 4px rgba(0,0,0,0.5));
+            font-size: 10px;
+            font-weight: 800;
+            letter-spacing: 1px;
+            color: #dc143c;
+            background: rgba(220,20,60,0.1);
+            padding: 2px 6px;
+            border-radius: 4px;
+            border: 1px solid rgba(220,20,60,0.3);
         }
 
         .pot-area::after {
-            content: '🪙';
+            content: '';
             position: absolute;
             right: -12px;
             top: 50%;
@@ -215,10 +314,8 @@
         .pot-amount {
             font-size: clamp(1.2rem, 4vw, 2rem);
             font-weight: bold;
-            color: #ffd700;
-            text-shadow: 
-                0 0 10px rgba(255,215,0,0.8), 
-                0 0 20px rgba(255,215,0,0.5);
+            color: #fff;
+            letter-spacing: 1px;
         }
 
         /* 公共牌区域 - 设计规范 */
@@ -360,9 +457,9 @@
             width: clamp(40px, 10vw, 60px);
             height: clamp(56px, 14vw, 84px);
             background: 
-                linear-gradient(145deg, #1a3a5c 0%, #2d5a87 50%, #1a3a5c 100%);
+                linear-gradient(145deg, #1a1a1a 0%, #2a2a2a 50%, #1a1a1a 100%);
             border-radius: 10px;
-            border: 1px solid #1a3a5c;
+            border: 1px solid #3a3a3a;
             display: flex;
             justify-content: center;
             align-items: center;
@@ -404,7 +501,7 @@
 
         /* 牌背中心图案 */
         .card-back::after {
-            content: '🃏';
+            content: '♠';
             position: absolute;
             font-size: 1.5em;
             opacity: 0.3;
@@ -426,7 +523,7 @@
 
         /* 当前行动玩家高亮 */
         .player-seat.active {
-            filter: drop-shadow(0 0 20px rgba(255, 215, 0, 0.6));
+            filter: drop-shadow(0 0 20px rgba(255, 255, 255, 0.6));
         }
 
         /* 玩家信息卡片 - 设计规范 */
@@ -448,7 +545,7 @@
             top: -12px;
             left: 50%;
             transform: translateX(-50%);
-            background: linear-gradient(135deg, #ffd700, #ffed4e);
+            background: linear-gradient(135deg, #ffffff, #dc143c);
             color: #1a1a1a;
             font-size: 0.7rem;
             font-weight: 700;
@@ -456,18 +553,18 @@
             border-radius: 10px;
             text-transform: uppercase;
             letter-spacing: 1px;
-            box-shadow: 0 2px 8px rgba(255, 215, 0, 0.4);
+            box-shadow: 0 2px 8px rgba(255, 255, 255, 0.4);
             white-space: nowrap;
             z-index: 10;
         }
 
         .player-position.dealer {
-            background: linear-gradient(135deg, #3498db, #2980b9);
+            background: linear-gradient(135deg, #dc143c, #8b0000);
             color: white;
         }
 
         .player-position.small-blind {
-            background: linear-gradient(135deg, #f39c12, #e67e22);
+            background: linear-gradient(135deg, #dc143c, #8b0000);
             color: white;
         }
 
@@ -481,7 +578,7 @@
             width: clamp(45px, 10vw, 60px);
             height: clamp(45px, 10vw, 60px);
             border-radius: 50%;
-            background: linear-gradient(135deg, #3498db, #2980b9);
+            background: linear-gradient(135deg, #dc143c, #8b0000);
             display: flex;
             align-items: center;
             justify-content: center;
@@ -500,8 +597,8 @@
         }
 
         .player-avatar.active {
-            border-color: #27ae60;
-            box-shadow: 0 0 15px rgba(39,174,96,0.8);
+            border-color: #dc143c;
+            box-shadow: 0 0 15px rgba(220,20,60,0.8);
             animation: avatar-pulse 1.5s infinite;
         }
 
@@ -528,10 +625,10 @@
 
         /* 筹码数量 - 设计规范 */
         .player-chips {
-            color: #ffd700;
+            color: #ffffff;
             font-size: clamp(0.8rem, 2.2vw, 1rem);
             font-weight: 700;
-            text-shadow: 0 0 10px rgba(255, 215, 0, 0.3);
+            text-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
         }
 
         /* 当前下注显示 - 设计规范 */
@@ -552,13 +649,13 @@
             top: -28px;
             left: 50%;
             transform: translateX(-50%);
-            background: linear-gradient(135deg, #ffd700, #ffed4e);
+            background: linear-gradient(135deg, #ffffff, #dc143c);
             color: #1a1a1a;
             font-size: 0.8rem;
             font-weight: 700;
             padding: 4px 12px;
             border-radius: 12px;
-            box-shadow: 0 3px 12px rgba(255, 215, 0, 0.5);
+            box-shadow: 0 3px 12px rgba(255, 255, 255, 0.5);
             animation: timer-pulse 1s infinite;
             white-space: nowrap;
             z-index: 25;
@@ -570,7 +667,7 @@
         }
 
         .player-timer.warning {
-            background: linear-gradient(135deg, #f39c12, #e67e22);
+            background: linear-gradient(135deg, #dc143c, #8b0000);
             color: white;
             animation: timer-pulse 0.5s infinite;
         }
@@ -641,7 +738,7 @@
             right: -70px;
             top: 50%;
             transform: translateY(-50%);
-            background: linear-gradient(135deg, #3498db, #2980b9);
+            background: linear-gradient(135deg, #dc143c, #8b0000);
             color: white;
             font-size: 0.75rem;
             font-weight: 700;
@@ -661,7 +758,7 @@
 
         /* 看牌/过牌 - 蓝色 */
         .player-action-display.check {
-            background: linear-gradient(135deg, #3498db, #2980b9);
+            background: linear-gradient(135deg, #dc143c, #8b0000);
         }
 
         /* 跟注 - 紫色 */
@@ -671,7 +768,7 @@
 
         /* 加注 - 橙色 */
         .player-action-display.raise {
-            background: linear-gradient(135deg, #f39c12, #e67e22);
+            background: linear-gradient(135deg, #dc143c, #8b0000);
         }
 
         /* 全下 - 红色 */
@@ -697,12 +794,12 @@
             top: 80px;
             left: 50%;
             transform: translateX(-50%);
-            background: linear-gradient(135deg, #27ae60, #2ecc71);
+            background: linear-gradient(135deg, #dc143c, #8b0000);
             padding: 12px 25px;
             border-radius: 25px;
             color: white;
             font-weight: 600;
-            box-shadow: 0 5px 20px rgba(39,174,96,0.4);
+            box-shadow: 0 5px 20px rgba(220,20,60,0.4);
             z-index: 1000;
             animation: slideDown 0.3s ease;
         }
@@ -765,7 +862,7 @@
             justify-content: center;
             align-items: center;
             gap: 15px;
-            border-top: 2px solid rgba(255,215,0,0.3);
+            border-top: 2px solid rgba(220,20,60,0.3);
             flex-shrink: 0;
             min-height: 85px;
             flex-wrap: wrap;
@@ -815,7 +912,7 @@
         }
 
         .btn-check {
-            background: linear-gradient(135deg, #3498db, #2980b9);
+            background: linear-gradient(135deg, #dc143c, #8b0000);
             color: white;
         }
 
@@ -825,12 +922,12 @@
         }
 
         .btn-raise {
-            background: linear-gradient(135deg, #27ae60, #2ecc71);
+            background: linear-gradient(135deg, #dc143c, #8b0000);
             color: white;
         }
 
         .btn-allin {
-            background: linear-gradient(135deg, #f39c12, #e67e22);
+            background: linear-gradient(135deg, #dc143c, #8b0000);
             color: white;
         }
 
@@ -884,12 +981,12 @@
             -webkit-appearance: none;
             width: 22px;
             height: 22px;
-            background: linear-gradient(135deg, #ffd700, #f39c12);
+            background: linear-gradient(135deg, #ffffff, #dc143c);
             border-radius: 50%;
             cursor: pointer;
             box-shadow: 
-                0 3px 12px rgba(255,215,0,0.6),
-                0 0 0 3px rgba(255,215,0,0.2);
+                0 3px 12px rgba(220,20,60,0.6),
+                0 0 0 3px rgba(220,20,60,0.2);
             border: 2px solid #fff;
             transition: transform 0.2s;
         }
@@ -900,11 +997,11 @@
 
         .bet-amount {
             font-size: clamp(1.1rem, 3vw, 1.4rem);
-            color: #ffd700;
+            color: #ffffff;
             font-weight: bold;
             min-width: 70px;
             text-align: center;
-            text-shadow: 0 0 10px rgba(255,215,0,0.5);
+            text-shadow: 0 0 10px rgba(220,20,60,0.5);
         }
 
         /* 游戏日志 */
@@ -929,11 +1026,11 @@
 
         .game-log h4 {
             margin-bottom: 12px;
-            color: #ffd700;
+            color: #ffffff;
             font-size: clamp(0.9rem, 2.2vw, 1.1rem);
-            border-bottom: 2px solid rgba(255,215,0,0.4);
+            border-bottom: 2px solid rgba(220,20,60,0.4);
             padding-bottom: 8px;
-            text-shadow: 0 0 10px rgba(255,215,0,0.3);
+            text-shadow: 0 0 10px rgba(220,20,60,0.3);
         }
 
         .log-item {
@@ -977,7 +1074,7 @@
             padding: clamp(20px, 5vw, 40px);
             border-radius: 15px;
             text-align: center;
-            border: 2px solid rgba(255,215,0,0.3);
+            border: 2px solid rgba(220,20,60,0.3);
             box-shadow: 0 20px 60px rgba(0,0,0,0.8);
             max-width: 90vw;
             width: 100%;
@@ -986,24 +1083,24 @@
 
         .modal-title {
             font-size: clamp(1.5rem, 5vw, 2rem);
-            color: #ffd700;
+            color: #ffffff;
             margin-bottom: 15px;
-            text-shadow: 0 0 15px rgba(255,215,0,0.5);
+            text-shadow: 0 0 15px rgba(220,20,60,0.5);
         }
 
         /* 赢家区域 */
         .winner-section {
             margin: 15px 0;
             padding: 15px;
-            background: linear-gradient(145deg, rgba(255,215,0,0.15), rgba(255,215,0,0.05));
+            background: linear-gradient(145deg, rgba(220,20,60,0.15), rgba(220,20,60,0.05));
             border-radius: 12px;
-            border: 2px solid rgba(255,215,0,0.4);
-            box-shadow: 0 0 20px rgba(255,215,0,0.2);
+            border: 2px solid rgba(220,20,60,0.4);
+            box-shadow: 0 0 20px rgba(220,20,60,0.2);
         }
 
         .winner-label {
             font-size: 0.8rem;
-            color: rgba(255,215,0,0.8);
+            color: rgba(220,20,60,0.8);
             text-transform: uppercase;
             letter-spacing: 2px;
             margin-bottom: 5px;
@@ -1011,18 +1108,18 @@
 
         .winner-name {
             font-size: clamp(1.3rem, 4vw, 1.6rem);
-            color: #ffd700;
+            color: #ffffff;
             font-weight: bold;
             margin-bottom: 8px;
-            text-shadow: 0 0 10px rgba(255,215,0,0.5);
+            text-shadow: 0 0 10px rgba(220,20,60,0.5);
         }
 
         .winner-hand-type {
             font-size: clamp(0.9rem, 2.5vw, 1.1rem);
-            color: #f39c12;
+            color: #dc143c;
             font-weight: 600;
             padding: 4px 12px;
-            background: rgba(243,156,18,0.15);
+            background: rgba(220,20,60,0.15);
             border-radius: 15px;
             display: inline-block;
             margin-bottom: 10px;
@@ -1030,23 +1127,23 @@
 
         .win-amount {
             font-size: clamp(1.5rem, 5vw, 2rem);
-            color: #27ae60;
+            color: #dc143c;
             font-weight: bold;
-            text-shadow: 0 0 10px rgba(39,174,96,0.4);
+            text-shadow: 0 0 10px rgba(220,20,60,0.4);
         }
 
         /* 最大牌型展示 - 简化版 */
         .best-hand-showcase {
             margin: 15px 0;
             padding: 12px;
-            background: linear-gradient(145deg, rgba(255,215,0,0.1), rgba(243,156,18,0.05));
+            background: linear-gradient(145deg, rgba(220,20,60,0.1), rgba(220,20,60,0.05));
             border-radius: 10px;
-            border: 1px solid rgba(255,215,0,0.3);
+            border: 1px solid rgba(220,20,60,0.3);
         }
 
         .best-hand-label {
             font-size: 0.75rem;
-            color: rgba(255,215,0,0.8);
+            color: rgba(220,20,60,0.8);
             margin-bottom: 8px;
             text-transform: uppercase;
             letter-spacing: 1px;
@@ -1138,7 +1235,7 @@
         }
 
         .btn-continue {
-            background: linear-gradient(135deg, #27ae60, #2ecc71);
+            background: linear-gradient(135deg, #dc143c, #8b0000);
             color: white;
         }
 
@@ -1187,7 +1284,7 @@
 
         .countdown-text {
             font-size: clamp(2.5rem, 10vw, 4rem);
-            color: #ffd700;
+            color: #ffffff;
             font-weight: bold;
             margin-bottom: 15px;
         }
@@ -1416,9 +1513,17 @@
                 padding: 4px 8px;
             }
             
-            .btn-exit {
-                padding: 8px 15px;
-                font-size: clamp(0.8rem, 1.8vw, 0.95rem);
+            .badge-btn {
+                padding: 4px 8px !important;
+            }
+            
+            .badge-btn .btn-label {
+                font-size: 6px !important;
+                letter-spacing: 1px;
+            }
+            
+            .badge-btn .btn-text {
+                font-size: 10px !important;
             }
             
             /* 人机徽章 */
@@ -1481,8 +1586,8 @@
             padding: 30px 40px;
             border-radius: 16px;
             text-align: center;
-            border: 2px solid rgba(255, 215, 0, 0.5);
-            box-shadow: 0 20px 60px rgba(0,0,0,0.8), 0 0 30px rgba(255, 215, 0, 0.2);
+            border: 2px solid rgba(255, 255, 255, 0.5);
+            box-shadow: 0 20px 60px rgba(0,0,0,0.8), 0 0 30px rgba(255, 255, 255, 0.2);
             max-width: 90%;
             width: 400px;
             animation: scaleIn 0.3s ease;
@@ -1505,7 +1610,7 @@
         }
         .game-modal-btn {
             padding: 12px 35px;
-            background: linear-gradient(135deg, #ffd700, #ffed4e);
+            background: linear-gradient(135deg, #ffffff, #dc143c);
             border: none;
             border-radius: 8px;
             color: #1a1a1a;
@@ -1516,12 +1621,12 @@
         }
         .game-modal-btn:hover {
             transform: translateY(-2px);
-            box-shadow: 0 5px 20px rgba(255, 215, 0, 0.4);
+            box-shadow: 0 5px 20px rgba(255, 255, 255, 0.4);
         }
         .game-modal-btn.success {
-            background: linear-gradient(135deg, #27ae60, #2ecc71);
+            background: linear-gradient(135deg, #dc143c, #8b0000);
             color: white;
-            box-shadow: 0 5px 20px rgba(39, 174, 96, 0.4);
+            box-shadow: 0 5px 20px rgba(220, 20, 60, 0.4);
         }
         .game-modal-btn.error {
             background: linear-gradient(135deg, #e74c3c, #c0392b);
@@ -1546,13 +1651,28 @@
                 <span class="room-name" id="roomName">贵州扑克</span>
                 <span class="blinds-info" id="blindsInfo">盲注: 10/20</span>
             </div>
-            <button class="btn-exit" onclick="exitGame()">退出</button>
+            <div class="top-actions">
+                <button class="badge-btn" onclick="backToLobby()">
+                    <span class="btn-label">BACK</span>
+                    <span class="btn-text">返回大厅</span>
+                </button>
+                <button class="badge-btn" onclick="goToProfile()">
+                    <span class="btn-label">PROFILE</span>
+                    <span class="btn-text">个人信息</span>
+                </button>
+                <button class="badge-btn" onclick="exitGame()">
+                    <span class="btn-label">EXIT</span>
+                    <span class="btn-text">退出</span>
+                </button>
+            </div>
 
         </div>
 
         <!-- 游戏桌区域 -->
         <div class="table-area">
             <div class="poker-table">
+                <!-- 碳纤维纹理 -->
+                <div class="carbon-fiber"></div>
                 <!-- 底池 -->
                 <div class="pot-area">
                     <div class="pot-label">底池</div>
@@ -1640,7 +1760,7 @@
         <!-- 自定义弹窗 -->
         <div class="game-modal-overlay" id="gameModal">
             <div class="game-modal-content">
-                <div class="game-modal-icon" id="modalIcon">ℹ️</div>
+                <div class="game-modal-icon" id="modalIcon">INFO</div>
                 <div class="game-modal-title" id="modalTitle">提示</div>
                 <div class="game-modal-message" id="modalMessage">消息内容</div>
                 <button class="game-modal-btn" id="modalBtn" onclick="closeModal()">确定</button>
@@ -1785,7 +1905,7 @@
         // 玩家重新连接
         socket.on('player-reconnected', (data) => {
             if (data.message) {
-                addLog('✅ ' + data.message);
+                addLog('SUCCESS ' + data.message);
                 showReconnectToast(data.message);
             }
             // 清除断线状态
@@ -2023,19 +2143,19 @@ socket.on('game-ending-soon', (data) => {
                     padding: 40px 50px;
                     border-radius: 20px;
                     text-align: center;
-                    border: 2px solid rgba(255,215,0,0.5);
-                    box-shadow: 0 20px 60px rgba(0,0,0,0.8), 0 0 40px rgba(255,215,0,0.2);
+                    border: 2px solid rgba(220,20,60,0.5);
+                    box-shadow: 0 20px 60px rgba(0,0,0,0.8), 0 0 40px rgba(220,20,60,0.2);
                     animation: scaleIn 0.3s ease;
                     min-width: 300px;
                 ">
                     <div style="font-size: 56px; margin-bottom: 20px;">👋</div>
-                    <div style="font-size: 1.6rem; font-weight: bold; margin-bottom: 10px; color: #ffd700;">人数不足</div>
+                    <div style="font-size: 1.6rem; font-weight: bold; margin-bottom: 10px; color: #ffffff;">人数不足</div>
                     <div style="font-size: 1.1rem; color: rgba(255,255,255,0.8); margin-bottom: 25px;">即将返回大厅</div>
                     <div style="
                         font-size: 3.5rem; 
                         font-weight: bold; 
-                        color: #ffd700;
-                        text-shadow: 0 0 20px rgba(255,215,0,0.5);
+                        color: #ffffff;
+                        text-shadow: 0 0 20px rgba(220,20,60,0.5);
                     " id="endingCountdown">${seconds}</div>
                     <div style="font-size: 0.9rem; color: rgba(255,255,255,0.5); margin-top: 10px;">秒后自动跳转</div>
                 </div>
@@ -2108,7 +2228,7 @@ socket.on('game-ending-soon', (data) => {
                     background: rgba(0,0,0,0.6);
                     padding: 10px 30px;
                     border-radius: 20px;
-                    border: 1px solid rgba(255,215,0,0.5);
+                    border: 1px solid rgba(220,20,60,0.5);
                     z-index: 100;
                     text-align: center;
                 `;
@@ -2122,9 +2242,9 @@ socket.on('game-ending-soon', (data) => {
             
             countdownDiv.innerHTML = `
                 <div style="font-size: 14px; color: rgba(255,255,255,0.8); margin-bottom: 5px;">新局即将开始</div>
-                <div style="font-size: 24px; color: #ffd700; font-weight: bold;">${seconds}</div>
+                <div style="font-size: 24px; color: #ffffff; font-weight: bold;">${seconds}</div>
                 <div style="font-size: 12px; color: rgba(255,255,255,0.6);">秒后自动选择</div>
-                <div style="font-size: 12px; color: ${canContinue ? '#27ae60' : '#e74c3c'}; margin-top: 5px;">
+                <div style="font-size: 12px; color: ${canContinue ? '#dc143c' : '#e74c3c'}; margin-top: 5px;">
                     筹码: ${myChips} ${canContinue ? '(可继续)' : '(不足1000)'}
                 </div>
             `;
@@ -2227,7 +2347,7 @@ socket.on('game-ending-soon', (data) => {
                     background: rgba(0,0,0,0.6);
                     padding: 10px 30px;
                     border-radius: 20px;
-                    border: 1px solid rgba(255,215,0,0.5);
+                    border: 1px solid rgba(220,20,60,0.5);
                     z-index: 100;
                     text-align: center;
                 `;
@@ -2236,7 +2356,7 @@ socket.on('game-ending-soon', (data) => {
             
             countdownDiv.innerHTML = `
                 <div style="font-size: 14px; color: rgba(255,255,255,0.8);">游戏即将开始</div>
-                <div style="font-size: 24px; color: #ffd700; font-weight: bold;">${seconds}</div>
+                <div style="font-size: 24px; color: #ffffff; font-weight: bold;">${seconds}</div>
             `;
             countdownDiv.style.display = 'block';
         }
@@ -2416,11 +2536,11 @@ socket.on('game-ending-soon', (data) => {
                                 ${actionDisplayHTML}
                                 <div class="player-avatar ${isActive ? 'active' : ''} ${isFolded ? 'folded' : ''} ${isDisconnected ? 'disconnected' : ''} ${isBot ? 'bot' : ''}">
                                     <img src="/avatars/${player.avatar || 'default.png'}" alt="">
-                                    ${isBot ? '<div class="bot-badge">🤖</div>' : ''}
+                                    ${isBot ? '<div class="bot-badge">BOT</div>' : ''}
                                 </div>
                                 ${disconnectTimerHTML}
                                 <div class="player-name">${escapeHtml(player.nickname || player.username)} (你)</div>
-                                <div class="player-chips">💰 ${player.chips}</div>
+                                <div class="player-chips"> ${player.chips}</div>
                                 ${player.currentBet > 0 ? `<div class="player-bet">${player.currentBet}</div>` : ''}
                             </div>
                         </div>
@@ -2435,11 +2555,11 @@ socket.on('game-ending-soon', (data) => {
                                 ${actionDisplayHTML}
                                 <div class="player-avatar ${isActive ? 'active' : ''} ${isFolded ? 'folded' : ''} ${isDisconnected ? 'disconnected' : ''} ${isBot ? 'bot' : ''}">
                                     <img src="/avatars/${player.avatar || 'default.png'}" alt="">
-                                    ${isBot ? '<div class="bot-badge">🤖</div>' : ''}
+                                    ${isBot ? '<div class="bot-badge">BOT</div>' : ''}
                                 </div>
                                 ${disconnectTimerHTML}
                                 <div class="player-name">${escapeHtml(player.nickname || player.username)}</div>
-                                <div class="player-chips">💰 ${player.chips}</div>
+                                <div class="player-chips"> ${player.chips}</div>
                                 ${player.currentBet > 0 ? `<div class="player-bet">${player.currentBet}</div>` : ''}
                             </div>
                         </div>
@@ -2712,11 +2832,24 @@ socket.on('game-ending-soon', (data) => {
             window.location.href = 'lobby.html';
         }
 
+        // 返回大厅
+        function backToLobby() {
+            showConfirmModal('确定要返回大厅吗？', function() {
+                socket.emit('leave-room', { roomId, userId: user.id });
+                window.location.href = 'lobby.html';
+            });
+        }
+
+        // 前往个人信息
+        function goToProfile() {
+            window.location.href = '/pages/profile.html';
+        }
+
         // 退出游戏
         function exitGame() {
             showConfirmModal('确定要退出游戏吗？', function() {
                 socket.emit('leave-room', { roomId, userId: user.id });
-                window.location.href = 'lobby.html';
+                window.location.href = '/pages/gamehall.html';
             });
         }
 
@@ -2735,17 +2868,17 @@ socket.on('game-ending-soon', (data) => {
             
             switch(type) {
                 case 'success':
-                    icon.textContent = '✅';
+                    icon.textContent = 'SUCCESS';
                     title.textContent = '成功';
                     btn.classList.add('success');
                     break;
                 case 'error':
-                    icon.textContent = '❌';
+                    icon.textContent = 'ERROR';
                     title.textContent = '错误';
                     btn.classList.add('error');
                     break;
                 default:
-                    icon.textContent = 'ℹ️';
+                    icon.textContent = 'INFO';
                     title.textContent = '提示';
             }
             
@@ -2775,12 +2908,12 @@ socket.on('game-ending-soon', (data) => {
             icon.textContent = emoji;
             icon.style.fontSize = '56px';
             title.textContent = titleText;
-            title.style.color = '#ffd700';
+            title.style.color = '#ffffff';
             msg.innerHTML = `<div style="color: rgba(255,255,255,0.8); font-size: 1.1rem;">${subtitle}</div>`;
             
             // 重置按钮样式为金色主题
             btn.className = 'game-modal-btn';
-            btn.style.background = 'linear-gradient(135deg, #ffd700, #ffed4e)';
+            btn.style.background = 'linear-gradient(135deg, #ffffff, #dc143c)';
             btn.style.color = '#1a1a1a';
             
             modal.classList.add('show');

@@ -810,107 +810,60 @@
             }
         }
         
-        /* Sophia 风格光效按钮 */
+        /* 徽章风格按钮 - 红色渐变背景 */
         .glass-btn {
-            position: relative;
-            width: 78px;
-            height: 65%;
-            background: transparent;
-            border: none;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 6px 16px;
+            background: linear-gradient(145deg, rgba(220, 20, 60, 0.9) 0%, rgba(139, 0, 0, 0.95) 100%);
+            border: 2px solid rgba(220, 20, 60, 0.5);
+            border-radius: 10px;
             cursor: pointer;
-            margin-left: 1px;
-            padding: 0;
-            overflow: visible;
-            align-self: center;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 0 20px rgba(220, 20, 60, 0.4);
+            color: #fff;
+            margin-left: 8px;
         }
-        
-        /* 渐变光效边框 */
-        .glass-btn::before,
-        .glass-btn::after {
-            content: '';
-            position: absolute;
-            background: linear-gradient(45deg, #dc143c, #0a0a0a, #0a0a0a, #8b0000);
-            transition: 0.5s;
-            opacity: 0;
-            border-radius: 8px;
-        }
-        
+
         .glass-btn::before {
-            inset: 0;
-            z-index: 1;
-        }
-        
-        .glass-btn::after {
-            inset: 0;
-            z-index: 0;
-            filter: blur(10px);
-        }
-        
-        /* 悬停时光效展开 */
-        .glass-btn:hover::before,
-        .glass-btn:hover::after {
-            opacity: 1;
-            inset: -3px;
-        }
-        
-        /* 按钮内容容器 */
-        .glass-btn .btn-text {
+            content: '';
             position: absolute;
             top: 0;
             left: 0;
-            width: 100%;
-            height: 100%;
-            background: #0a0a0a;
-            z-index: 10;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            font-size: 16px;
-            font-weight: 600;
+            right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.5), transparent);
+            opacity: 0.8;
+        }
+
+        .glass-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 30px rgba(220, 20, 60, 0.6);
+            border-color: rgba(220, 20, 60, 0.8);
+        }
+
+        .glass-btn:active {
+            transform: translateY(-1px);
+        }
+
+        .glass-btn .btn-label {
+            font-size: 8px;
+            font-weight: 800;
             letter-spacing: 2px;
-            color: #dc143c;
-            border: 1px solid rgba(220, 20, 60, 0.3);
-            border-radius: 8px;
-            overflow: hidden;
-            transition: all 0.3s ease;
+            color: rgba(255,255,255,0.7);
+            margin-bottom: 2px;
+            display: block;
         }
-        
-        /* 内部高光扫影 */
-        .glass-btn .btn-text::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -50%;
-            width: 100%;
-            height: 100%;
-            background: rgba(255, 255, 255, 0.075);
-            transform: skew(25deg);
-            transition: left 0.5s ease;
-        }
-        
-        .glass-btn:hover .btn-text::before {
-            left: 100%;
-        }
-        
-        /* 不同按钮颜色 */
-        .glass-btn.friends::before,
-        .glass-btn.friends::after {
-            background: linear-gradient(45deg, #dc143c, #0a0a0a, #0a0a0a, #ff0000);
-        }
-        
-        .glass-btn.profile::before,
-        .glass-btn.profile::after {
-            background: linear-gradient(45deg, #ffffff, #0a0a0a, #0a0a0a, #dc143c);
-        }
-        
-        .glass-btn.logout::before,
-        .glass-btn.logout::after {
-            background: linear-gradient(45deg, #ff0000, #0a0a0a, #0a0a0a, #dc143c);
-        }
-        
-        .glass-btn.admin::before,
-        .glass-btn.admin::after {
-            background: linear-gradient(45deg, #dc143c, #0a0a0a, #0a0a0a, #ff0000);
+
+        .glass-btn .btn-text {
+            font-size: 13px;
+            font-weight: 800;
+            color: #fff;
+            text-shadow: 0 0 10px rgba(255,255,255,0.3);
+            display: block;
         }
     </style>
 </head>
@@ -937,10 +890,22 @@
             
             <!-- 右侧：按钮 -->
             <div class="header-right" style="display: flex; align-items: center;">
-                <button id="adminBtn" onclick="goToAdmin()" class="glass-btn admin" style="display:none;"><span class="btn-text">管理</span></button>
-                <button onclick="goToFriends()" class="glass-btn friends"><span class="btn-text" style="color: #dc143c;">好友</span></button>
-                <button onclick="goToProfile()" class="glass-btn profile"><span class="btn-text" style="color: #dc143c;">资料</span></button>
-                <button onclick="logout()" class="glass-btn logout"><span class="btn-text" style="color: #dc143c;">退出</span></button>
+                <button id="adminBtn" onclick="goToAdmin()" class="glass-btn admin" style="display:none;">
+                    <span class="btn-label">ADMIN</span>
+                    <span class="btn-text">管理</span>
+                </button>
+                <button onclick="goToFriends()" class="glass-btn friends">
+                    <span class="btn-label">FRIENDS</span>
+                    <span class="btn-text">好友</span>
+                </button>
+                <button onclick="goToProfile()" class="glass-btn profile">
+                    <span class="btn-label">PROFILE</span>
+                    <span class="btn-text">资料</span>
+                </button>
+                <button onclick="logout()" class="glass-btn logout">
+                    <span class="btn-label">EXIT</span>
+                    <span class="btn-text">退出</span>
+                </button>
             </div>
         </header>
         
@@ -1323,16 +1288,13 @@
             return icons[gameCode] || icons['default'];
         }
         
-        // 选择游戏
-        // 处理卡片点击
+        // 处理卡片点击 - 仅切换，不进入游戏
         function handleCardClick(index) {
-            if (index === currentGameIndex) {
-                // 点击当前选中的卡片，直接进入游戏
-                enterGame(gamesData[index].game_code);
-            } else {
+            if (index !== currentGameIndex) {
                 // 点击其他卡片，切换到该卡片
                 selectGame(index);
             }
+            // 点击当前卡片不做任何操作，必须通过下方按钮进入游戏
         }
         
         function selectGame(index) {

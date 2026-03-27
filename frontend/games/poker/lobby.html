@@ -13,105 +13,151 @@
 
         body {
             font-family: 'Microsoft YaHei', sans-serif;
-            background: linear-gradient(135deg, #1a3d2a 0%, #0d2818 100%);
+            background: linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 100%);
             min-height: 100vh;
             color: white;
         }
 
         .header {
-            background: rgba(0,0,0,0.3);
+            background: rgba(0,0,0,0.2);
             padding: 20px;
-            display: flex;
-            justify-content: space-between;
+            display: grid;
+            grid-template-columns: 1fr auto 1fr;
             align-items: center;
-            border-bottom: 1px solid rgba(255,255,255,0.1);
+            border-bottom: 1px solid rgba(220,20,60,0.3);
         }
 
         .logo {
             font-size: 1.5rem;
-            color: #ffd700;
             font-weight: bold;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            justify-self: center;
+        }
+        
+        .logo-tag {
+            font-size: 12px;
+            font-weight: 700;
+            letter-spacing: 2px;
+            color: #dc143c;
+            background: rgba(220, 20, 60, 0.1);
+            padding: 3px 8px;
+            border-radius: 4px;
+            border: 1px solid rgba(220, 20, 60, 0.3);
+        }
+        
+        .logo-text {
+            color: #fff;
         }
 
         .user-info {
             display: flex;
             align-items: center;
-            gap: 20px;
+            gap: 12px;
+            justify-self: start;
         }
-
-        .user-avatar {
-            width: 50px;
-            height: 50px;
-            border-radius: 50%;
-            background: linear-gradient(135deg, #3498db, #2980b9);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            overflow: hidden;
-            border: 2px solid rgba(255, 215, 0, 0.3);
-        }
-
-        .user-avatar img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            border-radius: 50%;
-        }
-
-        .user-details {
+        
+        /* 用户徽章样式 */
+        .user-badge {
             display: flex;
             flex-direction: column;
-            gap: 5px;
+            align-items: center;
+            padding: 6px 16px;
+            background: linear-gradient(145deg, rgba(20,20,20,0.9) 0%, rgba(10,10,10,0.95) 100%);
+            border: 1px solid rgba(220, 20, 60, 0.3);
+            border-radius: 8px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .user-badge::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, #dc143c, transparent);
+            opacity: 0.6;
+        }
+        
+        .user-badge .badge-label {
+            font-size: 9px;
+            font-weight: 700;
+            letter-spacing: 2px;
+            color: rgba(255,255,255,0.4);
+            margin-bottom: 2px;
+        }
+        
+        .user-badge .badge-value {
+            font-size: 16px;
+            font-weight: 800;
+            color: #dc143c;
+            text-shadow: 0 0 10px rgba(220, 20, 60, 0.5);
         }
 
-        .chips {
-            color: #ffd700;
-            font-weight: bold;
+        /* 顶部右侧按钮组 - 徽章风格 */
+        .header-actions {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            justify-self: end;
         }
 
-        .btn-profile {
-            padding: 8px 20px;
-            background: rgba(52, 152, 219, 0.8);
-            border: none;
-            border-radius: 6px;
-            color: white;
+        /* 徽章风格按钮 - 红色渐变背景 */
+        .badge-btn {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 6px 16px;
+            background: linear-gradient(145deg, rgba(220, 20, 60, 0.9) 0%, rgba(139, 0, 0, 0.95) 100%);
+            border: 2px solid rgba(220, 20, 60, 0.5);
+            border-radius: 10px;
             cursor: pointer;
-            transition: all 0.3s;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 0 20px rgba(220, 20, 60, 0.4);
+            color: #fff;
         }
 
-        .btn-profile:hover {
-            background: rgba(52, 152, 219, 1);
+        .badge-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.5), transparent);
+            opacity: 0.8;
         }
 
-        .btn-logout {
-            padding: 8px 20px;
-            background: rgba(231, 76, 60, 0.8);
-            border: none;
-            border-radius: 6px;
-            color: white;
-            cursor: pointer;
-            transition: all 0.3s;
-        }
-
-        .btn-logout:hover {
-            background: rgba(231, 76, 60, 1);
-        }
-
-        .btn-back {
-            padding: 8px 20px;
-            background: linear-gradient(135deg, #9b59b6, #8e44ad);
-            border: none;
-            border-radius: 6px;
-            color: white;
-            cursor: pointer;
-            transition: all 0.3s;
-            margin-right: 10px;
-        }
-
-        .btn-back:hover {
-            background: linear-gradient(135deg, #8e44ad, #9b59b6);
+        .badge-btn:hover {
             transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(155, 89, 182, 0.4);
+            box-shadow: 0 8px 30px rgba(220, 20, 60, 0.6);
+            border-color: rgba(220, 20, 60, 0.8);
+        }
+
+        .badge-btn:active {
+            transform: translateY(-1px);
+        }
+
+        .badge-btn .btn-label {
+            font-size: 8px;
+            font-weight: 800;
+            letter-spacing: 2px;
+            color: rgba(255,255,255,0.7);
+            margin-bottom: 2px;
+            display: block;
+        }
+
+        .badge-btn .btn-text {
+            font-size: 13px;
+            font-weight: 800;
+            color: #fff;
+            text-shadow: 0 0 10px rgba(255,255,255,0.3);
+            display: block;
         }
 
         .container {
@@ -128,25 +174,26 @@
 
         .btn-primary {
             padding: 15px 30px;
-            background: linear-gradient(135deg, #ffd700, #ffed4e);
+            background: linear-gradient(135deg, #dc143c 0%, #8b0000 100%);
             border: none;
             border-radius: 8px;
-            color: #1a1a1a;
+            color: white;
             font-size: 1rem;
             font-weight: 600;
             cursor: pointer;
             transition: all 0.3s;
+            box-shadow: 0 0 20px rgba(220, 20, 60, 0.3);
         }
 
         .btn-primary:hover {
             transform: translateY(-2px);
-            box-shadow: 0 5px 20px rgba(255, 215, 0, 0.4);
+            box-shadow: 0 5px 25px rgba(220, 20, 60, 0.5);
         }
 
         .btn-secondary {
             padding: 15px 30px;
-            background: rgba(255,255,255,0.1);
-            border: 1px solid rgba(255,255,255,0.2);
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(220, 20, 60, 0.3);
             border-radius: 8px;
             color: white;
             font-size: 1rem;
@@ -155,12 +202,13 @@
         }
 
         .btn-secondary:hover {
-            background: rgba(255,255,255,0.2);
+            background: rgba(220, 20, 60, 0.1);
+            border-color: rgba(220, 20, 60, 0.6);
         }
 
         .btn-rank {
             padding: 15px 30px;
-            background: linear-gradient(135deg, #f39c12, #e67e22);
+            background: linear-gradient(135deg, #dc143c 0%, #8b0000 100%);
             border: none;
             border-radius: 8px;
             color: white;
@@ -168,11 +216,12 @@
             font-weight: 600;
             cursor: pointer;
             transition: all 0.3s;
+            box-shadow: 0 0 20px rgba(220, 20, 60, 0.3);
         }
 
         .btn-rank:hover {
             transform: translateY(-2px);
-            box-shadow: 0 5px 20px rgba(243, 156, 18, 0.4);
+            box-shadow: 0 5px 25px rgba(220, 20, 60, 0.5);
         }
 
         .btn-reconnect {
@@ -199,9 +248,22 @@
         }
 
         .room-list {
-            background: rgba(0,0,0,0.2);
+            background: linear-gradient(145deg, rgba(20,20,20,0.6) 0%, rgba(10,10,10,0.8) 100%);
             border-radius: 12px;
             overflow: hidden;
+            border: 1px solid rgba(220, 20, 60, 0.15);
+            position: relative;
+        }
+        
+        .room-list::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, #dc143c, transparent);
+            opacity: 0.6;
         }
 
         .room-list-header {
@@ -212,6 +274,7 @@
             gap: 10px;
             font-weight: bold;
             color: rgba(255,255,255,0.7);
+            border-bottom: 1px solid rgba(220, 20, 60, 0.2);
         }
 
         .room-item {
@@ -220,12 +283,13 @@
             grid-template-columns: 2fr 0.8fr 0.8fr 0.6fr 0.6fr 180px;
             gap: 10px;
             align-items: center;
-            border-bottom: 1px solid rgba(255,255,255,0.05);
+            border-bottom: 1px solid rgba(220, 20, 60, 0.1);
             transition: all 0.3s;
         }
 
         .room-item:hover {
-            background: rgba(255,255,255,0.05);
+            background: rgba(220, 20, 60, 0.05);
+            border-left: 3px solid rgba(220, 20, 60, 0.5);
         }
 
         .room-name {
@@ -239,27 +303,31 @@
 
         .btn-join {
             padding: 8px 20px;
-            background: #27ae60;
+            background: linear-gradient(135deg, #dc143c 0%, #8b0000 100%);
             border: none;
             border-radius: 6px;
             color: white;
             cursor: pointer;
             transition: all 0.3s;
+            font-weight: 600;
         }
 
         .btn-join:hover {
-            background: #2ecc71;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(220, 20, 60, 0.4);
         }
 
         .btn-join:disabled {
             background: rgba(255,255,255,0.1);
             cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
         }
 
         .btn-delete-room {
             padding: 8px 15px;
-            background: linear-gradient(135deg, #e74c3c, #c0392b);
-            border: none;
+            background: rgba(139, 0, 0, 0.8);
+            border: 1px solid rgba(220, 20, 60, 0.5);
             border-radius: 6px;
             color: white;
             cursor: pointer;
@@ -269,8 +337,9 @@
         }
 
         .btn-delete-room:hover {
+            background: rgba(139, 0, 0, 1);
             transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(231, 76, 60, 0.4);
+            box-shadow: 0 4px 12px rgba(220, 20, 60, 0.4);
         }
 
         .empty-state {
@@ -298,18 +367,47 @@
         }
 
         .modal-content {
-            background: linear-gradient(145deg, rgba(30,30,30,0.95), rgba(10,10,10,0.98));
+            background: linear-gradient(145deg, rgba(20,20,20,0.98) 0%, rgba(10,10,10,0.99) 100%);
             padding: 30px;
             border-radius: 12px;
             width: 400px;
             max-width: 90%;
-            border: 1px solid rgba(255,255,255,0.1);
+            border: 2px solid rgba(220, 20, 60, 0.3);
+            box-shadow: 0 20px 60px rgba(0,0,0,0.8), 0 0 30px rgba(220, 20, 60, 0.1);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .modal-content::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, #dc143c, transparent);
+            opacity: 0.6;
         }
 
         .modal-header {
             font-size: 1.3rem;
             margin-bottom: 20px;
-            color: #ffd700;
+            color: #fff;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .modal-header::before {
+            content: 'CREATE';
+            font-size: 10px;
+            font-weight: 800;
+            letter-spacing: 2px;
+            color: #dc143c;
+            background: rgba(220, 20, 60, 0.1);
+            padding: 3px 8px;
+            border-radius: 4px;
+            border: 1px solid rgba(220, 20, 60, 0.3);
         }
 
         .form-group {
@@ -336,7 +434,8 @@
         .form-group input:focus,
         .form-group select:focus {
             outline: none;
-            border-color: #ffd700;
+            border-color: #dc143c;
+            box-shadow: 0 0 10px rgba(220, 20, 60, 0.2);
         }
 
         .modal-actions {
@@ -360,29 +459,54 @@
         }
 
         .room-item.playing {
-            background: rgba(255, 215, 0, 0.1);
-            border-left: 4px solid #ffd700;
+            background: rgba(220, 20, 60, 0.1);
+            border-left: 4px solid #dc143c;
         }
 
         /* 排行榜弹窗样式 */
         .leaderboard-modal-content {
-            background: linear-gradient(145deg, rgba(30,30,30,0.98), rgba(10,10,10,0.99));
+            background: linear-gradient(145deg, rgba(20,20,20,0.98) 0%, rgba(10,10,10,0.99) 100%);
             padding: 30px;
             border-radius: 12px;
             width: 500px;
             max-width: 95%;
-            border: 1px solid rgba(255,255,255,0.1);
+            border: 2px solid rgba(220, 20, 60, 0.3);
             max-height: 80vh;
             overflow-y: auto;
+            position: relative;
+        }
+        
+        .leaderboard-modal-content::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, #dc143c, transparent);
+            opacity: 0.6;
         }
 
         .leaderboard-header {
             font-size: 1.5rem;
             margin-bottom: 25px;
-            color: #f39c12;
+            color: #fff;
             display: flex;
             justify-content: space-between;
             align-items: center;
+        }
+        
+        .leaderboard-header::before {
+            content: 'RANK';
+            font-size: 10px;
+            font-weight: 800;
+            letter-spacing: 2px;
+            color: #dc143c;
+            background: rgba(220, 20, 60, 0.1);
+            padding: 3px 8px;
+            border-radius: 4px;
+            border: 1px solid rgba(220, 20, 60, 0.3);
+            margin-right: 10px;
         }
 
         .leaderboard-list {
@@ -412,10 +536,10 @@
             width: 40px;
         }
 
-        .rank-1 { color: #ffd700; }
-        .rank-2 { color: #c0c0c0; }
-        .rank-3 { color: #cd7f32; }
-        .rank-other { color: rgba(255,255,255,0.5); }
+        .rank-1 { color: #dc143c; text-shadow: 0 0 10px rgba(220, 20, 60, 0.5); }
+        .rank-2 { color: #fff; }
+        .rank-3 { color: rgba(255,255,255,0.7); }
+        .rank-other { color: rgba(255,255,255,0.4); }
 
         .leaderboard-username {
             flex: 1;
@@ -423,39 +547,65 @@
         }
 
         .leaderboard-chips {
-            color: #ffd700;
+            color: #dc143c;
             font-weight: bold;
         }
 
         /* 个人信息弹窗样式 */
         .profile-modal-content {
-            background: linear-gradient(145deg, rgba(30,30,30,0.98), rgba(10,10,10,0.99));
+            background: linear-gradient(145deg, rgba(20,20,20,0.98) 0%, rgba(10,10,10,0.99) 100%);
             padding: 30px;
             border-radius: 12px;
             width: 400px;
             max-width: 95%;
-            border: 1px solid rgba(255,255,255,0.1);
+            border: 2px solid rgba(220, 20, 60, 0.3);
+            position: relative;
+        }
+        
+        .profile-modal-content::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, #dc143c, transparent);
+            opacity: 0.6;
         }
 
         .profile-header {
             font-size: 1.4rem;
             margin-bottom: 20px;
-            color: #3498db;
+            color: #fff;
             display: flex;
             justify-content: space-between;
             align-items: center;
+        }
+        
+        .profile-header::before {
+            content: 'PROFILE';
+            font-size: 10px;
+            font-weight: 800;
+            letter-spacing: 2px;
+            color: #dc143c;
+            background: rgba(220, 20, 60, 0.1);
+            padding: 3px 8px;
+            border-radius: 4px;
+            border: 1px solid rgba(220, 20, 60, 0.3);
+            margin-right: 10px;
         }
 
         .profile-avatar {
             width: 80px;
             height: 80px;
             border-radius: 50%;
-            background: linear-gradient(135deg, #3498db, #2980b9);
+            background: linear-gradient(135deg, #dc143c, #8b0000);
             display: flex;
             align-items: center;
             justify-content: center;
             font-size: 2.5rem;
             margin: 0 auto 20px;
+            box-shadow: 0 0 20px rgba(220, 20, 60, 0.3);
         }
 
         .profile-info {
@@ -500,19 +650,40 @@
             display: flex;
         }
         .game-modal-content {
-            background: linear-gradient(145deg, rgba(30,30,30,0.98), rgba(10,10,10,0.99));
+            background: linear-gradient(145deg, rgba(20,20,20,0.98) 0%, rgba(10,10,10,0.99) 100%);
             padding: 30px 40px;
             border-radius: 16px;
             text-align: center;
-            border: 2px solid rgba(255, 215, 0, 0.5);
-            box-shadow: 0 20px 60px rgba(0,0,0,0.8), 0 0 30px rgba(255, 215, 0, 0.2);
+            border: 2px solid rgba(220, 20, 60, 0.5);
+            box-shadow: 0 20px 60px rgba(0,0,0,0.8), 0 0 30px rgba(220, 20, 60, 0.2);
             max-width: 90%;
             width: 400px;
             animation: scaleIn 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .game-modal-content::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, #dc143c, transparent);
+            opacity: 0.6;
         }
         .game-modal-icon {
-            font-size: 48px;
+            font-size: 14px;
+            font-weight: 800;
+            letter-spacing: 3px;
+            color: #dc143c;
+            background: rgba(220, 20, 60, 0.1);
+            padding: 6px 16px;
+            border-radius: 6px;
+            border: 1px solid rgba(220, 20, 60, 0.3);
             margin-bottom: 15px;
+            display: inline-block;
         }
         .game-modal-title {
             font-size: 1.5rem;
@@ -528,28 +699,29 @@
         }
         .game-modal-btn {
             padding: 12px 35px;
-            background: linear-gradient(135deg, #ffd700, #ffed4e);
+            background: linear-gradient(135deg, #dc143c 0%, #8b0000 100%);
             border: none;
             border-radius: 8px;
-            color: #1a1a1a;
+            color: white;
             font-size: 1rem;
             font-weight: 600;
             cursor: pointer;
             transition: all 0.3s;
+            box-shadow: 0 0 20px rgba(220, 20, 60, 0.3);
         }
         .game-modal-btn:hover {
             transform: translateY(-2px);
-            box-shadow: 0 5px 20px rgba(255, 215, 0, 0.4);
+            box-shadow: 0 5px 25px rgba(220, 20, 60, 0.5);
         }
         .game-modal-btn.success {
-            background: linear-gradient(135deg, #27ae60, #2ecc71);
+            background: linear-gradient(135deg, #dc143c, #8b0000);
             color: white;
-            box-shadow: 0 5px 20px rgba(39, 174, 96, 0.4);
+            box-shadow: 0 5px 20px rgba(220, 20, 60, 0.4);
         }
         .game-modal-btn.error {
-            background: linear-gradient(135deg, #e74c3c, #c0392b);
+            background: linear-gradient(135deg, #8b0000, #4a0000);
             color: white;
-            box-shadow: 0 5px 20px rgba(231, 76, 60, 0.4);
+            box-shadow: 0 5px 20px rgba(139, 0, 0, 0.4);
         }
         @keyframes fadeIn {
             from { opacity: 0; }
@@ -642,7 +814,7 @@
     <!-- 自定义弹窗 -->
     <div class="game-modal-overlay" id="gameModal">
         <div class="game-modal-content">
-            <div class="game-modal-icon" id="modalIcon">ℹ️</div>
+            <div class="game-modal-icon" id="modalIcon">提示</div>
             <div class="game-modal-title" id="modalTitle">提示</div>
             <div class="game-modal-message" id="modalMessage">消息内容</div>
             <button class="game-modal-btn" id="modalBtn" onclick="closeModal()">确定</button>
@@ -652,7 +824,7 @@
     <!-- 邀请弹窗 -->
     <div class="game-modal-overlay" id="inviteModal">
         <div class="game-modal-content">
-            <div class="game-modal-icon">📨</div>
+            <div class="game-modal-icon">邀请</div>
             <div class="game-modal-title">游戏邀请</div>
             <div class="game-modal-message" id="inviteInfo"></div>
             <div style="display: flex; gap: 15px; justify-content: center; margin-top: 20px;">
@@ -665,7 +837,7 @@
     <!-- 删除房间确认弹窗 -->
     <div class="game-modal-overlay" id="deleteRoomModal">
         <div class="game-modal-content">
-            <div class="game-modal-icon">🗑️</div>
+            <div class="game-modal-icon">删除</div>
             <div class="game-modal-title">删除房间</div>
             <div class="game-modal-message">确定要删除这个房间吗？<br>房间内的所有玩家将被移出。</div>
             <div style="display: flex; gap: 15px; justify-content: center; margin-top: 20px;">
@@ -676,18 +848,38 @@
     </div>
     
     <div class="header">
-        <div class="logo">♠ 贵州扑克</div>
+        <!-- 左边：PLAYER/CHIPS -->
         <div class="user-info">
-            <div class="user-avatar" id="headerAvatar">
-                <img id="headerAvatarImg" src="" alt="头像">
+            <div class="user-badge">
+                <span class="badge-label">PLAYER</span>
+                <span id="username" class="badge-value">加载中...</span>
             </div>
-            <div class="user-details">
-                <span id="username">加载中...</span>
-                <span class="chips">💰 <span id="chips">0</span></span>
+            <div class="user-badge">
+                <span class="badge-label">CHIPS</span>
+                <span id="chips" class="badge-value">0</span>
             </div>
-            <button class="btn-back" onclick="backToGameHall()">🏠 返回大厅</button>
-            <button class="btn-profile" onclick="showProfileModal()">👤 个人信息</button>
-            <button class="btn-logout" onclick="logout()">退出</button>
+        </div>
+        
+        <!-- 中间：POKER德州扑克 -->
+        <div class="logo">
+            <span class="logo-tag">POKER</span>
+            <span class="logo-text">德州扑克</span>
+        </div>
+        
+        <!-- 右边：按钮 -->
+        <div class="header-actions">
+            <button class="badge-btn" onclick="backToGameHall()">
+                <span class="btn-label">BACK</span>
+                <span class="btn-text">返回大厅</span>
+            </button>
+            <button class="badge-btn" onclick="showProfileModal()">
+                <span class="btn-label">PROFILE</span>
+                <span class="btn-text">个人信息</span>
+            </button>
+            <button class="badge-btn" onclick="logout()">
+                <span class="btn-label">EXIT</span>
+                <span class="btn-text">退出</span>
+            </button>
         </div>
     </div>
 
@@ -695,8 +887,8 @@
         <div class="actions">
             <button class="btn-primary" onclick="showCreateModal()">创建房间</button>
             <button class="btn-secondary" onclick="refreshRooms()">刷新列表</button>
-            <button class="btn-rank" onclick="showLeaderboardModal()">🏆 排行榜</button>
-            <button class="btn-reconnect" id="reconnectBtn" onclick="reconnectToGame()" style="display: none;">⚡ 重连游戏</button>
+            <button class="btn-rank" onclick="showLeaderboardModal()">排行榜</button>
+            <button class="btn-reconnect" id="reconnectBtn" onclick="reconnectToGame()" style="display: none;">重连游戏</button>
         </div>
 
         <div class="room-list">
@@ -757,7 +949,7 @@
     <div class="modal" id="leaderboardModal">
         <div class="leaderboard-modal-content">
             <div class="leaderboard-header">
-                <span>🏆 筹码排行榜</span>
+                <span>筹码排行榜</span>
                 <button class="btn-close" onclick="hideLeaderboardModal()">关闭</button>
             </div>
             <div class="leaderboard-list" id="leaderboardList">
@@ -770,10 +962,10 @@
     <div class="modal" id="profileModal">
         <div class="profile-modal-content">
             <div class="profile-header">
-                <span>👤 个人信息</span>
+                <span>个人信息</span>
                 <button class="btn-close" onclick="hideProfileModal()">关闭</button>
             </div>
-            <div class="profile-avatar" id="profileAvatar">👤</div>
+            <div class="profile-avatar" id="profileAvatar">用户</div>
             <div class="profile-info">
                 <div class="profile-info-item">
                     <span>用户名</span>
@@ -785,7 +977,7 @@
                 </div>
                 <div class="profile-info-item">
                     <span>当前筹码</span>
-                    <span id="profileChips" style="color: #ffd700;">0</span>
+                    <span id="profileChips" style="color: #dc143c; font-weight: bold;">0</span>
                 </div>
             </div>
         </div>
@@ -803,7 +995,7 @@
             window.location.href = '../../pages/login.html';
         } else {
             document.getElementById('username').textContent = user.nickname || user.username;
-            document.getElementById('chips').textContent = user.chips || 0;
+            document.getElementById('chips').textContent = formatChips(user.chips || 0);
             
             // 设置头像
             const avatarFilename = user.avatar || 'default.png';
@@ -850,7 +1042,7 @@
             // 显示重连按钮
             const reconnectBtn = document.getElementById('reconnectBtn');
             reconnectBtn.style.display = 'inline-block';
-            reconnectBtn.textContent = data.isDisconnected ? '⚡ 重新连接 (已掉线)' : '⚡ 返回游戏';
+            reconnectBtn.textContent = data.isDisconnected ? '重新连接 (已掉线)' : '返回游戏';
         });
         
         socket.on('active-game-not-found', () => {
@@ -898,6 +1090,17 @@
             showInviteModal(data);
         });
 
+        // 格式化筹码显示
+        function formatChips(chips) {
+            const num = parseInt(chips) || 0;
+            if (num >= 1000000) {
+                return (num / 1000000).toFixed(1) + 'M';
+            } else if (num >= 1000) {
+                return (num / 1000).toFixed(1) + 'K';
+            }
+            return num.toString();
+        }
+
         // 显示自定义弹窗
         function showModal(message, type = 'info', callback) {
             const modal = document.getElementById('gameModal');
@@ -913,17 +1116,20 @@
             
             switch(type) {
                 case 'success':
-                    icon.textContent = '✅';
+                    icon.textContent = 'SUCCESS';
+                    icon.style.color = '#dc143c';
                     title.textContent = '成功';
                     btn.classList.add('success');
                     break;
                 case 'error':
-                    icon.textContent = '❌';
+                    icon.textContent = 'ERROR';
+                    icon.style.color = '#8b0000';
                     title.textContent = '错误';
                     btn.classList.add('error');
                     break;
                 default:
-                    icon.textContent = 'ℹ️';
+                    icon.textContent = 'INFO';
+                    icon.style.color = '#dc143c';
                     title.textContent = '提示';
             }
             
@@ -976,7 +1182,7 @@
                                 ${room.playerCount >= room.maxPlayers || isPlaying ? 'disabled' : ''}>
                                 ${room.playerCount >= room.maxPlayers ? '已满' : isPlaying ? '游戏中' : '加入'}
                             </button>
-                            ${isOwner ? `<button class="btn-delete-room" onclick="deleteRoom('${room.id}')">🗑️ 删除</button>` : ''}
+                            ${isOwner ? `<button class="btn-delete-room" onclick="deleteRoom('${room.id}')">删除</button>` : ''}
                         </div>
                     </div>
                 `;
@@ -1124,7 +1330,7 @@
                     <div class="leaderboard-item">
                         <div class="rank-number ${rankClass}">${rankIcon}</div>
                         <div class="leaderboard-username">${escapeHtml(item.nickname || item.username)} ${isCurrentUser ? '(你)' : ''}</div>
-                        <div class="leaderboard-chips">💰 ${item.chips || 0}</div>
+                        <div class="leaderboard-chips">${formatChips(item.chips || 0)}</div>
                     </div>
                 `;
             }).join('');
@@ -1134,7 +1340,7 @@
         function showProfileModal() {
             document.getElementById('profileUsername').textContent = user.username || '-';
             document.getElementById('profileNickname').textContent = user.nickname || user.username || '-';
-            document.getElementById('profileChips').textContent = user.chips || 0;
+            document.getElementById('profileChips').textContent = formatChips(user.chips || 0);
             document.getElementById('profileModal').classList.add('show');
         }
 
