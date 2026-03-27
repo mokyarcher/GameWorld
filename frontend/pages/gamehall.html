@@ -358,6 +358,36 @@
             transition: none;
         }
         
+        /* 卡牌名字遮罩 */
+        .card-name-overlay {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            padding: 20px 15px 15px;
+            background: linear-gradient(180deg, transparent 0%, rgba(0,0,0,0.8) 50%, rgba(0,0,0,0.95) 100%);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            border-radius: 0 0 8px 8px;
+        }
+        
+        .card-name-label {
+            font-size: 8px;
+            font-weight: 800;
+            letter-spacing: 3px;
+            color: rgba(220, 20, 60, 0.8);
+            margin-bottom: 3px;
+        }
+        
+        .card-name-text {
+            font-size: 18px;
+            font-weight: 800;
+            color: #fff;
+            text-shadow: 0 0 15px rgba(220, 20, 60, 0.5);
+            letter-spacing: 1px;
+        }
+        
         .carousel-item.prev {
             transform: translateX(-200px) scale(0.8) rotateY(35deg);
             opacity: 1;
@@ -522,6 +552,64 @@
             justify-content: center;
             gap: 10px;
             margin-top: 20px;
+        }
+        
+        /* 进入游戏按钮 - 徽章风格 */
+        .enter-game-wrapper {
+            display: flex;
+            justify-content: center;
+            margin-top: 30px;
+        }
+        
+        .enter-game-btn {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 12px 40px;
+            background: linear-gradient(145deg, rgba(220, 20, 60, 0.9) 0%, rgba(139, 0, 0, 0.95) 100%);
+            border: 2px solid rgba(220, 20, 60, 0.5);
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 0 30px rgba(220, 20, 60, 0.4);
+        }
+        
+        .enter-game-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.5), transparent);
+            opacity: 0.8;
+        }
+        
+        .enter-game-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 40px rgba(220, 20, 60, 0.6);
+            border-color: rgba(220, 20, 60, 0.8);
+        }
+        
+        .enter-game-btn:active {
+            transform: translateY(-1px);
+        }
+        
+        .enter-game-btn .enter-label {
+            font-size: 10px;
+            font-weight: 800;
+            letter-spacing: 3px;
+            color: rgba(255,255,255,0.7);
+            margin-bottom: 4px;
+        }
+        
+        .enter-game-btn .enter-text {
+            font-size: 20px;
+            font-weight: 800;
+            color: #fff;
+            text-shadow: 0 0 10px rgba(255,255,255,0.3);
         }
         
         .carousel-indicator {
@@ -888,6 +976,14 @@
                     
                     <!-- 指示器 -->
                     <div class="carousel-indicators" id="carouselIndicators"></div>
+                    
+                    <!-- 进入游戏按钮 -->
+                    <div class="enter-game-wrapper">
+                        <div class="enter-game-btn" onclick="enterCurrentGame()">
+                            <span class="enter-label">ENTER</span>
+                            <span class="enter-text">进入游戏</span>
+                        </div>
+                    </div>
                 </div>
             </section>
         </main>
@@ -1167,6 +1263,10 @@
                 return `
                     <div class="carousel-item ${getItemClass(index)}" data-index="${index}" onclick="handleCardClick(${index})">
                         <img class="card-image" src="${cardImage}" alt="${game.game_name}">
+                        <div class="card-name-overlay">
+                            <span class="card-name-label">GAME</span>
+                            <span class="card-name-text">${game.game_name}</span>
+                        </div>
                     </div>
                 `;
             }).join('');
@@ -2044,6 +2144,13 @@
                 window.location.href = '../games/poker/lobby.html';
             } else {
                 showModal('该游戏即将上线，敬请期待！', 'info');
+            }
+        }
+        
+        // 进入当前选中的游戏
+        function enterCurrentGame() {
+            if (gamesData[currentGameIndex]) {
+                enterGame(gamesData[currentGameIndex].game_code);
             }
         }
         
