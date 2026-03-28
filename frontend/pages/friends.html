@@ -13,8 +13,8 @@
         }
         
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            font-family: 'Microsoft YaHei', sans-serif;
+            background: linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 100%);
             min-height: 100vh;
             color: #fff;
         }
@@ -31,35 +31,63 @@
             justify-content: space-between;
             align-items: center;
             padding: 20px 30px;
-            background: rgba(255,255,255,0.05);
+            background: linear-gradient(180deg, rgba(20,20,20,0.95) 0%, rgba(10,10,10,0.9) 100%);
             border-radius: 16px;
             margin-bottom: 30px;
-            border: 1px solid rgba(255,255,255,0.1);
+            border-bottom: 2px solid rgba(220,20,60,0.4);
+            box-shadow: 0 5px 30px rgba(0,0,0,0.8);
         }
         
         .logo {
             font-size: 1.8rem;
             font-weight: bold;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
+            color: #fff;
+            letter-spacing: 2px;
+        }
+        
+        .logo::before {
+            content: 'FRIENDS';
+            font-size: 10px;
+            font-weight: 800;
+            letter-spacing: 2px;
+            color: #dc143c;
+            background: rgba(220, 20, 60, 0.1);
+            padding: 2px 6px;
+            border-radius: 4px;
+            border: 1px solid rgba(220, 20, 60, 0.3);
+            margin-right: 10px;
+            vertical-align: middle;
         }
         
         .btn-back {
-            padding: 10px 25px;
-            border: none;
-            border-radius: 8px;
-            font-size: 1rem;
-            font-weight: 600;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 6px 16px;
+            background: linear-gradient(145deg, rgba(220, 20, 60, 0.9) 0%, rgba(139, 0, 0, 0.95) 100%);
+            border: 2px solid rgba(220, 20, 60, 0.5);
+            border-radius: 10px;
             cursor: pointer;
-            transition: all 0.3s;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 0 20px rgba(220, 20, 60, 0.4);
+            color: #fff;
+        }
+        
+        .btn-back::before {
+            content: 'BACK';
+            font-size: 8px;
+            font-weight: 800;
+            letter-spacing: 2px;
+            color: rgba(255,255,255,0.7);
+            margin-bottom: 2px;
         }
         
         .btn-back:hover {
             transform: translateY(-2px);
-            box-shadow: 0 5px 20px rgba(102, 126, 234, 0.5);
+            box-shadow: 0 8px 30px rgba(220, 20, 60, 0.6);
+            border-color: rgba(220, 20, 60, 0.8);
         }
         
         /* 标签页 */
@@ -67,9 +95,10 @@
             display: flex;
             gap: 10px;
             margin-bottom: 30px;
-            background: rgba(255,255,255,0.05);
+            background: linear-gradient(145deg, rgba(20,20,20,0.9) 0%, rgba(10,10,10,0.95) 100%);
             padding: 10px;
             border-radius: 12px;
+            border: 1px solid rgba(220, 20, 60, 0.3);
         }
         
         .tab {
@@ -87,23 +116,25 @@
         }
         
         .tab.active {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(145deg, rgba(220, 20, 60, 0.9) 0%, rgba(139, 0, 0, 0.95) 100%);
             color: white;
+            border: 1px solid rgba(220, 20, 60, 0.5);
         }
         
         .tab:hover:not(.active) {
-            background: rgba(255,255,255,0.1);
+            background: rgba(220, 20, 60, 0.1);
         }
         
         .tab .badge {
             position: absolute;
             top: 5px;
             right: 10px;
-            background: #e74c3c;
+            background: #dc143c;
             color: white;
             font-size: 0.75rem;
             padding: 2px 8px;
             border-radius: 10px;
+            box-shadow: 0 0 10px rgba(220, 20, 60, 0.5);
         }
         
         /* 内容区域 */
@@ -117,11 +148,12 @@
         
         /* 搜索区域 */
         .search-section {
-            background: rgba(255,255,255,0.05);
+            background: linear-gradient(145deg, rgba(20,20,20,0.9) 0%, rgba(10,10,10,0.95) 100%);
             border-radius: 16px;
-            border: 1px solid rgba(255,255,255,0.1);
+            border: 1px solid rgba(220, 20, 60, 0.3);
             padding: 30px;
             margin-bottom: 30px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.5);
         }
         
         .search-box {
@@ -146,24 +178,26 @@
         
         .search-box input:focus {
             outline: none;
-            border-color: #667eea;
+            border-color: #dc143c;
+            box-shadow: 0 0 10px rgba(220, 20, 60, 0.3);
         }
         
         .btn-search {
             padding: 15px 30px;
             border: none;
             border-radius: 10px;
-            background: linear-gradient(135deg, #27ae60, #2ecc71);
+            background: linear-gradient(145deg, rgba(220, 20, 60, 0.9) 0%, rgba(139, 0, 0, 0.95) 100%);
             color: white;
             font-size: 1rem;
             font-weight: 600;
             cursor: pointer;
             transition: all 0.3s;
+            border: 1px solid rgba(220, 20, 60, 0.5);
         }
         
         .btn-search:hover {
             transform: translateY(-2px);
-            box-shadow: 0 5px 20px rgba(39, 174, 96, 0.5);
+            box-shadow: 0 8px 30px rgba(220, 20, 60, 0.6);
         }
         
         .search-hint {
@@ -178,17 +212,18 @@
         
         /* 用户列表 */
         .user-list {
-            background: rgba(255,255,255,0.05);
+            background: linear-gradient(145deg, rgba(20,20,20,0.9) 0%, rgba(10,10,10,0.95) 100%);
             border-radius: 16px;
-            border: 1px solid rgba(255,255,255,0.1);
+            border: 1px solid rgba(220, 20, 60, 0.3);
             overflow: hidden;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.5);
         }
         
         .user-item {
             display: flex;
             align-items: center;
             padding: 20px 25px;
-            border-bottom: 1px solid rgba(255,255,255,0.05);
+            border-bottom: 1px solid rgba(220, 20, 60, 0.1);
             transition: background 0.3s;
         }
         
@@ -197,16 +232,17 @@
         }
         
         .user-item:hover {
-            background: rgba(255,255,255,0.03);
+            background: rgba(220, 20, 60, 0.05);
         }
         
         .user-avatar {
             width: 50px;
             height: 50px;
-            border-radius: 50%;
+            border-radius: 8px;
             object-fit: cover;
-            border: 2px solid rgba(255,255,255,0.2);
+            border: 2px solid rgba(220, 20, 60, 0.3);
             margin-right: 15px;
+            box-shadow: 0 0 10px rgba(220, 20, 60, 0.2);
         }
         
         .user-info {
@@ -240,22 +276,23 @@
         }
         
         .status-dot.online {
-            background: #27ae60;
-            box-shadow: 0 0 8px #27ae60;
+            background: #dc143c;
+            box-shadow: 0 0 8px rgba(220, 20, 60, 0.8);
         }
         
         .status-dot.offline {
-            background: #7f8c8d;
+            background: #555;
         }
         
         .location-tag {
             display: inline-block;
             padding: 2px 8px;
-            background: rgba(102, 126, 234, 0.3);
+            background: rgba(220, 20, 60, 0.2);
+            border: 1px solid rgba(220, 20, 60, 0.3);
             border-radius: 10px;
             font-size: 0.75rem;
             margin-left: 8px;
-            color: rgba(255,255,255,0.8);
+            color: #dc143c;
         }
         
         .user-actions {
@@ -274,32 +311,37 @@
         }
         
         .btn-add {
-            background: linear-gradient(135deg, #27ae60, #2ecc71);
+            background: linear-gradient(145deg, rgba(220, 20, 60, 0.9) 0%, rgba(139, 0, 0, 0.95) 100%);
             color: white;
+            border: 1px solid rgba(220, 20, 60, 0.5);
         }
         
         .btn-add:hover {
-            box-shadow: 0 5px 15px rgba(39, 174, 96, 0.5);
+            box-shadow: 0 5px 15px rgba(220, 20, 60, 0.5);
         }
         
         .btn-accept {
-            background: linear-gradient(135deg, #27ae60, #2ecc71);
+            background: linear-gradient(145deg, rgba(220, 20, 60, 0.9) 0%, rgba(139, 0, 0, 0.95) 100%);
             color: white;
+            border: 1px solid rgba(220, 20, 60, 0.5);
         }
         
         .btn-reject {
-            background: linear-gradient(135deg, #e74c3c, #c0392b);
+            background: linear-gradient(145deg, rgba(100,100,100,0.8) 0%, rgba(60,60,60,0.9) 100%);
             color: white;
+            border: 1px solid rgba(255,255,255,0.2);
         }
         
         .btn-cancel {
             background: rgba(255,255,255,0.1);
             color: white;
+            border: 1px solid rgba(255,255,255,0.2);
         }
         
         .btn-remove {
-            background: linear-gradient(135deg, #e74c3c, #c0392b);
+            background: linear-gradient(145deg, rgba(220, 20, 60, 0.9) 0%, rgba(139, 0, 0, 0.95) 100%);
             color: white;
+            border: 1px solid rgba(220, 20, 60, 0.5);
         }
         
         .btn-action:hover {
@@ -316,6 +358,23 @@
         .empty-state .icon {
             font-size: 4rem;
             margin-bottom: 20px;
+        }
+        
+        .empty-icon {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 80px;
+            height: 80px;
+            border: 2px solid rgba(220, 20, 60, 0.4);
+            border-radius: 12px;
+            background: linear-gradient(145deg, rgba(20,20,20,0.8) 0%, rgba(10,10,10,0.9) 100%);
+            color: rgba(220, 20, 60, 0.8);
+            font-size: 14px;
+            font-weight: 700;
+            letter-spacing: 2px;
+            margin-bottom: 20px;
+            box-shadow: 0 0 20px rgba(220, 20, 60, 0.1);
         }
         
         /* 提示消息 */
@@ -337,11 +396,13 @@
         }
         
         .toast.success {
-            background: linear-gradient(135deg, #27ae60, #2ecc71);
+            background: linear-gradient(145deg, rgba(220, 20, 60, 0.9) 0%, rgba(139, 0, 0, 0.95) 100%);
+            border: 1px solid rgba(220, 20, 60, 0.5);
         }
         
         .toast.error {
-            background: linear-gradient(135deg, #e74c3c, #c0392b);
+            background: linear-gradient(145deg, rgba(80,80,80,0.9) 0%, rgba(40,40,40,0.95) 100%);
+            border: 1px solid rgba(255,255,255,0.2);
         }
     </style>
 </head>
@@ -349,8 +410,8 @@
     <div class="friends-container">
         <!-- 顶部导航 -->
         <header class="header">
-            <div class="logo">👥 我的好友</div>
-            <button onclick="backToHall()" class="btn-back">🏠 返回大厅</button>
+            <div class="logo">我的好友</div>
+            <button onclick="backToHall()" class="btn-back">返回大厅</button>
         </header>
         
         <!-- 标签页 -->
@@ -371,7 +432,7 @@
         <div class="content-section active" id="section-friends">
             <div class="user-list" id="friendsList">
                 <div class="empty-state">
-                    <div class="icon">👋</div>
+                    <div class="icon">FRIENDS</div>
                     <p>暂无好友，去添加一些吧！</p>
                 </div>
             </div>
@@ -383,7 +444,7 @@
                 <h3 style="margin-bottom:20px;color:rgba(255,255,255,0.8)">收到的申请</h3>
                 <div class="user-list" id="receivedRequests">
                     <div class="empty-state">
-                        <div class="icon">📭</div>
+                        <div class="empty-icon">INBOX</div>
                         <p>没有收到好友申请</p>
                     </div>
                 </div>
@@ -391,7 +452,7 @@
                 <h3 style="margin:30px 0 20px;color:rgba(255,255,255,0.8)">发出的申请</h3>
                 <div class="user-list" id="sentRequests">
                     <div class="empty-state">
-                        <div class="icon">📤</div>
+                        <div class="empty-icon">SENT</div>
                         <p>没有发出好友申请</p>
                     </div>
                 </div>
@@ -403,7 +464,7 @@
             <div class="search-section">
                 <div class="search-box">
                     <input type="text" id="searchInput" placeholder="输入用户名或用户ID搜索..." maxlength="20">
-                    <button onclick="searchUsers()" class="btn-search">🔍 搜索</button>
+                    <button onclick="searchUsers()" class="btn-search">搜索</button>
                 </div>
                 <div class="search-hint">支持通过用户名（模糊搜索）或用户ID（精确搜索）查找</div>
                 
@@ -553,7 +614,7 @@
             if (requests.length === 0) {
                 container.innerHTML = `
                     <div class="empty-state">
-                        <div class="icon">📭</div>
+                        <div class="empty-icon">INBOX</div>
                         <p>没有收到好友申请</p>
                     </div>
                 `;
@@ -582,7 +643,7 @@
             if (requests.length === 0) {
                 container.innerHTML = `
                     <div class="empty-state">
-                        <div class="icon">📤</div>
+                        <div class="empty-icon">SENT</div>
                         <p>没有发出好友申请</p>
                     </div>
                 `;
@@ -636,7 +697,7 @@
             if (users.length === 0) {
                 container.innerHTML = `
                     <div class="empty-state">
-                        <div class="icon">🔍</div>
+                        <div class="icon">SEARCH</div>
                         <p>未找到匹配的用户</p>
                     </div>
                 `;

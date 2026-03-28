@@ -251,6 +251,30 @@
             transform: none;
         }
         
+        /* 用户头像样式 */
+        .user-avatar-wrapper {
+            width: 48px;
+            height: 48px;
+            border-radius: 8px;
+            overflow: hidden;
+            border: 2px solid rgba(220, 20, 60, 0.5);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 0 15px rgba(220, 20, 60, 0.2);
+        }
+        
+        .user-avatar-wrapper:hover {
+            border-color: rgba(220, 20, 60, 0.8);
+            box-shadow: 0 0 20px rgba(220, 20, 60, 0.4);
+            transform: translateY(-2px);
+        }
+        
+        .user-avatar-wrapper img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
         /* 面板标题样式 */
         .panel h3 {
             display: flex;
@@ -442,89 +466,52 @@
         /* 游戏名称区域 */
         /* 选中标记已移除 */
         
-        /* 箭头按钮 - 精美版 - GameWorld 蓝紫主题 */
-        .carousel-arrow {
+        /* 翻页按钮 - 竖式简约风格 */
+        .carousel-nav-btn {
             position: absolute;
-            top: 50%;
+            top: 35%;
             transform: translateY(-50%);
-            width: 50px;
+            width: 28px;
             height: 80px;
-            border-radius: 12px;
-            background: linear-gradient(145deg, #dc143c, #8b0000);
-            border: 2px solid rgba(255,255,255,0.2);
-            color: white;
-            font-size: 28px;
-            font-weight: bold;
+            background: linear-gradient(180deg, rgba(20,20,20,0.9) 0%, rgba(10,10,10,0.95) 100%);
+            border: 1px solid rgba(220, 20, 60, 0.3);
+            border-radius: 4px;
             cursor: pointer;
             display: flex;
             align-items: center;
             justify-content: center;
-            box-shadow: 
-                0 8px 25px rgba(102, 126, 234, 0.4),
-                inset 0 1px 0 rgba(255,255,255,0.3);
-            transition: all 0.3s cubic-bezier(0.23, 1, 0.32, 1);
-            z-index: 30;
+            transition: all 0.3s ease;
+            z-index: 10;
+            box-shadow: 0 0 15px rgba(0,0,0,0.5);
         }
         
-        .carousel-arrow::before {
-            content: '';
-            position: absolute;
-            inset: -2px;
-            border-radius: 14px;
-            background: linear-gradient(135deg, rgba(220, 20, 60, 0.5), transparent, rgba(139, 0, 0, 0.3));
-            z-index: -1;
-            opacity: 0;
-            transition: opacity 0.3s ease;
+        .carousel-nav-btn:hover {
+            border-color: rgba(220, 20, 60, 0.6);
+            box-shadow: 0 0 20px rgba(220, 20, 60, 0.2);
+            background: linear-gradient(180deg, rgba(30,30,30,0.9) 0%, rgba(15,15,15,0.95) 100%);
         }
         
-        .carousel-arrow:hover::before {
-            opacity: 1;
-        }
-        
-        .carousel-arrow:hover {
-            transform: translateY(-50%) scale(1.05);
-            box-shadow: 
-                0 12px 35px rgba(102, 126, 234, 0.6),
-                inset 0 1px 0 rgba(255,255,255,0.3);
-        }
-        
-        .carousel-arrow:active {
-            transform: translateY(-50%) scale(0.98);
-            box-shadow: 
-                0 4px 15px rgba(102, 126, 234, 0.4),
-                inset 0 1px 0 rgba(255,255,255,0.3);
-        }
-        
-        .carousel-prev {
-            left: calc(50% - 200px);
-        }
-        
-        .carousel-next {
-            right: calc(50% - 200px);
-        }
-            z-index: 20;
-            transition: all 0.3s;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            box-shadow: 0 4px 15px rgba(255,215,0,0.4);
-        }
-        
-        .carousel-arrow:hover {
-            transform: translateY(-50%) scale(1.1);
-            box-shadow: 0 6px 20px rgba(255,215,0,0.6);
-        }
-        
-        .carousel-arrow:active {
+        .carousel-nav-btn:active {
             transform: translateY(-50%) scale(0.95);
         }
         
-        .carousel-prev {
-            left: 10px;
+        .carousel-nav-btn .nav-arrow {
+            color: rgba(220, 20, 60, 0.8);
+            font-size: 24px;
+            font-weight: 300;
+            line-height: 1;
         }
         
-        .carousel-next {
-            right: 10px;
+        .carousel-nav-btn:hover .nav-arrow {
+            color: #dc143c;
+        }
+        
+        .carousel-nav-btn.carousel-prev {
+            left: -40px;
+        }
+        
+        .carousel-nav-btn.carousel-next {
+            right: -40px;
         }
         
         /* 游戏信息区域已移除 */
@@ -873,6 +860,10 @@
         <header class="header">
             <!-- 左侧：用户信息卡片 -->
             <div class="header-left" style="display: flex; align-items: center; gap: 12px;">
+                <!-- 用户头像 -->
+                <div class="user-avatar-wrapper" onclick="goToProfile()" title="点击修改资料">
+                    <img id="userAvatar" src="../avatars/default.png" alt="头像">
+                </div>
                 <!-- 昵称卡片 -->
                 <div class="user-badge nickname-badge" onclick="goToProfile()" title="点击修改资料">
                     <span class="badge-label">PLAYER</span>
@@ -932,12 +923,22 @@
             <section class="games-section">
                 <!-- 滚轴式游戏选择器 -->
                 <div class="game-carousel-container">
+                    <!-- 翻页按钮 - 左 -->
+                    <button class="carousel-nav-btn carousel-prev" onclick="prevGame()">
+                        <span class="nav-arrow">‹</span>
+                    </button>
+                    
                     <!-- 游戏滚轴 -->
                     <div class="game-carousel" id="gameCarousel">
                         <div class="carousel-track" id="carouselTrack">
                             <!-- 游戏卡片将动态生成 -->
                         </div>
                     </div>
+                    
+                    <!-- 翻页按钮 - 右 -->
+                    <button class="carousel-nav-btn carousel-next" onclick="nextGame()">
+                        <span class="nav-arrow">›</span>
+                    </button>
                     
                     <!-- 指示器 -->
                     <div class="carousel-indicators" id="carouselIndicators"></div>

@@ -6,14 +6,14 @@
     <title>GameWorld - 登录</title>
     <link rel="stylesheet" href="../css/style.css">
     <style>
-        /* 自定义游戏风格弹窗 */
+        /* 黑红白风格弹窗 */
         .game-modal-overlay {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(0, 0, 0, 0.85);
+            background: rgba(0, 0, 0, 0.9);
             display: none;
             justify-content: center;
             align-items: center;
@@ -24,54 +24,75 @@
             display: flex;
         }
         .game-modal-content {
-            background: linear-gradient(145deg, rgba(30,30,30,0.98), rgba(10,10,10,0.99));
-            padding: 30px 40px;
-            border-radius: 16px;
+            background: linear-gradient(145deg, rgba(25,25,25,0.98), rgba(10,10,10,0.99));
+            padding: 35px 45px;
+            border-radius: 12px;
             text-align: center;
-            border: 2px solid rgba(102, 126, 234, 0.5);
-            box-shadow: 0 20px 60px rgba(0,0,0,0.8), 0 0 30px rgba(102, 126, 234, 0.2);
+            border: 1px solid rgba(220, 20, 60, 0.4);
+            box-shadow: 0 20px 60px rgba(0,0,0,0.9), 0 0 40px rgba(220, 20, 60, 0.15);
             max-width: 90%;
-            width: 400px;
+            width: 380px;
             animation: scaleIn 0.3s ease;
         }
         .game-modal-icon {
-            font-size: 48px;
-            margin-bottom: 15px;
+            width: 70px;
+            height: 70px;
+            margin: 0 auto 20px;
+            border: 2px solid rgba(220, 20, 60, 0.5);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(145deg, rgba(20,20,20,0.9), rgba(10,10,10,0.95));
+            box-shadow: 0 0 25px rgba(220, 20, 60, 0.2);
+        }
+        .game-modal-icon::before {
+            font-size: 14px;
+            font-weight: 700;
+            letter-spacing: 1px;
+        }
+        .game-modal-icon.success::before {
+            content: 'OK';
+            color: #dc143c;
+        }
+        .game-modal-icon.error::before {
+            content: 'ERR';
+            color: #dc143c;
+        }
+        .game-modal-icon.info::before {
+            content: 'INFO';
+            color: rgba(255,255,255,0.6);
         }
         .game-modal-title {
-            font-size: 1.5rem;
+            font-size: 1.4rem;
             color: #fff;
-            margin-bottom: 15px;
+            margin-bottom: 12px;
             font-weight: 600;
+            letter-spacing: 2px;
         }
         .game-modal-message {
             font-size: 1rem;
-            color: rgba(255,255,255,0.8);
-            margin-bottom: 25px;
+            color: rgba(255,255,255,0.7);
+            margin-bottom: 28px;
             line-height: 1.5;
         }
         .game-modal-btn {
-            padding: 12px 35px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            border: none;
-            border-radius: 8px;
-            color: white;
-            font-size: 1rem;
+            padding: 12px 40px;
+            background: transparent;
+            border: 1px solid rgba(220, 20, 60, 0.5);
+            border-radius: 6px;
+            color: #dc143c;
+            font-size: 14px;
             font-weight: 600;
+            letter-spacing: 2px;
             cursor: pointer;
             transition: all 0.3s;
+            text-transform: uppercase;
         }
         .game-modal-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 20px rgba(102, 126, 234, 0.5);
-        }
-        .game-modal-btn.success {
-            background: linear-gradient(135deg, #27ae60, #2ecc71);
-            box-shadow: 0 5px 20px rgba(39, 174, 96, 0.4);
-        }
-        .game-modal-btn.error {
-            background: linear-gradient(135deg, #e74c3c, #c0392b);
-            box-shadow: 0 5px 20px rgba(231, 76, 60, 0.4);
+            background: rgba(220, 20, 60, 0.1);
+            border-color: rgba(220, 20, 60, 0.8);
+            box-shadow: 0 0 20px rgba(220, 20, 60, 0.3);
         }
         @keyframes fadeIn {
             from { opacity: 0; }
@@ -135,7 +156,7 @@
     <!-- 自定义弹窗 -->
     <div class="game-modal-overlay" id="gameModal">
         <div class="game-modal-content">
-            <div class="game-modal-icon" id="modalIcon">ℹ️</div>
+            <div class="game-modal-icon" id="modalIcon"></div>
             <div class="game-modal-title" id="modalTitle">提示</div>
             <div class="game-modal-message" id="modalMessage">消息内容</div>
             <button class="game-modal-btn" id="modalBtn" onclick="closeModal()">确定</button>
@@ -158,18 +179,16 @@
             
             switch(type) {
                 case 'success':
-                    icon.textContent = '✅';
-                    title.textContent = '成功';
-                    btn.classList.add('success');
+                    icon.className = 'game-modal-icon success';
+                    title.textContent = 'SUCCESS';
                     break;
                 case 'error':
-                    icon.textContent = '❌';
-                    title.textContent = '错误';
-                    btn.classList.add('error');
+                    icon.className = 'game-modal-icon error';
+                    title.textContent = 'ERROR';
                     break;
                 default:
-                    icon.textContent = 'ℹ️';
-                    title.textContent = '提示';
+                    icon.className = 'game-modal-icon info';
+                    title.textContent = 'NOTICE';
             }
             
             modal.classList.add('show');

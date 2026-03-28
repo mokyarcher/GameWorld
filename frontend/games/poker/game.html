@@ -191,7 +191,7 @@
             z-index: 1;
         }
 
-        /* 碳纤维纹理层 - 红黑交替线条 */
+        /* 碳纤维纹理层 - 灰黑交替线条 */
         .carbon-fiber {
             position: absolute;
             top: 0;
@@ -200,21 +200,21 @@
             bottom: 0;
             border-radius: 50% / 40%;
             background: 
-                /* 红黑交替线条 - 左上到右下（45度） */
+                /* 灰黑交替线条 - 左上到右下（45度） */
                 repeating-linear-gradient(
                     45deg,
                     transparent,
+                    transparent 3px,
+                    rgba(0,0,0,0.6) 3px,
+                    rgba(0,0,0,0.6) 4px,
                     transparent 4px,
-                    rgba(0,0,0,0.5) 4px,
-                    rgba(0,0,0,0.5) 5px,
-                    transparent 5px,
-                    transparent 8px,
-                    rgba(220,20,60,0.6) 8px,
-                    rgba(220,20,60,0.6) 9px
+                    transparent 6px,
+                    rgba(100,100,100,0.3) 6px,
+                    rgba(100,100,100,0.3) 7px
                 );
             z-index: 0;
             pointer-events: none;
-            opacity: 0.85;
+            opacity: 0.8;
         }
 
         /* 桌子边沿 - 立体木纹/金属边框效果 */
