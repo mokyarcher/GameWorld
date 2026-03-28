@@ -598,7 +598,7 @@
         .profile-avatar {
             width: 80px;
             height: 80px;
-            border-radius: 50%;
+            border-radius: 12px;
             background: linear-gradient(135deg, #dc143c, #8b0000);
             display: flex;
             align-items: center;
@@ -606,6 +606,14 @@
             font-size: 2.5rem;
             margin: 0 auto 20px;
             box-shadow: 0 0 20px rgba(220, 20, 60, 0.3);
+            overflow: hidden;
+            border: 2px solid rgba(220, 20, 60, 0.5);
+        }
+        
+        .profile-avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
         }
 
         .profile-info {
@@ -965,7 +973,7 @@
                 <span>个人信息</span>
                 <button class="btn-close" onclick="hideProfileModal()">关闭</button>
             </div>
-            <div class="profile-avatar" id="profileAvatar">用户</div>
+            <div class="profile-avatar" id="profileAvatar"><img src="" alt="头像" id="profileAvatarImg"></div>
             <div class="profile-info">
                 <div class="profile-info-item">
                     <span>用户名</span>
@@ -1341,6 +1349,17 @@
             document.getElementById('profileUsername').textContent = user.username || '-';
             document.getElementById('profileNickname').textContent = user.nickname || user.username || '-';
             document.getElementById('profileChips').textContent = formatChips(user.chips || 0);
+            
+            // 加载头像
+            const avatarImg = document.getElementById('profileAvatarImg');
+            if (user.avatar) {
+                avatarImg.src = `../../avatars/${user.avatar}`;
+                avatarImg.style.display = 'block';
+            } else {
+                avatarImg.style.display = 'none';
+                document.getElementById('profileAvatar').textContent = user.nickname ? user.nickname[0].toUpperCase() : '用户';
+            }
+            
             document.getElementById('profileModal').classList.add('show');
         }
 

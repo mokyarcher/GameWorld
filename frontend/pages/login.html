@@ -25,14 +25,28 @@
         }
         .game-modal-content {
             background: linear-gradient(145deg, rgba(25,25,25,0.98), rgba(10,10,10,0.99));
-            padding: 35px 45px;
+            padding: 45px 45px 35px;
             border-radius: 12px;
             text-align: center;
             border: 1px solid rgba(220, 20, 60, 0.4);
             box-shadow: 0 20px 60px rgba(0,0,0,0.9), 0 0 40px rgba(220, 20, 60, 0.15);
             max-width: 90%;
-            width: 380px;
+            width: 320px;
             animation: scaleIn 0.3s ease;
+        }
+        
+        /* 成功弹窗特殊布局 - 无按钮 */
+        .game-modal-content.success-modal {
+            padding: 50px 45px 45px;
+        }
+        
+        .game-modal-content.success-modal .game-modal-title {
+            margin-top: 25px;
+            margin-bottom: 8px;
+        }
+        
+        .game-modal-content.success-modal .game-modal-message {
+            margin-bottom: 0;
         }
         .game-modal-icon {
             width: 70px;
@@ -69,6 +83,12 @@
             margin-bottom: 12px;
             font-weight: 600;
             letter-spacing: 2px;
+        }
+        
+        .game-modal-title.success-title {
+            font-size: 1.6rem;
+            margin-top: 20px;
+            margin-bottom: 8px;
         }
         .game-modal-message {
             font-size: 1rem;
@@ -155,7 +175,7 @@
 
     <!-- 自定义弹窗 -->
     <div class="game-modal-overlay" id="gameModal">
-        <div class="game-modal-content">
+        <div class="game-modal-content" id="modalContent">
             <div class="game-modal-icon" id="modalIcon"></div>
             <div class="game-modal-title" id="modalTitle">提示</div>
             <div class="game-modal-message" id="modalMessage">消息内容</div>
@@ -167,6 +187,7 @@
         // 显示自定义弹窗
         function showModal(message, type = 'info', callback) {
             const modal = document.getElementById('gameModal');
+            const content = document.getElementById('modalContent');
             const icon = document.getElementById('modalIcon');
             const title = document.getElementById('modalTitle');
             const msg = document.getElementById('modalMessage');
@@ -174,13 +195,30 @@
             
             msg.textContent = message;
             
-            // 重置按钮样式
+            // 清除之前的定时器
+            if (window.modalAutoCloseTimer) {
+                clearTimeout(window.modalAutoCloseTimer);
+            }
+            
+            // 重置样式
             btn.className = 'game-modal-btn';
+            title.className = 'game-modal-title';
+            content.className = 'game-modal-content';
+            btn.style.display = 'inline-block';
             
             switch(type) {
                 case 'success':
                     icon.className = 'game-modal-icon success';
                     title.textContent = 'SUCCESS';
+                    title.className = 'game-modal-title success-title';
+                    content.className = 'game-modal-content success-modal';
+                    btn.style.display = 'none'; // 隐藏确定按钮
+                    
+                    // 0.5s 后自动关闭
+                    window.modalAutoCloseTimer = setTimeout(() => {
+                        closeModal();
+                        if (callback) callback();
+                    }, 500);
                     break;
                 case 'error':
                     icon.className = 'game-modal-icon error';
@@ -193,8 +231,10 @@
             
             modal.classList.add('show');
             
-            // 点击确定后的回调
-            window.modalCallback = callback;
+            // 点击确定后的回调（非成功状态）
+            if (type !== 'success') {
+                window.modalCallback = callback;
+            }
         }
         
         function closeModal() {
