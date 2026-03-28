@@ -404,6 +404,115 @@
             background: linear-gradient(145deg, rgba(80,80,80,0.9) 0%, rgba(40,40,40,0.95) 100%);
             border: 1px solid rgba(255,255,255,0.2);
         }
+        
+        /* 确认弹窗 */
+        .confirm-modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.85);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 10000;
+            animation: fadeIn 0.3s ease;
+        }
+        
+        .confirm-modal-overlay.show {
+            display: flex;
+        }
+        
+        .confirm-modal-content {
+            background: linear-gradient(145deg, rgba(25,25,25,0.98), rgba(10,10,10,0.99));
+            padding: 30px 40px;
+            border-radius: 12px;
+            text-align: center;
+            border: 1px solid rgba(220, 20, 60, 0.4);
+            box-shadow: 0 20px 60px rgba(0,0,0,0.9), 0 0 40px rgba(220, 20, 60, 0.15);
+            max-width: 90%;
+            width: 360px;
+            animation: scaleIn 0.3s ease;
+        }
+        
+        .confirm-modal-icon {
+            width: 60px;
+            height: 60px;
+            margin: 0 auto 20px;
+            border: 2px solid rgba(220, 20, 60, 0.5);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(145deg, rgba(20,20,20,0.9), rgba(10,10,10,0.95));
+            font-size: 24px;
+            color: #dc143c;
+        }
+        
+        .confirm-modal-title {
+            font-size: 1.2rem;
+            color: #fff;
+            margin-bottom: 15px;
+            font-weight: 600;
+            letter-spacing: 2px;
+        }
+        
+        .confirm-modal-message {
+            font-size: 0.95rem;
+            color: rgba(255,255,255,0.7);
+            margin-bottom: 25px;
+            line-height: 1.5;
+        }
+        
+        .confirm-modal-actions {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+        }
+        
+        .confirm-modal-btn {
+            padding: 10px 30px;
+            border-radius: 6px;
+            font-size: 14px;
+            font-weight: 600;
+            letter-spacing: 1px;
+            cursor: pointer;
+            transition: all 0.3s;
+            border: 1px solid;
+        }
+        
+        .confirm-modal-btn.confirm {
+            background: linear-gradient(145deg, rgba(220, 20, 60, 0.9) 0%, rgba(139, 0, 0, 0.95) 100%);
+            color: white;
+            border-color: rgba(220, 20, 60, 0.5);
+        }
+        
+        .confirm-modal-btn.confirm:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(220, 20, 60, 0.4);
+        }
+        
+        .confirm-modal-btn.cancel {
+            background: transparent;
+            color: rgba(255,255,255,0.6);
+            border-color: rgba(255,255,255,0.2);
+        }
+        
+        .confirm-modal-btn.cancel:hover {
+            border-color: rgba(255,255,255,0.4);
+            color: rgba(255,255,255,0.9);
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        
+        @keyframes scaleIn {
+            from { transform: scale(0.9); opacity: 0; }
+            to { transform: scale(1); opacity: 1; }
+        }
     </style>
 </head>
 <body>
@@ -475,6 +584,19 @@
     
     <!-- 提示消息 -->
     <div class="toast" id="toast"></div>
+    
+    <!-- 确认弹窗 -->
+    <div class="confirm-modal-overlay" id="confirmModal">
+        <div class="confirm-modal-content">
+            <div class="confirm-modal-icon">?</div>
+            <div class="confirm-modal-title" id="confirmTitle">确认</div>
+            <div class="confirm-modal-message" id="confirmMessage">确认要执行此操作吗？</div>
+            <div class="confirm-modal-actions">
+                <button class="confirm-modal-btn cancel" onclick="closeConfirmModal(false)">取消</button>
+                <button class="confirm-modal-btn confirm" onclick="closeConfirmModal(true)">确认</button>
+            </div>
+        </div>
+    </div>
     
     <script>
         const API_BASE = `${window.location.protocol}//${window.location.host}/api`;
@@ -833,11 +955,10 @@
         
         // 删除好友
         async function removeFriend(friendId) {
-            if (!confirm('确定要删除这位好友吗？')) {
-                return;
-            }
-            
-            try {
+            showConfirmModal('确定要删除这位好友吗？', '删除好友', async (confirmed) => {
+                if (!confirmed) return;
+                
+                try {
                 const response = await fetch(`${API_BASE}/friends/remove`, {
                     method: 'POST',
                     headers: {
@@ -859,6 +980,7 @@
                 console.error('删除好友失败:', error);
                 showToast('网络错误', 'error');
             }
+            });
         }
         
         // 显示提示
@@ -871,6 +993,38 @@
                 toast.classList.remove('show');
             }, 3000);
         }
+        
+        // 确认弹窗相关
+        let confirmCallback = null;
+        
+        function showConfirmModal(message, title = '确认', callback) {
+            const modal = document.getElementById('confirmModal');
+            const titleEl = document.getElementById('confirmTitle');
+            const messageEl = document.getElementById('confirmMessage');
+            
+            titleEl.textContent = title;
+            messageEl.textContent = message;
+            confirmCallback = callback;
+            
+            modal.classList.add('show');
+        }
+        
+        function closeConfirmModal(confirmed) {
+            const modal = document.getElementById('confirmModal');
+            modal.classList.remove('show');
+            
+            if (confirmCallback) {
+                confirmCallback(confirmed);
+                confirmCallback = null;
+            }
+        }
+        
+        // 点击遮罩关闭
+        document.getElementById('confirmModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeConfirmModal(false);
+            }
+        });
         
         // 返回大厅
         function backToHall() {

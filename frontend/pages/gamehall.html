@@ -1122,31 +1122,35 @@
                     const testGames = [
                         {
                             game_code: 'chess',
-                            game_name: '国际象棋',
-                            description: '经典策略棋类游戏，考验你的智慧和谋略',
+                            game_name: '正在开发',
+                            description: '经典策略棋类游戏，敬请期待',
                             min_chips: 100,
-                            max_players: 2
+                            max_players: 2,
+                            developing: true
                         },
                         {
                             game_code: 'mahjong',
-                            game_name: '四川麻将',
-                            description: '血战到底，刺激对战，胡牌不停',
+                            game_name: '正在开发',
+                            description: '四川麻将，敬请期待',
                             min_chips: 500,
-                            max_players: 4
+                            max_players: 4,
+                            developing: true
                         },
                         {
                             game_code: 'dice',
-                            game_name: '骰子大战',
-                            description: '比拼运气与胆识，摇出你的幸运数字',
+                            game_name: '正在开发',
+                            description: '骰子大战，敬请期待',
                             min_chips: 50,
-                            max_players: 6
+                            max_players: 6,
+                            developing: true
                         },
                         {
                             game_code: 'slot',
-                            game_name: '幸运老虎机',
-                            description: '777大奖等你来拿，一夜暴富不是梦',
+                            game_name: '正在开发',
+                            description: '幸运老虎机，敬请期待',
                             min_chips: 10,
-                            max_players: 1
+                            max_players: 1,
+                            developing: true
                         },
 
                     ];
@@ -1172,31 +1176,35 @@
                     },
                     {
                         game_code: 'chess',
-                        game_name: '国际象棋',
-                        description: '经典策略棋类游戏，考验你的智慧和谋略',
+                        game_name: '正在开发',
+                        description: '经典策略棋类游戏，敬请期待',
                         min_chips: 100,
-                        max_players: 2
+                        max_players: 2,
+                        developing: true
                     },
                     {
                         game_code: 'mahjong',
-                        game_name: '四川麻将',
-                        description: '血战到底，刺激对战，胡牌不停',
+                        game_name: '正在开发',
+                        description: '四川麻将，敬请期待',
                         min_chips: 500,
-                        max_players: 4
+                        max_players: 4,
+                        developing: true
                     },
                     {
                         game_code: 'dice',
-                        game_name: '骰子大战',
-                        description: '比拼运气与胆识，摇出你的幸运数字',
+                        game_name: '正在开发',
+                        description: '骰子大战，敬请期待',
                         min_chips: 50,
-                        max_players: 6
+                        max_players: 6,
+                        developing: true
                     },
                     {
                         game_code: 'slot',
-                        game_name: '幸运老虎机',
-                        description: '777大奖等你来拿，一夜暴富不是梦',
+                        game_name: '正在开发',
+                        description: '幸运老虎机，敬请期待',
                         min_chips: 10,
-                        max_players: 1
+                        max_players: 1,
+                        developing: true
                     },
 
                 ];
@@ -1208,7 +1216,12 @@
         // 渲染滚轴
         // 获取游戏背景渐变
         // 获取游戏卡牌图片路径
-        function getGameCardImage(gameCode) {
+        function getGameCardImage(gameCode, isDeveloping = false) {
+            // 正在开发的游戏使用统一卡牌
+            if (isDeveloping) {
+                return '../images/cards/dev-card.jpg';
+            }
+            
             const images = {
                 'poker-classic': '../images/cards/poker-classic.jpg',
                 'poker-texas': '../images/cards/poker-texas.jpg',
@@ -1225,7 +1238,7 @@
             const indicators = document.getElementById('carouselIndicators');
             
             track.innerHTML = gamesData.map((game, index) => {
-                const cardImage = getGameCardImage(game.game_code);
+                const cardImage = getGameCardImage(game.game_code, game.developing);
                 return `
                     <div class="carousel-item ${getItemClass(index)}" data-index="${index}" onclick="handleCardClick(${index})">
                         <img class="card-image" src="${cardImage}" alt="${game.game_name}">
