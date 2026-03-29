@@ -40,6 +40,9 @@ async function init() {
   // 数据库迁移：添加 is_locked 列（如果不存在）
   await migrateAddLockedColumn();
   
+  // 初始化地图模块数据库
+  await initMapDatabase();
+  
   console.log('数据库初始化完成');
 }
 
@@ -113,6 +116,30 @@ function all(sql, params = []) {
       }
     });
   });
+}
+
+// 初始化地图模块数据库
+async function initMapDatabase() {
+  try {
+    const mapSchemaPath = path.join(__dirname, 'map_schema.sql');
+    if (fs.existsSync(mapSchemaPath)) {
+      const mapSchema = fs.readFileSync(mapSchemaPath, 'utf8');
+      const statements = mapSchema.split(';').filter(stmt => stmt.trim());
+      
+      for (const statement of statements) {
+        try {
+          await run(statement);
+        } catch (err) {
+          if (!err.message.includes('already exists')) {
+            console.error('[DB] 地图表初始化失败:', err.message);
+          }
+        }
+      }
+      console.log('[DB] 地图模块数据库初始化完成');
+    }
+  } catch (err) {
+    console.error('[DB] 地图数据库初始化失败:', err.message);
+  }
 }
 
 module.exports = {

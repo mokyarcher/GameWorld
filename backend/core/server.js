@@ -10,6 +10,7 @@ const gamehallController = require('../modules/gamehall/gamehall.controller');
 const { router: adminController, initAdminAccount } = require('../modules/admin/admin.controller');
 const friendsController = require('../modules/friends/friends.controller');
 const { router: onlineController, userOnline, userOffline, updateLocation } = require('../modules/online/online.controller');
+const mapController = require('../modules/map/map.controller');
 
 const app = express();
 const server = http.createServer(app);
@@ -33,6 +34,10 @@ app.use(express.json());
 const frontendPath = path.join(__dirname, '../../frontend');
 app.use(express.static(frontendPath));
 
+// 静态文件服务：上传的图片
+const uploadsPath = path.join(__dirname, '../../uploads');
+app.use('/uploads', express.static(uploadsPath));
+
 // 处理 favicon.ico 请求，返回空响应避免404错误
 app.get('/favicon.ico', (req, res) => {
   res.status(204).end();
@@ -49,6 +54,7 @@ async function startServer() {
   app.use('/api/admin', adminController);
   app.use('/api/friends', friendsController);
   app.use('/api/online', onlineController);
+  app.use('/api/map', mapController);
   
   // 初始化管理员账户
   await initAdminAccount();
@@ -87,7 +93,7 @@ async function startServer() {
   pokerSocket(io);
   
   server.listen(PORT, HOST, () => {
-    console.log(`GameWorld 服务器运行在 http://${HOST}:${PORT}`);
+    console.log(`ShareX 服务器运行在 http://${HOST}:${PORT}`);
     console.log(`登录页面: http://localhost:${PORT}/pages/login.html`);
     console.log(`局域网访问: http://<你的IP地址>:${PORT}/pages/login.html`);
   });

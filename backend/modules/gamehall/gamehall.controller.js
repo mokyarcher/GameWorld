@@ -66,8 +66,8 @@ router.get('/announcements', async (req, res) => {
     const announcements = [
       {
         id: 1,
-        title: '欢迎来到 GameWorld！',
-        content: 'GameWorld 是一个多游戏平台，目前支持贵州扑克。更多游戏即将上线！',
+        title: '欢迎来到 ShareX！',
+        content: 'ShareX 是一个分享平台，支持游戏、工具和其他有趣的内容。更多功能即将上线！',
         created_at: new Date().toISOString()
       },  
       {

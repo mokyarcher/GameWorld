@@ -816,9 +816,69 @@
                 font-size: 0.8rem;
             }
         }
+        
+        /* 横屏提示 - 手机竖屏时显示 */
+        .orientation-hint {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 100%);
+            z-index: 99999;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 20px;
+        }
+        
+        .orientation-hint .phone-icon {
+            font-size: 80px;
+            animation: rotatePhone 2s ease-in-out infinite;
+            margin-bottom: 30px;
+        }
+        
+        .orientation-hint .hint-title {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #dc143c;
+            margin-bottom: 15px;
+        }
+        
+        .orientation-hint .hint-text {
+            font-size: 1rem;
+            color: rgba(255,255,255,0.7);
+            line-height: 1.6;
+        }
+        
+        @keyframes rotatePhone {
+            0%, 100% { transform: rotate(0deg); }
+            50% { transform: rotate(90deg); }
+        }
+        
+        /* 手机竖屏时显示横屏提示 */
+        @media screen and (max-width: 768px) and (orientation: portrait) {
+            .orientation-hint {
+                display: flex;
+            }
+            body > *:not(.orientation-hint) {
+                display: none !important;
+            }
+        }
     </style>
 </head>
 <body>
+    <!-- 横屏提示 -->
+    <div class="orientation-hint" id="orientationHint">
+        <div class="phone-icon">📱</div>
+        <div class="hint-title">请切换至横屏模式</div>
+        <div class="hint-text">
+            本游戏需要在横屏模式下进行<br>
+            请将手机旋转90度
+        </div>
+    </div>
     <!-- 自定义弹窗 -->
     <div class="game-modal-overlay" id="gameModal">
         <div class="game-modal-content">

@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GameWorld - 游戏大厅</title>
+    <title>ShareX - 游戏大厅</title>
     <link rel="stylesheet" href="../css/style.css">
     <style>
         /* 自定义游戏风格弹窗 */
@@ -507,11 +507,11 @@
         }
         
         .carousel-nav-btn.carousel-prev {
-            left: -40px;
+            left: 60px;
         }
         
         .carousel-nav-btn.carousel-next {
-            right: -40px;
+            right: 60px;
         }
         
         /* 游戏信息区域已移除 */
@@ -730,11 +730,11 @@
             }
             
             .carousel-prev {
-                left: calc(50% - 125px);
+                left: calc(50% - 200px);
             }
             
             .carousel-next {
-                right: calc(50% - 125px);
+                right: calc(50% - 200px);
             }
         }
         
@@ -789,11 +789,11 @@
             }
             
             .carousel-prev {
-                left: calc(50% - 110px);
+                left: calc(50% - 180px);
             }
             
             .carousel-next {
-                right: calc(50% - 110px);
+                right: calc(50% - 180px);
             }
         }
         
@@ -876,8 +876,8 @@
                 </div>
             </div>
             
-            <!-- 中间：GameWorld Logo -->
-            <div class="logo" style="position: absolute; left: 50%; transform: translateX(-50%); margin-top: 25px; font-weight: 800; display: flex; align-items: center; gap: 8px;"><span style="font-size: 12px; font-weight: 700; letter-spacing: 2px; color: #dc143c; background: rgba(220, 20, 60, 0.1); padding: 3px 8px; border-radius: 4px; border: 1px solid rgba(220, 20, 60, 0.3);">GAME</span><span style="color: #fff;">WORLD</span></div>
+            <!-- 中间：ShareX Logo -->
+            <div class="logo" style="position: absolute; left: 50%; transform: translateX(-50%); margin-top: 25px; font-weight: 800; display: flex; align-items: center; gap: 8px;"><span style="font-size: 12px; font-weight: 700; letter-spacing: 2px; color: #dc143c; background: rgba(220, 20, 60, 0.1); padding: 3px 8px; border-radius: 4px; border: 1px solid rgba(220, 20, 60, 0.3);">SHARE</span><span style="color: #fff;">X</span></div>
             
             <!-- 右侧：按钮 -->
             <div class="header-right" style="display: flex; align-items: center;">
@@ -1180,10 +1180,25 @@
 
                     ];
                     
-                    // 去重合并
+                    // 去重合并，地图分享放到第二位（德州扑克之后）
                     const existingCodes = backendGames.map(g => g.game_code);
                     const uniqueTestGames = testGames.filter(g => !existingCodes.includes(g.game_code));
-                    gamesData = [...backendGames, ...uniqueTestGames];
+                    
+                    // 地图分享放到第二位
+                    const mapTool = {
+                        game_code: 'map',
+                        game_name: '足迹空间',
+                        description: '在地图上标记你的足迹，分享美好瞬间',
+                        icon: '🗺️',
+                        is_tool: true
+                    };
+                    
+                    // 如果后端没有map，则插入到第二位
+                    if (!existingCodes.includes('map')) {
+                        gamesData = [backendGames[0], mapTool, ...backendGames.slice(1), ...uniqueTestGames];
+                    } else {
+                        gamesData = [...backendGames, ...uniqueTestGames];
+                    }
                     
                     initCarousel();
 
@@ -1192,6 +1207,13 @@
                 console.error('加载游戏列表失败:', error);
                 // 如果后端加载失败，使用测试数据
                 gamesData = [
+                    {
+                        game_code: 'map',
+                        game_name: '足迹空间',
+                        description: '在地图上标记你的足迹，分享美好瞬间',
+                        icon: '🗺️',
+                        is_tool: true
+                    },
                     {
                         game_code: 'poker',
                         game_name: '德州扑克',
@@ -1248,6 +1270,7 @@
             }
             
             const images = {
+                'map': '../images/cards/map-share-card.jpg',  // 地图分享使用专用背景
                 'poker-classic': '../images/cards/poker-classic.jpg',
                 'poker-texas': '../images/cards/poker-texas.jpg',
                 'poker-omaha': '../images/cards/poker-omaha.jpg',
@@ -2161,6 +2184,8 @@
         function enterGame(gameCode) {
             if (gameCode === 'poker') {
                 window.location.href = '../games/poker/lobby.html';
+            } else if (gameCode === 'map') {
+                window.location.href = './map/index.html';
             } else {
                 showModal('该游戏即将上线，敬请期待！', 'info');
             }

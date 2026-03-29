@@ -1,0 +1,1154 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>ShareX - 地图分享</title>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Montserrat:wght@400;600;700;900&display=swap" rel="stylesheet">
+    <!-- 高德地图 API -->
+    <!-- 需要替换: YOUR_AMAP_KEY = 你的Key, YOUR_AMAP_JSCODE = 你的安全密钥 -->
+    <script src="https://webapi.amap.com/maps?v=2.0&key=dc1a31eed073a23a9c40279af411e571&jscode=241a51fe6f730d717facae1b43c1d69d"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #0a0a0a;
+            color: #fff;
+            overflow: hidden;
+        }
+
+        /* 地图容器 */
+        #mapContainer {
+            width: 100vw;
+            height: 100vh;
+        }
+
+        /* 顶部导航 */
+        .map-header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 60px;
+            background: linear-gradient(180deg, rgba(10,10,10,0.95) 0%, rgba(10,10,10,0.8) 100%);
+            backdrop-filter: blur(10px);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 20px;
+            z-index: 1000;
+            border-bottom: 1px solid rgba(220, 20, 60, 0.3);
+        }
+
+        .map-logo {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .map-logo span:first-child {
+            font-size: 10px;
+            font-weight: 700;
+            letter-spacing: 2px;
+            color: #dc143c;
+            background: rgba(220, 20, 60, 0.1);
+            padding: 2px 6px;
+            border-radius: 4px;
+            border: 1px solid rgba(220, 20, 60, 0.3);
+        }
+
+        .map-logo span:last-child {
+            font-weight: 900;
+            font-size: 1.4rem;
+            background: linear-gradient(135deg, #fff, #dc143c);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        /* 足迹空间标题 */
+        .map-title {
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            text-align: center;
+        }
+
+        .map-title-main {
+            font-family: 'Orbitron', 'Montserrat', sans-serif;
+            font-size: 1.6rem;
+            font-weight: 900;
+            letter-spacing: 4px;
+            background: linear-gradient(135deg, #fff 0%, #dc143c 50%, #ff6b6b 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-shadow: 0 0 30px rgba(220, 20, 60, 0.5);
+        }
+
+        .map-title-sub {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 0.65rem;
+            font-weight: 600;
+            letter-spacing: 6px;
+            color: rgba(220, 20, 60, 0.8);
+            margin-top: 2px;
+        }
+
+        .map-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        .btn {
+            padding: 8px 16px;
+            border: none;
+            border-radius: 6px;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-weight: 600;
+        }
+
+        .btn-back {
+            background: rgba(255,255,255,0.1);
+            color: #fff;
+            border: 1px solid rgba(220, 20, 60, 0.3);
+        }
+
+        .btn-back:hover {
+            background: rgba(220, 20, 60, 0.2);
+        }
+
+        .btn-my-pins {
+            background: linear-gradient(135deg, #dc143c, #8b0000);
+            color: #fff;
+        }
+
+        .btn-my-pins:hover {
+            box-shadow: 0 0 15px rgba(220, 20, 60, 0.5);
+        }
+
+        /* 发布按钮（右下角） - 统一风格 */
+        .fab-post {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            width: 56px;
+            height: 56px;
+            border-radius: 50%;
+            background: rgba(128, 128, 128, 0.6);
+            border: 2px solid rgb(120, 0, 0);
+            color: #fff;
+            font-size: 26px;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(170, 0, 0, 0.1);
+            z-index: 1000;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .fab-post:hover {
+            transform: scale(1.1);
+            box-shadow: 0 6px 25px rgba(170, 0, 0, 0.6);
+        }
+
+        /* 定位按钮（左下角） - 统一风格 */
+        .fab-location {
+            position: fixed;
+            bottom: 30px;
+            left: 30px;
+            width: 56px;
+            height: 56px;
+            border-radius: 50%;
+            background: rgba(128, 128, 128, 0.6);
+            border: 2px solid rgb(120, 0, 0);
+            color: #fff;
+            font-size: 24px;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(170, 0, 0, 0.1);
+            z-index: 1000;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .fab-location:hover {
+            transform: scale(1.1);
+            box-shadow: 0 6px 25px rgba(170, 0, 0, 0.6);
+        }
+
+        .fab-location:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        /* 显示全部足迹按钮 - 统一风格 */
+        .fab-show-all {
+            position: fixed;
+            bottom: 100px;
+            left: 30px;
+            width: 56px;
+            height: 56px;
+            border-radius: 50%;
+            /*background: linear-gradient(135deg, #808080);*/
+            background: rgba(128, 128, 128, 0.6);
+            border: 2px solid rgb(120, 0, 0);
+            color: #fff;
+            font-size: 24px;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(170, 0, 0, 0.1);
+            z-index: 1000;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .fab-show-all:hover {
+            transform: scale(1.1);
+            box-shadow: 0 6px 25px rgba(170, 0, 0, 0.6);
+        }
+
+        .fab-show-all.active {
+            background: linear-gradient(135deg, #e74c3c, #c0392b);
+            box-shadow: 0 4px 15px rgba(231, 76, 60, 0.4);
+        }
+
+        /* 图层切换按钮 - 统一风格 */
+        .fab-layer {
+            position: fixed;
+            bottom: 100px;
+            right: 30px;
+            width: 56px;
+            height: 56px;
+            border-radius: 50%;
+            background: rgba(128, 128, 128, 0.6);
+            border: 2px solid rgb(120, 0, 0);
+            color: #fff;
+            font-size: 22px;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(170, 0, 0, 0.1);
+            z-index: 1000;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .fab-layer:hover {
+            transform: scale(1.1);
+            box-shadow: 0 6px 25px rgba(170, 0, 0, 0.6);
+        }
+
+        /* 全屏按钮 - 统一风格 */
+        .fab-fullscreen {
+            position: fixed;
+            bottom: 170px;
+            right: 30px;
+            width: 56px;
+            height: 56px;
+            border-radius: 50%;
+            background: rgba(128, 128, 128, 0.6);
+            border: 2px solid rgb(120, 0, 0);
+            color: #fff;
+            font-size: 22px;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(170, 0, 0, 0.1);
+            z-index: 1000;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .fab-fullscreen:hover {
+            transform: scale(1.1);
+            box-shadow: 0 6px 25px rgba(170, 0, 0, 0.6);
+        }
+
+        /* 刷新按钮 - 统一风格 */
+        .fab-refresh {
+            position: fixed;
+            bottom: 170px;
+            left: 30px;
+            width: 56px;
+            height: 56px;
+            border-radius: 50%;
+            background: rgba(128, 128, 128, 0.6);
+            border: 2px solid rgb(120, 0, 0);
+            color: #fff;
+            font-size: 22px;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(170, 0, 0, 0.1);
+            z-index: 1000;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .fab-refresh:hover {
+            transform: scale(1.1);
+            box-shadow: 0 6px 25px rgba(170, 0, 0, 0.6);
+        }
+
+        .fab-refresh.spinning {
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        /* 使用说明按钮 - 统一风格 */
+        .fab-help {
+            position: fixed;
+            bottom: 240px;
+            right: 30px;
+            width: 56px;
+            height: 56px;
+            border-radius: 50%;
+            background: rgba(128, 128, 128, 0.6);
+            border: 2px solid rgb(120, 0, 0);
+            color: #fff;
+            font-size: 24px;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(170, 0, 0, 0.1);
+            z-index: 1000;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .fab-help:hover {
+            transform: scale(1.1);
+            box-shadow: 0 6px 25px rgba(170, 0, 0, 0.6);
+        }
+
+        /* 使用说明弹窗 */
+        .help-modal-content {
+            background: linear-gradient(145deg, #1a1a1a, #0a0a0a);
+            border-radius: 16px;
+            border: 1px solid rgba(220, 20, 60, 0.3);
+            width: 100%;
+            max-width: 500px;
+            max-height: 80vh;
+            overflow-y: auto;
+            padding: 24px;
+        }
+
+        .help-section {
+            margin-bottom: 20px;
+        }
+
+        .help-section h4 {
+            color: #dc143c;
+            margin-bottom: 10px;
+            font-size: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .help-section p {
+            color: rgba(255,255,255,0.8);
+            line-height: 1.6;
+            font-size: 0.9rem;
+            margin-bottom: 8px;
+        }
+
+        .help-section ul {
+            color: rgba(255,255,255,0.8);
+            padding-left: 20px;
+            margin: 0;
+        }
+
+        .help-section li {
+            line-height: 1.6;
+            font-size: 0.9rem;
+            margin-bottom: 6px;
+        }
+
+        .help-tips {
+            background: rgba(220, 20, 60, 0.1);
+            border: 1px solid rgba(220, 20, 60, 0.2);
+            border-radius: 8px;
+            padding: 12px 15px;
+            margin-top: 20px;
+        }
+
+        .help-tips h4 {
+            color: #dc143c;
+            margin-bottom: 8px;
+            font-size: 0.95rem;
+        }
+
+        .help-tips p {
+            color: rgba(255,255,255,0.7);
+            font-size: 0.85rem;
+            line-height: 1.5;
+        }
+
+        /* 图层选择菜单 */
+        .layer-menu {
+            position: fixed;
+            bottom: 160px;
+            right: 30px;
+            background: rgba(26, 26, 26, 0.95);
+            border: 1px solid rgba(155, 89, 182, 0.3);
+            border-radius: 12px;
+            padding: 10px;
+            z-index: 1000;
+            display: none;
+            flex-direction: column;
+            gap: 5px;
+            min-width: 140px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+        }
+
+        .layer-menu.show {
+            display: flex;
+        }
+
+        .layer-option {
+            padding: 10px 15px;
+            border: none;
+            background: transparent;
+            color: #fff;
+            font-size: 0.9rem;
+            cursor: pointer;
+            border-radius: 8px;
+            transition: all 0.3s;
+            text-align: left;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .layer-option:hover {
+            background: rgba(155, 89, 182, 0.2);
+        }
+
+        .layer-option.active {
+            background: rgba(155, 89, 182, 0.3);
+            color: #9b59b6;
+        }
+
+        /* 发布弹窗 */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.85);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 2000;
+            padding: 20px;
+        }
+
+        .modal-overlay.show {
+            display: flex;
+        }
+
+        .modal-content {
+            background: linear-gradient(145deg, #1a1a1a, #0a0a0a);
+            border-radius: 16px;
+            border: 1px solid rgba(220, 20, 60, 0.3);
+            width: 100%;
+            max-width: 500px;
+            max-height: 90vh;
+            overflow-y: auto;
+            padding: 24px;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .modal-title {
+            font-size: 1.3rem;
+            font-weight: 700;
+        }
+
+        .modal-close {
+            background: none;
+            border: none;
+            color: #888;
+            font-size: 24px;
+            cursor: pointer;
+        }
+
+        .modal-close:hover {
+            color: #fff;
+        }
+
+        .form-group {
+            margin-bottom: 16px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: rgba(255,255,255,0.7);
+            font-size: 0.9rem;
+        }
+
+        .form-group input,
+        .form-group textarea {
+            width: 100%;
+            padding: 12px 16px;
+            border: 1px solid rgba(220, 20, 60, 0.3);
+            border-radius: 8px;
+            background: rgba(0,0,0,0.3);
+            color: #fff;
+            font-size: 1rem;
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: #dc143c;
+        }
+
+        .form-group textarea {
+            min-height: 100px;
+            resize: vertical;
+        }
+
+        .location-info {
+            background: rgba(220, 20, 60, 0.1);
+            border: 1px solid rgba(220, 20, 60, 0.2);
+            border-radius: 8px;
+            padding: 12px;
+            margin-bottom: 16px;
+        }
+
+        .location-info .label {
+            font-size: 0.8rem;
+            color: #dc143c;
+            margin-bottom: 4px;
+        }
+
+        .location-info .value {
+            font-size: 0.9rem;
+            color: rgba(255,255,255,0.9);
+            margin-bottom: 10px;
+        }
+
+        .btn-use-location {
+            width: 100%;
+            padding: 10px;
+            background: linear-gradient(135deg, #27ae60, #2ecc71);
+            border: none;
+            border-radius: 6px;
+            color: #fff;
+            font-size: 0.9rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-top: 8px;
+        }
+
+        .btn-use-location:hover {
+            box-shadow: 0 0 15px rgba(39, 174, 96, 0.4);
+        }
+
+        .btn-use-location:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        /* 图片上传 */
+        .image-upload {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-bottom: 16px;
+        }
+
+        .upload-btn {
+            width: 80px;
+            height: 80px;
+            border: 2px dashed rgba(220, 20, 60, 0.4);
+            border-radius: 8px;
+            background: rgba(0,0,0,0.2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 24px;
+            color: #dc143c;
+            transition: all 0.3s;
+        }
+
+        .upload-btn:hover {
+            border-color: #dc143c;
+            background: rgba(220, 20, 60, 0.1);
+        }
+
+        .upload-preview {
+            width: 80px;
+            height: 80px;
+            border-radius: 8px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .upload-preview img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .upload-preview .remove {
+            position: absolute;
+            top: 4px;
+            right: 4px;
+            width: 20px;
+            height: 20px;
+            background: rgba(0,0,0,0.7);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 12px;
+        }
+
+        .btn-submit {
+            width: 100%;
+            padding: 14px;
+            background: linear-gradient(135deg, #dc143c, #8b0000);
+            border: none;
+            border-radius: 8px;
+            color: #fff;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .btn-submit:hover {
+            box-shadow: 0 0 20px rgba(220, 20, 60, 0.4);
+        }
+
+        .btn-submit:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        /* 详情弹窗 */
+        .pin-detail {
+            text-align: center;
+        }
+
+        .pin-detail .user-info {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 16px;
+        }
+
+        .pin-detail .avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid rgba(220, 20, 60, 0.3);
+        }
+
+        .pin-detail .nickname {
+            font-weight: 600;
+        }
+
+        .pin-detail .time {
+            font-size: 0.8rem;
+            color: #888;
+            margin-bottom: 16px;
+        }
+
+        .pin-detail .content {
+            text-align: left;
+            margin-bottom: 16px;
+            line-height: 1.6;
+        }
+
+        .pin-detail .images {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 10px;
+            margin-bottom: 16px;
+        }
+
+        .pin-detail .images img {
+            width: 100%;
+            border-radius: 8px;
+        }
+
+        .pin-detail .location {
+            font-size: 0.85rem;
+            color: #888;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+        }
+
+        /* 提示消息 */
+        .toast {
+            position: fixed;
+            top: 80px;
+            left: 50%;
+            transform: translateX(-50%) translateY(-100px);
+            background: linear-gradient(135deg, #dc143c, #8b0000);
+            color: #fff;
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-weight: 600;
+            z-index: 3000;
+            opacity: 0;
+            transition: all 0.3s;
+        }
+
+        .toast.show {
+            transform: translateX(-50%) translateY(0);
+            opacity: 1;
+        }
+
+        /* 加载动画 */
+        .loading {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 1500;
+            display: none;
+        }
+
+        .loading.show {
+            display: block;
+        }
+
+        .loading-spinner {
+            width: 50px;
+            height: 50px;
+            border: 3px solid rgba(220, 20, 60, 0.3);
+            border-top-color: #dc143c;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* 侧边栏 */
+        .sidebar-overlay {
+            position: fixed;
+            top: 0;
+            right: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 2500;
+            display: none;
+            justify-content: flex-end;
+        }
+
+        .sidebar-overlay.show {
+            display: flex;
+        }
+
+        .sidebar-content {
+            width: 400px;
+            max-width: 90%;
+            height: 100%;
+            background: linear-gradient(145deg, #1a1a1a, #0a0a0a);
+            border-left: 1px solid rgba(220, 20, 60, 0.3);
+            display: flex;
+            flex-direction: column;
+            animation: slideIn 0.3s ease;
+        }
+
+        @keyframes slideIn {
+            from { transform: translateX(100%); }
+            to { transform: translateX(0); }
+        }
+
+        .sidebar-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px;
+            border-bottom: 1px solid rgba(220, 20, 60, 0.2);
+        }
+
+        .sidebar-title {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: #dc143c;
+        }
+
+        .sidebar-close {
+            background: none;
+            border: none;
+            color: #888;
+            font-size: 24px;
+            cursor: pointer;
+        }
+
+        .sidebar-close:hover {
+            color: #fff;
+        }
+
+        .sidebar-body {
+            flex: 1;
+            overflow-y: auto;
+            padding: 15px;
+        }
+
+        /* 足迹列表项 */
+        .pin-item {
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(220, 20, 60, 0.2);
+            border-radius: 12px;
+            padding: 15px;
+            margin-bottom: 15px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .pin-item:hover {
+            background: rgba(220, 20, 60, 0.1);
+            border-color: rgba(220, 20, 60, 0.4);
+        }
+
+        .pin-item-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 10px;
+        }
+
+        .pin-item-title {
+            font-weight: 600;
+            font-size: 1rem;
+            color: #fff;
+            flex: 1;
+            margin-right: 10px;
+        }
+
+        .pin-item-delete {
+            background: rgba(220, 20, 60, 0.2);
+            border: 1px solid rgba(220, 20, 60, 0.4);
+            color: #dc143c;
+            padding: 4px 10px;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .pin-item-delete:hover {
+            background: rgba(220, 20, 60, 0.4);
+            color: #fff;
+        }
+
+        .pin-item-content {
+            color: rgba(255,255,255,0.7);
+            font-size: 0.9rem;
+            margin-bottom: 8px;
+            line-height: 1.4;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .pin-item-address {
+            color: #888;
+            font-size: 0.8rem;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .pin-item-images {
+            display: flex;
+            gap: 5px;
+            margin-bottom: 8px;
+        }
+
+        .pin-item-images img {
+            width: 50px;
+            height: 50px;
+            object-fit: cover;
+            border-radius: 4px;
+        }
+
+        .pin-item-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.75rem;
+            color: #666;
+        }
+
+        .pin-item-empty {
+            text-align: center;
+            padding: 40px 20px;
+            color: #888;
+        }
+
+        /* 移动端适配 */
+        @media (max-width: 768px) {
+            .map-header {
+                padding: 0 15px;
+                height: 50px;
+            }
+
+            .map-logo {
+                font-size: 1rem;
+            }
+
+            .btn {
+                padding: 6px 12px;
+                font-size: 0.8rem;
+            }
+
+            .fab-post {
+                width: 56px;
+                height: 56px;
+                font-size: 24px;
+                bottom: 20px;
+                right: 20px;
+            }
+
+            .fab-location {
+                width: 48px;
+                height: 48px;
+                font-size: 18px;
+                bottom: 20px;
+                left: 20px;
+            }
+
+            .modal-content {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- 顶部导航 -->
+    <header class="map-header">
+        <div class="map-logo">
+            <span>SHARE</span>
+            <span>X</span>
+        </div>
+        <div class="map-title">
+            <div class="map-title-main">足迹空间</div>
+            <div class="map-title-sub">FOOTPRINT SPACE</div>
+        </div>
+        <div class="map-actions">
+            <button class="btn btn-back" onclick="backToHall()">返回大厅</button>
+            <button class="btn btn-my-pins" onclick="showMyPins()">我的足迹</button>
+        </div>
+    </header>
+
+    <!-- 地图容器 -->
+    <div id="mapContainer"></div>
+
+    <!-- 我在哪儿按钮（左下角） -->
+    <button class="fab-location" onclick="locateMe()" title="查看我的位置">📍</button>
+
+    <!-- 刷新按钮 -->
+    <button class="fab-refresh" id="refreshBtn" onclick="refreshMap()" title="刷新地图">↻</button>
+
+    <!-- 显示全部足迹按钮（左下偏上） -->
+    <button class="fab-show-all" onclick="showAllPinsInfo()" title="显示全部足迹">🐾</button>
+
+    <!-- 图层切换按钮 -->
+    <button class="fab-layer" onclick="toggleLayerMenu()" title="切换地图">🌐</button>
+    
+    <!-- 全屏按钮 -->
+    <button class="fab-fullscreen" id="fullscreenBtn" onclick="toggleFullscreen()" title="全屏">⛶</button>
+    
+    <!-- 使用说明按钮 -->
+    <button class="fab-help" onclick="showHelpModal()" title="使用说明">❓</button>
+    
+    <!-- 图层选择菜单 -->
+    <div class="layer-menu" id="layerMenu">
+        <button class="layer-option active" onclick="switchMapLayer('default')" data-layer="default">
+            🗺️ 标准地图
+        </button>
+        <button class="layer-option" onclick="switchMapLayer('satellite')" data-layer="satellite">
+            🛰️ 卫星地图
+        </button>
+        <button class="layer-option" onclick="switchMapLayer('traffic')" data-layer="traffic">
+            🚦 交通地图
+        </button>
+    </div>
+
+    <!-- 发布按钮（右下角） -->
+    <button class="fab-post" onclick="openPostModal()" title="分享位置">+</button>
+
+    <!-- 发布弹窗 -->
+    <div class="modal-overlay" id="postModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">📍 分享位置</h3>
+                <button class="modal-close" onclick="closePostModal()">&times;</button>
+            </div>
+            
+            <div class="location-info">
+                <div class="label">📍 选择的位置</div>
+                <div class="value" id="selectedLocation">点击地图选择位置或使用"使用当前位置"按钮</div>
+                <button class="btn-use-location" onclick="getCurrentLocation()">📍 使用当前位置</button>
+            </div>
+
+            <div class="form-group">
+                <label>标题（可选，最多8个字）</label>
+                <input type="text" id="postTitle" placeholder="给这个位置起个名字..." maxlength="16" oninput="limitTitleLength(this)">
+            </div>
+
+            <div class="form-group">
+                <label>分享内容</label>
+                <textarea id="postContent" placeholder="分享你在这里的故事..."></textarea>
+            </div>
+
+            <div class="form-group">
+                <label>上传图片（最多5张）</label>
+                <div class="image-upload" id="imageUpload">
+                    <div class="upload-btn" onclick="document.getElementById('fileInput').click()">+</div>
+                </div>
+                <input type="file" id="fileInput" accept="image/*" multiple style="display: none;" onchange="handleFileSelect(event)">
+            </div>
+
+            <button class="btn-submit" id="submitBtn" onclick="submitPost()">发布分享</button>
+        </div>
+    </div>
+
+    <!-- 详情弹窗 -->
+    <div class="modal-overlay" id="detailModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">📍 位置详情</h3>
+                <button class="modal-close" onclick="closeDetailModal()">&times;</button>
+            </div>
+            <div class="pin-detail" id="pinDetail">
+                <!-- 动态填充 -->
+            </div>
+        </div>
+    </div>
+
+    <!-- 使用说明弹窗 -->
+    <div class="modal-overlay" id="helpModal">
+        <div class="help-modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">📖 足迹空间使用说明</h3>
+                <button class="modal-close" onclick="closeHelpModal()">&times;</button>
+            </div>
+            <div class="help-content">
+                <div class="help-section">
+                    <h4>🎯 什么是足迹空间？</h4>
+                    <p>足迹空间是 ShareX 的地图分享功能，让您可以标记自己去过的地方，分享位置故事，查看好友的足迹。</p>
+                </div>
+                
+                <div class="help-section">
+                    <h4>📍 如何发布足迹？</h4>
+                    <ul>
+                        <li>点击右下角的 <strong>+</strong> 按钮</li>
+                        <li>点击地图选择位置，或点击"使用当前位置"自动定位</li>
+                        <li>填写标题（最多8个字）和分享内容</li>
+                        <li>可上传最多5张图片</li>
+                        <li>点击"发布分享"即可</li>
+                    </ul>
+                </div>
+                
+                <div class="help-section">
+                    <h4>🗺️ 地图操作</h4>
+                    <ul>
+                        <li><strong>拖拽</strong>：移动地图查看不同区域</li>
+                        <li><strong>缩放</strong>：双指捏合或滚轮缩放</li>
+                        <li><strong>点击标记</strong>：查看足迹详情</li>
+                        <li><strong>点击地图</strong>：选择发布位置</li>
+                    </ul>
+                </div>
+                
+                <div class="help-section">
+                    <h4>🔧 功能按钮说明</h4>
+                    <ul>
+                        <li><strong>📍</strong> 定位按钮：快速定位到您的当前位置</li>
+                        <li><strong>↻</strong> 刷新按钮：刷新地图上的足迹数据</li>
+                        <li><strong>🐾</strong> 显示全部：显示所有用户的足迹卡片</li>
+                        <li><strong>🌐</strong> 图层切换：切换标准/卫星/交通地图</li>
+                        <li><strong>⛶</strong> 全屏按钮：进入全屏模式</li>
+                        <li><strong>我的足迹</strong>：查看和管理您发布的所有足迹</li>
+                    </ul>
+                </div>
+                
+                <div class="help-section">
+                    <h4>👀 如何查看他人足迹？</h4>
+                    <ul>
+                        <li>点击地图上的 <strong>蓝色标记</strong> 查看详情</li>
+                        <li>点击"显示全部足迹"按钮查看所有足迹卡片</li>
+                        <li>点击卡片可直接查看完整内容</li>
+                    </ul>
+                </div>
+                
+                <div class="help-tips">
+                    <h4>💡 小贴士</h4>
+                    <p>• 标题建议简短有趣，让更多人记住您的足迹<br>
+                    • 上传照片能让您的分享更生动<br>
+                    • 您可以在"我的足迹"中删除自己发布的足迹<br>
+                    • 点击任意位置即可快速创建新足迹</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 我的足迹侧边栏 -->
+    <div class="sidebar-overlay" id="myPinsSidebar">
+        <div class="sidebar-content">
+            <div class="sidebar-header">
+                <h3 class="sidebar-title">🐾 我的足迹</h3>
+                <button class="sidebar-close" onclick="closeMyPinsSidebar()">&times;</button>
+            </div>
+            <div class="sidebar-body" id="myPinsList">
+                <!-- 动态填充 -->
+            </div>
+        </div>
+    </div>
+
+    <!-- 提示消息 -->
+    <div class="toast" id="toast"></div>
+
+    <!-- 加载动画 -->
+    <div class="loading" id="loading">
+        <div class="loading-spinner"></div>
+    </div>
+
+    <script src="js/api.js"></script>
+    <script src="js/map.js"></script>
+</body>
+</html>

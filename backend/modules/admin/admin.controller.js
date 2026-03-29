@@ -220,6 +220,58 @@ router.post('/lock', authenticateAdmin, async (req, res) => {
   }
 });
 
+// 删除用户账号（管理员）
+router.delete('/users/:userId', authenticateAdmin, async (req, res) => {
+  try {
+    const { userId } = req.params;
+    
+    if (!userId) {
+      return res.status(400).json({ error: '参数不完整' });
+    }
+    
+    // 获取用户信息
+    const user = await db.get('SELECT * FROM users WHERE id = ?', [userId]);
+    if (!user) {
+      return res.status(404).json({ error: '用户不存在' });
+    }
+    
+    // 不能删除管理员账号
+    if (user.is_admin) {
+      return res.status(403).json({ error: '不能删除管理员账户' });
+    }
+    
+    // 删除用户相关数据（使用事务）
+    await db.run('BEGIN TRANSACTION');
+    
+    try {
+      // 删除筹码流水记录
+      await db.run('DELETE FROM chips_transactions WHERE user_id = ?', [userId]);
+      
+      // 删除好友关系
+      await db.run('DELETE FROM friends WHERE user_id = ? OR friend_id = ?', [userId, userId]);
+      
+      // 删除足迹地图数据
+      await db.run('DELETE FROM map_pins WHERE user_id = ?', [userId]);
+      
+      // 删除用户账号
+      await db.run('DELETE FROM users WHERE id = ?', [userId]);
+      
+      await db.run('COMMIT');
+      
+      res.json({
+        success: true,
+        message: `用户 ${user.nickname || user.username} 及其所有数据已删除`
+      });
+    } catch (err) {
+      await db.run('ROLLBACK');
+      throw err;
+    }
+  } catch (error) {
+    console.error('[Admin] 删除用户失败:', error);
+    res.status(500).json({ error: '删除用户失败' });
+  }
+});
+
 // 检查当前用户是否为管理员
 router.get('/check', async (req, res) => {
   try {

@@ -1,0 +1,1172 @@
+/**
+ * ShareX 地图分享 - 主逻辑
+ */
+
+let map = null;
+let currentMarker = null;
+let selectedPosition = null;
+let uploadedFiles = [];
+let currentLayer = 'default'; // 当前地图图层
+let satelliteLayer = null; // 卫星图层
+let trafficLayer = null; // 交通图层
+let allInfoWindows = []; // 存储所有打开的信息窗体
+let isShowAllPins = false; // 是否正在显示全部足迹
+
+// 限制标题长度（最多8个汉字，即16个字符）
+function limitTitleLength(input) {
+    const maxChars = 16; // 最大字符数（英文字符）
+    let value = input.value;
+    
+    // 计算实际字符长度（中文算2个字符）
+    let charCount = 0;
+    let cutIndex = value.length;
+    
+    for (let i = 0; i < value.length; i++) {
+        // 中文字符算2个，其他算1个
+        charCount += (value.charCodeAt(i) > 127) ? 2 : 1;
+        if (charCount > maxChars) {
+            cutIndex = i;
+            break;
+        }
+    }
+    
+    // 如果超出限制，截断并提示
+    if (charCount > maxChars) {
+        input.value = value.substring(0, cutIndex);
+        showToast('标题最多8个汉字或16个英文字符');
+    }
+}
+
+// 从完整地址中提取省市（简洁显示）
+function extractProvinceCity(address) {
+    if (!address) return '';
+    
+    // 匹配省/直辖市
+    const provinceMatch = address.match(/^(.+?省|.+?自治区|.+?市)/);
+    if (!provinceMatch) return address.substring(0, 8);
+    
+    const province = provinceMatch[1];
+    const rest = address.substring(province.length);
+    
+    // 匹配市（如果后面还有内容）
+    const cityMatch = rest.match(/^(.+?市|.+?自治州|.+?地区|.+?盟)/);
+    if (cityMatch) {
+        // 直辖市特殊处理：北京/上海/天津/重庆
+        if (province === cityMatch[1]) {
+            return province;
+        }
+        return province + cityMatch[1];
+    }
+    
+    return province;
+}
+
+// 平滑动画移动到目标位置（自定义实现）
+function animateToPosition(map, targetLng, targetLat, targetZoom, duration) {
+    const startPosition = map.getCenter();
+    const startZoom = map.getZoom();
+    const startTime = Date.now();
+    
+    // easeOutCubic 缓动函数
+    function easeOutCubic(t) {
+        return 1 - Math.pow(1 - t, 3);
+    }
+
+    function animate() {
+        const elapsedTime = Date.now() - startTime;
+        const fraction = Math.min(elapsedTime / duration, 1);
+        const easedFraction = easeOutCubic(fraction);
+
+        if (fraction < 1) {
+            const newZoom = startZoom + (targetZoom - startZoom) * easedFraction;
+            const newLat = startPosition.lat + (targetLat - startPosition.lat) * easedFraction;
+            const newLng = startPosition.lng + (targetLng - startPosition.lng) * easedFraction;
+            map.setZoom(newZoom);
+            map.setCenter([newLng, newLat]);
+            requestAnimationFrame(animate);
+        } else {
+            map.setZoom(targetZoom);
+            map.setCenter([targetLng, targetLat]);
+        }
+    }
+
+    requestAnimationFrame(animate);
+}
+
+// 初始化地图
+function initMap() {
+    // 检查高德地图是否加载
+    if (typeof AMap === 'undefined') {
+        showToast('地图加载失败，请检查网络');
+        return;
+    }
+
+    // 检测是否为移动设备
+    const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+    
+    // 创建地图实例，默认中心为中国
+    map = new AMap.Map('mapContainer', {
+        zoom: 5,
+        center: [104.195397, 35.86166], // 中国中心
+        viewMode: '2D',
+        // 移动设备使用默认样式，桌面使用深色主题
+        mapStyle: isMobile ? null : 'amap://styles/dark',
+    });
+
+    // 添加地图点击事件
+    map.on('click', async function(e) {
+        selectedPosition = {
+            lat: e.lnglat.getLat(),
+            lng: e.lnglat.getLng()
+        };
+        
+        // 更新选中位置标记
+        updateSelectedMarker(selectedPosition);
+        
+        // 更新位置显示
+        await updateLocationDisplay(selectedPosition);
+    });
+
+    // 加载已有标记
+    loadPins();
+}
+
+// 更新选中位置标记（发布位置 - 红色）
+function updateSelectedMarker(position) {
+    if (!map || !position) return;
+    
+    if (currentMarker) {
+        currentMarker.setMap(null);
+    }
+    
+    // 使用 SVG 创建高清红色标记（矮版）
+    const redMarkerSvg = `
+        <svg xmlns="http://www.w3.org/2000/svg" width="28" height="32" viewBox="0 0 28 32">
+            <defs>
+                <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
+                    <feDropShadow dx="0" dy="2" stdDeviation="2" flood-opacity="0.3"/>
+                </filter>
+            </defs>
+            <path d="M14 0C6.27 0 0 5.8 0 13c0 9.5 14 19 14 19s14-9.5 14-19C28 5.8 21.73 0 14 0z" fill="#dc143c" filter="url(#shadow)"/>
+            <circle cx="14" cy="13" r="6" fill="white"/>
+            <circle cx="14" cy="13" r="4" fill="#dc143c"/>
+        </svg>
+    `;
+    
+    currentMarker = new AMap.Marker({
+        position: [position.lng, position.lat],
+        map: map,
+        icon: new AMap.Icon({
+            size: new AMap.Size(28, 32),
+            image: 'data:image/svg+xml;base64,' + btoa(unescape(encodeURIComponent(redMarkerSvg))),
+            imageSize: new AMap.Size(28, 32),
+            anchor: 'center bottom'
+        }),
+        offset: new AMap.Pixel(-14, -32)
+    });
+}
+
+// 更新位置显示
+async function updateLocationDisplay(position) {
+    const display = document.getElementById('selectedLocation');
+    if (!display) {
+        console.log('[Map] selectedLocation 元素未找到');
+        return;
+    }
+    
+    // 先显示坐标和提示
+    display.textContent = `${position.lat.toFixed(6)}, ${position.lng.toFixed(6)}（正在获取地址...）`;
+    display.style.color = '#888';
+    
+    console.log('[Map] 开始获取地址:', position.lat, position.lng);
+    
+    try {
+        // 使用后端 API 进行逆地理编码
+        const data = await MapAPI.reverseGeocode(position.lat, position.lng);
+        console.log('[Map] 逆地理编码结果:', data);
+        
+        if (data.success && data.address) {
+            display.textContent = data.address;
+            display.style.color = 'rgba(255,255,255,0.9)';
+            if (selectedPosition) {
+                selectedPosition.address = data.address;
+                console.log('[Map] 地址已保存:', data.address);
+            }
+        } else {
+            throw new Error('逆地理编码失败');
+        }
+    } catch (error) {
+        console.error('[Map] 获取地址失败:', error);
+        // 保留坐标显示
+        display.textContent = `${position.lat.toFixed(6)}, ${position.lng.toFixed(6)}`;
+        display.style.color = 'rgba(255,255,255,0.9)';
+    }
+}
+
+// 加载标记列表
+async function loadPins() {
+    showLoading(true);
+    
+    try {
+        const data = await MapAPI.getPins();
+        
+        if (data.success && data.pins) {
+            data.pins.forEach(pin => {
+                addPinToMap(pin);
+            });
+        }
+    } catch (error) {
+        console.error('加载标记失败:', error);
+    } finally {
+        showLoading(false);
+    }
+}
+
+// 添加标记到地图（其他用户的足迹 - 蓝色）
+function addPinToMap(pin) {
+    // 使用 SVG 创建高清蓝色标记（矮版）
+    const blueMarkerSvg = `
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="30" viewBox="0 0 24 30">
+            <defs>
+                <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
+                    <feDropShadow dx="0" dy="2" stdDeviation="2" flood-opacity="0.3"/>
+                </filter>
+            </defs>
+            <path d="M12 0C5.37 0 0 5.37 0 12c0 9 12 18 12 18s12-9 12-18C24 5.37 18.63 0 12 0z" fill="#3498db" filter="url(#shadow)"/>
+            <circle cx="12" cy="12" r="5" fill="white"/>
+            <circle cx="12" cy="12" r="3" fill="#3498db"/>
+        </svg>
+    `;
+    
+    const marker = new AMap.Marker({
+        position: [pin.lng, pin.lat],
+        map: map,
+        title: pin.title || '位置分享',
+        icon: new AMap.Icon({
+            size: new AMap.Size(24, 30),
+            image: 'data:image/svg+xml;base64,' + btoa(unescape(encodeURIComponent(blueMarkerSvg))),
+            imageSize: new AMap.Size(24, 30),
+            anchor: 'center bottom'
+        }),
+        offset: new AMap.Pixel(-12, -30)
+    });
+    
+    // 创建信息窗体（悬浮卡片）
+    // 悬停信息卡片内容（与显示全部足迹样式一致）
+    const infoWindowContent = `
+        <div style="
+            background: linear-gradient(145deg, rgba(26,26,26,0.95), rgba(42,42,42,0.95));
+            border: 1px solid rgba(220, 20, 60, 0.4);
+            border-radius: 10px;
+            padding: 8px 10px;
+            min-width: 140px;
+            max-width: 160px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.6);
+            font-size: 0.8rem;
+            backdrop-filter: blur(4px);
+        ">
+            <div style="display: flex; align-items: center; gap: 6px; margin-bottom: 4px;">
+                <img src="${pin.avatar ? '/avatars/' + pin.avatar : '../images/default-avatar.png'}" 
+                     style="width: 24px; height: 24px; border-radius: 50%; object-fit: cover; border: 1.5px solid rgba(220, 20, 60, 0.4);"
+                     alt="avatar">
+                <div style="color: #fff; font-weight: 600; font-size: 0.8rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">${escapeHtml(pin.nickname || '匿名')}</div>
+            </div>
+            ${pin.title ? `<div style="color: #dc143c; font-weight: 600; font-size: 0.75rem; margin-bottom: 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">${escapeHtml(pin.title)}</div>` : ''}
+            <div style="color: #aaa; font-size: 0.65rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">📍 ${pin.address ? extractProvinceCity(pin.address) : `${pin.lat.toFixed(3)}, ${pin.lng.toFixed(3)}`}</div>
+        </div>
+    `;
+    
+    const infoWindow = new AMap.InfoWindow({
+        content: infoWindowContent,
+        offset: new AMap.Pixel(0, -45),
+        closeWhenClickMap: false,
+        isCustom: true
+    });
+    
+    // 鼠标悬停显示信息窗体
+    marker.on('mouseover', function() {
+        infoWindow.open(map, [pin.lng, pin.lat]);
+    });
+    
+    // 鼠标移出隐藏信息窗体
+    marker.on('mouseout', function() {
+        infoWindow.close();
+    });
+    
+    // 点击标记显示详情
+    marker.on('click', function() {
+        infoWindow.close();
+        showPinDetail(pin);
+    });
+}
+
+// 打开发布弹窗
+function openPostModal() {
+    document.getElementById('postModal').classList.add('show');
+}
+
+// 关闭发布弹窗
+function closePostModal() {
+    document.getElementById('postModal').classList.remove('show');
+    // 重置表单
+    document.getElementById('postTitle').value = '';
+    document.getElementById('postContent').value = '';
+    uploadedFiles = [];
+    updateImagePreview();
+    // 重置位置显示
+    const locationDisplay = document.getElementById('selectedLocation');
+    if (locationDisplay) {
+        locationDisplay.textContent = '点击地图选择位置或使用"使用当前位置"按钮';
+    }
+}
+
+// 处理文件选择
+function handleFileSelect(event) {
+    const files = Array.from(event.target.files);
+    
+    if (uploadedFiles.length + files.length > 5) {
+        showToast('最多只能上传5张图片');
+        return;
+    }
+    
+    files.forEach(file => {
+        if (file.size > 5 * 1024 * 1024) {
+            showToast('单张图片不能超过5MB');
+            return;
+        }
+        uploadedFiles.push(file);
+    });
+    
+    updateImagePreview();
+}
+
+// 更新图片预览
+function updateImagePreview() {
+    const container = document.getElementById('imageUpload');
+    
+    // 保留上传按钮
+    container.innerHTML = `
+        <div class="upload-btn" onclick="document.getElementById('fileInput').click()">+</div>
+    `;
+    
+    // 添加预览
+    uploadedFiles.forEach((file, index) => {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            const div = document.createElement('div');
+            div.className = 'upload-preview';
+            div.innerHTML = `
+                <img src="${e.target.result}" alt="preview">
+                <div class="remove" onclick="removeImage(${index})">×</div>
+            `;
+            container.appendChild(div);
+        };
+        reader.readAsDataURL(file);
+    });
+}
+
+// 移除图片
+function removeImage(index) {
+    uploadedFiles.splice(index, 1);
+    updateImagePreview();
+}
+
+// 提交发布
+async function submitPost() {
+    const token = getToken();
+    if (!token) {
+        showToast('请先登录');
+        setTimeout(redirectToLogin, 1500);
+        return;
+    }
+    
+    // 检查是否选择了位置
+    if (!selectedPosition) {
+        showToast('请先选择位置（点击地图或使用"使用当前位置"按钮）');
+        return;
+    }
+    
+    const title = document.getElementById('postTitle').value;
+    const content = document.getElementById('postContent').value;
+    
+    if (!content && uploadedFiles.length === 0) {
+        showToast('请填写内容或上传图片');
+        return;
+    }
+    
+    const submitBtn = document.getElementById('submitBtn');
+    submitBtn.disabled = true;
+    submitBtn.textContent = '发布中...';
+    
+    try {
+        console.log('[Map] 提交发布:', selectedPosition);
+        const formData = new FormData();
+        formData.append('lat', selectedPosition.lat);
+        formData.append('lng', selectedPosition.lng);
+        formData.append('title', title);
+        formData.append('content', content);
+        if (selectedPosition.address) {
+            formData.append('address', selectedPosition.address);
+            console.log('[Map] 提交地址:', selectedPosition.address);
+        } else {
+            console.log('[Map] 无地址信息');
+        }
+        
+        uploadedFiles.forEach(file => {
+            formData.append('images', file);
+        });
+        
+        const result = await MapAPI.createPin(formData);
+        
+        if (result.success) {
+            showToast('发布成功！');
+            closePostModal();
+            // 刷新标记
+            loadPins();
+        } else {
+            showToast(result.error || '发布失败');
+        }
+    } catch (error) {
+        showToast('发布失败，请重试');
+        console.error(error);
+    } finally {
+        submitBtn.disabled = false;
+        submitBtn.textContent = '发布分享';
+    }
+}
+
+// 显示标记详情
+// 显示足迹详情弹窗
+function showPinDetail(pinData) {
+    const detailHtml = `
+        <div class="user-info">
+            <img src="${pinData.avatar ? '/avatars/' + pinData.avatar : '../images/default-avatar.png'}" 
+                 class="avatar" alt="avatar">
+            <span class="nickname">${pinData.nickname || '匿名用户'}</span>
+        </div>
+        <div class="time">${formatDate(pinData.created_at)}</div>
+        ${pinData.title ? `<h4 style="margin-bottom: 10px;">${pinData.title}</h4>` : ''}
+        ${pinData.content ? `<div class="content">${escapeHtml(pinData.content)}</div>` : ''}
+        ${pinData.images && pinData.images.length > 0 ? `
+            <div class="images">
+                ${pinData.images.map(img => `
+                    <img src="/uploads/map/${img}" alt="分享图片">
+                `).join('')}
+            </div>
+        ` : ''}
+        <div class="location">
+            📍 ${pinData.address || `${pinData.lat.toFixed(4)}, ${pinData.lng.toFixed(4)}`}
+        </div>
+    `;
+    
+    document.getElementById('pinDetail').innerHTML = detailHtml;
+    document.getElementById('detailModal').classList.add('show');
+}
+
+// 点击卡片打开足迹详情（通过ID）
+async function openPinDetail(pinId) {
+    try {
+        const data = await MapAPI.getPin(pinId);
+        
+        if (data.success && data.pin) {
+            // 复用现有的详情展示逻辑
+            showPinDetail(data.pin);
+        } else {
+            showToast('足迹不存在');
+        }
+    } catch (error) {
+        console.error('[Map] 加载足迹详情失败:', error);
+        showToast('加载详情失败');
+    }
+}
+
+// 关闭详情弹窗
+function closeDetailModal() {
+    document.getElementById('detailModal').classList.remove('show');
+}
+
+// 显示使用说明弹窗
+function showHelpModal() {
+    document.getElementById('helpModal').classList.add('show');
+}
+
+// 关闭使用说明弹窗
+function closeHelpModal() {
+    document.getElementById('helpModal').classList.remove('show');
+}
+
+// 显示我的足迹侧边栏
+async function showMyPins() {
+    const token = getToken();
+    if (!token) {
+        showToast('请先登录');
+        setTimeout(redirectToLogin, 1500);
+        return;
+    }
+    
+    // 打开侧边栏
+    document.getElementById('myPinsSidebar').classList.add('show');
+    
+    // 加载足迹列表
+    await loadMyPinsList();
+}
+
+// 关闭我的足迹侧边栏
+function closeMyPinsSidebar() {
+    document.getElementById('myPinsSidebar').classList.remove('show');
+}
+
+// 加载我的足迹列表
+async function loadMyPinsList() {
+    const listContainer = document.getElementById('myPinsList');
+    listContainer.innerHTML = '<div class="loading" style="display:block;position:static;margin:20px auto;"><div class="loading-spinner"></div></div>';
+    
+    try {
+        const data = await MapAPI.getMyPins();
+        
+        if (data.success && data.pins) {
+            if (data.pins.length === 0) {
+                listContainer.innerHTML = '<div class="pin-item-empty">还没有足迹，快去分享你的位置吧！</div>';
+                return;
+            }
+            
+            listContainer.innerHTML = data.pins.map(pin => `
+                <div class="pin-item" data-id="${pin.id}">
+                    <div class="pin-item-header">
+                        <div class="pin-item-title">${pin.title || '无标题'}</div>
+                        <button class="pin-item-delete" onclick="deleteMyPin(${pin.id}, event)">删除</button>
+                    </div>
+                    ${pin.content ? `<div class="pin-item-content">${escapeHtml(pin.content)}</div>` : ''}
+                    <div class="pin-item-address">📍 ${pin.address || `${pin.lat.toFixed(4)}, ${pin.lng.toFixed(4)}`}</div>
+                    ${pin.images && pin.images.length > 0 ? `
+                        <div class="pin-item-images">
+                            ${pin.images.slice(0, 3).map(img => `<img src="/uploads/map/${img}" alt="">`).join('')}
+                            ${pin.images.length > 3 ? `<span style="color:#888;font-size:0.8rem;">+${pin.images.length - 3}</span>` : ''}
+                        </div>
+                    ` : ''}
+                    <div class="pin-item-footer">
+                        <span>${formatDate(pin.created_at)}</span>
+                        <span>👁 ${pin.view_count || 0}</span>
+                    </div>
+                </div>
+            `).join('');
+            
+            // 添加点击事件（点击卡片查看详情）
+            listContainer.querySelectorAll('.pin-item').forEach(item => {
+                item.addEventListener('click', function(e) {
+                    // 如果点击的是删除按钮，不触发查看详情
+                    if (e.target.classList.contains('pin-item-delete')) return;
+                    
+                    const pinId = this.dataset.id;
+                    const pin = data.pins.find(p => p.id == pinId);
+                    if (pin) {
+                        // 平滑飞行到该位置
+                        animateToPosition(map, pin.lng, pin.lat, 15, 2000);
+                        // 显示详情
+                        showPinDetail(pin);
+                    }
+                });
+            });
+        } else {
+            listContainer.innerHTML = '<div class="pin-item-empty">加载失败</div>';
+        }
+    } catch (error) {
+        console.error('[Map] 加载足迹列表失败:', error);
+        listContainer.innerHTML = '<div class="pin-item-empty">加载失败</div>';
+    }
+}
+
+// 删除我的足迹
+async function deleteMyPin(pinId, event) {
+    event.stopPropagation(); // 阻止冒泡，避免触发查看详情
+    
+    if (!confirm('确定要删除这条足迹吗？')) {
+        return;
+    }
+    
+    try {
+        const result = await MapAPI.deletePin(pinId);
+        if (result.success) {
+            showToast('删除成功');
+            // 刷新列表
+            await loadMyPinsList();
+            // 刷新地图标记
+            loadPins();
+        } else {
+            showToast(result.error || '删除失败');
+        }
+    } catch (error) {
+        console.error('[Map] 删除足迹失败:', error);
+        showToast('删除失败');
+    }
+}
+
+// 获取当前位置（只切换视角，不创建发布标记）
+async function locateMe() {
+    const btn = document.querySelector('.fab-location');
+    
+    // 检查浏览器是否支持地理定位
+    if (!navigator.geolocation) {
+        showToast('您的设备不支持地理定位');
+        return;
+    }
+    
+    btn.disabled = true;
+    showToast('正在定位...');
+    
+    navigator.geolocation.getCurrentPosition(
+        // 成功回调
+        async function(position) {
+            const lat = position.coords.latitude;
+            const lng = position.coords.longitude;
+            
+            // 平滑动画移动到当前位置
+            animateToPosition(map, lng, lat, 15, 3000);
+            
+            // 添加一个临时标记（不作为发布位置）- 绿色（矮版）
+            const greenMarkerSvg = `
+                <svg xmlns="http://www.w3.org/2000/svg" width="28" height="34" viewBox="0 0 28 34">
+                    <defs>
+                        <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
+                            <feDropShadow dx="0" dy="2" stdDeviation="2" flood-opacity="0.3"/>
+                        </filter>
+                    </defs>
+                    <path d="M14 0C6.27 0 0 6.2 0 14c0 10.5 14 20 14 20s14-9.5 14-20C28 6.2 21.73 0 14 0z" fill="#27ae60" filter="url(#shadow)"/>
+                    <circle cx="14" cy="14" r="6" fill="white"/>
+                    <circle cx="14" cy="14" r="4" fill="#27ae60"/>
+                </svg>
+            `;
+            
+            const currentLocationMarker = new AMap.Marker({
+                position: [lng, lat],
+                map: map,
+                title: '您的位置',
+                icon: new AMap.Icon({
+                    size: new AMap.Size(28, 34),
+                    image: 'data:image/svg+xml;base64,' + btoa(unescape(encodeURIComponent(greenMarkerSvg))),
+                    imageSize: new AMap.Size(28, 34),
+                    anchor: 'center bottom'
+                }),
+                offset: new AMap.Pixel(-14, -34)
+            });
+            
+            // 获取地址信息
+            try {
+                const data = await MapAPI.reverseGeocode(lat, lng);
+                if (data.success && data.address) {
+                    showToast('📍 ' + data.address);
+                } else {
+                    showToast('已定位到您的位置');
+                }
+            } catch (error) {
+                console.error('[Map] 获取地址失败:', error);
+                showToast('已定位到您的位置');
+            }
+            
+            btn.disabled = false;
+        },
+        // 错误回调
+        function(error) {
+            btn.disabled = false;
+            
+            switch(error.code) {
+                case error.PERMISSION_DENIED:
+                    showToast('您拒绝了位置请求');
+                    break;
+                case error.POSITION_UNAVAILABLE:
+                    showToast('无法获取位置信息');
+                    break;
+                case error.TIMEOUT:
+                    showToast('获取位置超时');
+                    break;
+                default:
+                    showToast('获取位置失败');
+            }
+        },
+        // 选项
+        {
+            enableHighAccuracy: true,
+            timeout: 10000,
+            maximumAge: 0
+        }
+    );
+}
+
+// 获取当前位置并设置为发布位置
+async function getCurrentLocation() {
+    const btn = document.querySelector('.btn-use-location') || document.querySelector('.fab-post');
+    
+    // 检查浏览器是否支持地理定位
+    if (!navigator.geolocation) {
+        showToast('您的设备不支持地理定位');
+        return;
+    }
+    
+    if (btn) btn.disabled = true;
+    showToast('正在获取位置...');
+    
+    navigator.geolocation.getCurrentPosition(
+        // 成功回调
+        async function(position) {
+            const lat = position.coords.latitude;
+            const lng = position.coords.longitude;
+            
+            // 更新选中位置
+            selectedPosition = {
+                lat: lat,
+                lng: lng
+            };
+            
+            // 平滑飞行到当前位置
+            animateToPosition(map, lng, lat, 15, 2000);
+            
+            // 添加标记
+            updateSelectedMarker(selectedPosition);
+            
+            // 更新位置显示（包括弹窗中的显示）
+            await updateLocationDisplay(selectedPosition);
+            
+            // 获取地址并在提示中显示
+            console.log('[Map] 开始获取地址...');
+            try {
+                const data = await MapAPI.reverseGeocode(lat, lng);
+                console.log('[Map] 逆地理编码结果:', data);
+                if (data.success && data.address) {
+                    selectedPosition.address = data.address;
+                    showToast('📍 ' + data.address);
+                    console.log('[Map] 地址已保存到 selectedPosition:', data.address);
+                } else {
+                    showToast('定位成功！可以发布了');
+                    console.log('[Map] 逆地理编码失败');
+                }
+            } catch (error) {
+                console.error('[Map] 获取地址失败:', error);
+                showToast('定位成功！可以发布了');
+            }
+            if (btn) btn.disabled = false;
+        },
+        // 错误回调
+        function(error) {
+            if (btn) btn.disabled = false;
+            
+            switch(error.code) {
+                case error.PERMISSION_DENIED:
+                    showToast('您拒绝了位置请求');
+                    break;
+                case error.POSITION_UNAVAILABLE:
+                    showToast('无法获取位置信息');
+                    break;
+                case error.TIMEOUT:
+                    showToast('获取位置超时');
+                    break;
+                default:
+                    showToast('获取位置失败');
+            }
+        },
+        // 选项
+        {
+            enableHighAccuracy: true,  // 高精度
+            timeout: 10000,            // 10秒超时
+            maximumAge: 0              // 不使用缓存
+        }
+    );
+}
+
+// 返回大厅
+function backToHall() {
+    window.location.href = '../gamehall.html';
+}
+
+// 显示提示
+function showToast(message) {
+    const toast = document.getElementById('toast');
+    toast.textContent = message;
+    toast.classList.add('show');
+    
+    setTimeout(() => {
+        toast.classList.remove('show');
+    }, 3000);
+}
+
+// 显示/隐藏加载
+function showLoading(show) {
+    const loading = document.getElementById('loading');
+    if (show) {
+        loading.classList.add('show');
+    } else {
+        loading.classList.remove('show');
+    }
+}
+
+// 格式化日期
+function formatDate(dateStr) {
+    const date = new Date(dateStr);
+    return date.toLocaleString('zh-CN', {
+        year: 'numeric',
+        month: '2-digit',
+        day: '2-digit',
+        hour: '2-digit',
+        minute: '2-digit'
+    });
+}
+
+// HTML转义
+function escapeHtml(text) {
+    const div = document.createElement('div');
+    div.textContent = text;
+    return div.innerHTML;
+}
+
+// 页面加载完成后初始化
+window.onload = function() {
+    initMap();
+};
+
+// 点击弹窗外部关闭
+document.getElementById('postModal').addEventListener('click', function(e) {
+    if (e.target === this) {
+        closePostModal();
+    }
+});
+
+document.getElementById('detailModal').addEventListener('click', function(e) {
+    if (e.target === this) {
+        closeDetailModal();
+    }
+});
+
+// 点击使用说明弹窗外部关闭
+document.getElementById('helpModal').addEventListener('click', function(e) {
+    if (e.target === this) {
+        closeHelpModal();
+    }
+});
+
+// 点击侧边栏外部关闭
+document.getElementById('myPinsSidebar').addEventListener('click', function(e) {
+    if (e.target === this) {
+        closeMyPinsSidebar();
+    }
+});
+
+// 点击地图其他区域关闭图层菜单
+document.addEventListener('click', function(e) {
+    const layerMenu = document.getElementById('layerMenu');
+    const layerBtn = document.querySelector('.fab-layer');
+    if (layerMenu && !layerMenu.contains(e.target) && !layerBtn.contains(e.target)) {
+        layerMenu.classList.remove('show');
+    }
+});
+
+// 切换图层菜单显示
+function toggleLayerMenu() {
+    const menu = document.getElementById('layerMenu');
+    menu.classList.toggle('show');
+}
+
+// 检查是否处于全屏状态（包括 F11 触发的全屏）
+function isFullscreen() {
+    // 1. 检查 API 全屏
+    const isApiFullscreen = !!(document.fullscreenElement || 
+                               document.webkitFullscreenElement || 
+                               document.mozFullScreenElement || 
+                               document.msFullscreenElement);
+    
+    if (isApiFullscreen) return true;
+    
+    // 2. 检查 F11 全屏 - 使用更宽松的条件
+    // 只要窗口高度接近屏幕高度，就认为是全屏
+    const winHeight = window.innerHeight;
+    const screenHeight = screen.height;
+    const heightRatio = winHeight / screenHeight;
+    
+    // 高度比例大于 0.95 认为是全屏（允许浏览器保留少量 UI）
+    const isF11Fullscreen = heightRatio > 0.95;
+    
+    console.log('[Fullscreen] height:', winHeight, 'screen:', screenHeight, 'ratio:', heightRatio, 'isF11:', isF11Fullscreen);
+    
+    return isF11Fullscreen;
+}
+
+// 更新全屏按钮状态
+function updateFullscreenButton() {
+    const btn = document.getElementById('fullscreenBtn');
+    if (!btn) return;
+    
+    if (isFullscreen()) {
+        btn.innerHTML = '⛶';
+        btn.title = '退出全屏';
+    } else {
+        btn.innerHTML = '⛶';
+        btn.title = '全屏';
+    }
+}
+
+// 刷新地图
+function refreshMap() {
+    const btn = document.getElementById('refreshBtn');
+    if (btn.classList.contains('spinning')) return;
+    
+    btn.classList.add('spinning');
+    showToast('正在刷新...');
+    
+    // 重新加载足迹
+    loadPins().then(() => {
+        setTimeout(() => {
+            btn.classList.remove('spinning');
+            showToast('刷新完成');
+        }, 500);
+    }).catch(() => {
+        btn.classList.remove('spinning');
+        showToast('刷新失败');
+    });
+}
+
+// 切换全屏模式
+function toggleFullscreen() {
+    if (!isFullscreen()) {
+        // 进入全屏
+        const docEl = document.documentElement;
+        const requestFullScreen = docEl.requestFullscreen || 
+                                  docEl.webkitRequestFullscreen || 
+                                  docEl.mozRequestFullScreen || 
+                                  docEl.msRequestFullscreen;
+        
+        if (requestFullScreen) {
+            requestFullScreen.call(docEl).then(() => {
+                updateFullscreenButton();
+                showToast('已进入全屏模式');
+            }).catch(err => {
+                showToast('无法进入全屏模式');
+            });
+        }
+    } else {
+        // 退出全屏 - 区分 API 全屏和 F11 全屏
+        const isApiFullscreen = !!(document.fullscreenElement || 
+                                   document.webkitFullscreenElement || 
+                                   document.mozFullScreenElement || 
+                                   document.msFullscreenElement);
+        
+        if (isApiFullscreen) {
+            // API 全屏，使用 API 退出
+            const exitFullScreen = document.exitFullscreen || 
+                                   document.webkitExitFullscreen || 
+                                   document.mozCancelFullScreen || 
+                                   document.msExitFullscreen;
+            
+            if (exitFullScreen) {
+                exitFullScreen.call(document).then(() => {
+                    updateFullscreenButton();
+                    showToast('已退出全屏模式');
+                });
+            }
+        } else {
+            // F11 全屏，提示用户按 ESC
+            showToast('若退出全屏请轻按 F11 或长按 Esc');
+        }
+    }
+}
+
+// 监听全屏变化事件（API 触发）
+document.addEventListener('fullscreenchange', updateFullscreenButton);
+document.addEventListener('webkitfullscreenchange', updateFullscreenButton);
+document.addEventListener('mozfullscreenchange', updateFullscreenButton);
+document.addEventListener('MSFullscreenChange', updateFullscreenButton);
+
+// 监听窗口大小变化（捕获 F11 全屏）
+window.addEventListener('resize', () => {
+    // 使用防抖，F11 动画需要一定时间
+    clearTimeout(window.resizeTimer);
+    window.resizeTimer = setTimeout(updateFullscreenButton, 300);
+});
+
+// 监听 F11 按键，强制更新状态
+document.addEventListener('keydown', (e) => {
+    if (e.key === 'F11') {
+        // F11 按键后延迟检测（浏览器全屏动画需要时间）
+        setTimeout(updateFullscreenButton, 500);
+        setTimeout(updateFullscreenButton, 1000);
+    }
+});
+
+// 页面加载时初始化按钮状态
+window.addEventListener('load', updateFullscreenButton);
+
+// 定时检测（备用方案）
+setInterval(updateFullscreenButton, 1000);
+
+// 显示全部足迹信息窗体
+async function showAllPinsInfo() {
+    const btn = document.querySelector('.fab-show-all');
+    
+    // 如果已经在显示状态，则关闭所有信息窗体
+    if (isShowAllPins) {
+        allInfoWindows.forEach(marker => {
+            marker.setMap(null);
+        });
+        allInfoWindows = [];
+        isShowAllPins = false;
+        btn.classList.remove('active');
+        showToast('已关闭全部足迹显示');
+        return;
+    }
+    
+    // 获取所有足迹
+    try {
+        btn.disabled = true;
+        showToast('正在加载全部足迹...');
+        
+        const data = await MapAPI.getPins();
+        
+        if (data.success && data.pins && data.pins.length > 0) {
+            // 关闭之前的所有信息窗体
+            allInfoWindows.forEach(marker => {
+                marker.setMap(null);
+            });
+            allInfoWindows = [];
+            
+            // 为每个足迹创建自定义覆盖物（同时显示多个）
+            data.pins.forEach((pin, index) => {
+                // 创建带缩放动画的卡片内容（可点击）
+                const cardContent = `
+                    <div class="pin-info-card" onclick="openPinDetail(${pin.id})" style="
+                        background: linear-gradient(145deg, rgba(26,26,26,0.95), rgba(42,42,42,0.95));
+                        border: 1px solid rgba(220, 20, 60, 0.4);
+                        border-radius: 8px;
+                        padding: 5px 8px;
+                        min-width: 110px;
+                        max-width: 130px;
+                        box-shadow: 0 3px 10px rgba(0,0,0,0.5);
+                        font-size: 0.7rem;
+                        backdrop-filter: blur(4px);
+                        cursor: pointer;
+                        transform: scale(0);
+                        opacity: 0;
+                        transform-origin: center bottom;
+                        animation: cardPopIn 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+                        animation-delay: ${index * 0.05}s;
+                        transition: all 0.2s ease;
+                    " onmouseover="this.style.borderColor='rgba(220, 20, 60, 0.8)'; this.style.transform='scale(1.02)';" 
+                       onmouseout="this.style.borderColor='rgba(220, 20, 60, 0.4)'; this.style.transform='scale(1)';">
+                        <div style="display: flex; align-items: center; gap: 4px; margin-bottom: 3px;">
+                            <img src="${pin.avatar ? '/avatars/' + pin.avatar : '../images/default-avatar.png'}" 
+                                 style="width: 18px; height: 18px; border-radius: 50%; object-fit: cover; border: 1px solid rgba(220, 20, 60, 0.4); pointer-events: none;"
+                                 alt="avatar">
+                            <div style="color: #fff; font-weight: 600; font-size: 0.7rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; pointer-events: none;">${escapeHtml(pin.nickname || '匿名')}</div>
+                        </div>
+                        ${pin.title ? `<div style="color: #dc143c; font-weight: 600; font-size: 0.65rem; margin-bottom: 1px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; pointer-events: none;">${escapeHtml(pin.title)}</div>` : ''}
+                        <div style="color: #aaa; font-size: 0.6rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; pointer-events: none;">📍 ${pin.address ? extractProvinceCity(pin.address) : `${pin.lat.toFixed(3)}, ${pin.lng.toFixed(3)}`}</div>
+                    </div>
+                `;
+                
+                // 使用 LabelMarker 或自定义覆盖物
+                const labelMarker = new AMap.Marker({
+                    position: [pin.lng, pin.lat],
+                    map: map,
+                    content: cardContent,
+                    offset: new AMap.Pixel(-55, -70), // 偏移量，让卡片显示在标记上方
+                    zIndex: 200
+                });
+                
+                allInfoWindows.push(labelMarker);
+            });
+            
+            // 添加动画样式（如果还没有添加）
+            if (!document.getElementById('card-animation-style')) {
+                const style = document.createElement('style');
+                style.id = 'card-animation-style';
+                style.textContent = `
+                    @keyframes cardPopIn {
+                        0% {
+                            transform: scale(0);
+                            opacity: 0;
+                        }
+                        50% {
+                            transform: scale(1.1);
+                            opacity: 0.8;
+                        }
+                        100% {
+                            transform: scale(1);
+                            opacity: 1;
+                        }
+                    }
+                `;
+                document.head.appendChild(style);
+            }
+            
+            isShowAllPins = true;
+            btn.classList.add('active');
+            showToast(`已显示 ${data.pins.length} 个足迹`);
+        } else {
+            showToast('暂无足迹');
+        }
+        
+        btn.disabled = false;
+    } catch (error) {
+        console.error('[Map] 加载足迹失败:', error);
+        showToast('加载失败');
+        btn.disabled = false;
+    }
+}
+
+// 切换地图图层
+function switchMapLayer(layerType) {
+    if (!map) return;
+    
+    currentLayer = layerType;
+    
+    // 更新按钮状态
+    document.querySelectorAll('.layer-option').forEach(btn => {
+        btn.classList.remove('active');
+        if (btn.dataset.layer === layerType) {
+            btn.classList.add('active');
+        }
+    });
+    
+    // 关闭菜单
+    document.getElementById('layerMenu').classList.remove('show');
+    
+    switch(layerType) {
+        case 'default':
+            // 标准地图
+            map.setMapStyle('amap://styles/dark');
+            if (satelliteLayer) {
+                satelliteLayer.hide();
+            }
+            if (trafficLayer) {
+                trafficLayer.hide();
+            }
+            showToast('已切换到标准地图');
+            break;
+            
+        case 'satellite':
+            // 卫星地图
+            map.setMapStyle('amap://styles/normal');
+            if (!satelliteLayer) {
+                satelliteLayer = new AMap.TileLayer.Satellite();
+                satelliteLayer.setMap(map);
+            } else {
+                satelliteLayer.show();
+            }
+            if (trafficLayer) {
+                trafficLayer.hide();
+            }
+            showToast('已切换到卫星地图');
+            break;
+            
+        case 'traffic':
+            // 交通地图
+            map.setMapStyle('amap://styles/normal');
+            if (!trafficLayer) {
+                trafficLayer = new AMap.TileLayer.Traffic();
+                trafficLayer.setMap(map);
+            } else {
+                trafficLayer.show();
+            }
+            if (satelliteLayer) {
+                satelliteLayer.hide();
+            }
+            showToast('已切换到交通地图');
+            break;
+    }
+}

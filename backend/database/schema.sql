@@ -1,4 +1,4 @@
--- GameWorld 数据库表结构
+-- ShareX 数据库表结构
 
 -- 用户表
 CREATE TABLE IF NOT EXISTS users (
