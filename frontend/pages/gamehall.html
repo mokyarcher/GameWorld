@@ -52,7 +52,7 @@
         }
         .game-modal-btn {
             padding: 12px 35px;
-            background: linear-gradient(135deg, #dc143c 0%, #8b0000 100%);
+            background: linear-gradient(135deg, #d04060 0% #8b0000 100%);
             border: none;
             border-radius: 8px;
             color: white;
@@ -238,7 +238,7 @@
             font-size: 16px;
             font-weight: 800;
             color: #dc143c;
-            text-shadow: 0 0 10px rgba(220, 20, 60, 0.5);
+            text-shadow: 0 0 10px rgba(170, 20, 60, 0.5);
         }
         
         .chips-badge {
@@ -246,7 +246,7 @@
         }
         
         .chips-badge:hover {
-            border-color: rgba(220, 20, 60, 0.3);
+            border-color: rgba(170, 20, 60, 0.3);
             box-shadow: none;
             transform: none;
         }
@@ -257,15 +257,15 @@
             height: 48px;
             border-radius: 8px;
             overflow: hidden;
-            border: 2px solid rgba(220, 20, 60, 0.5);
+            border: 2px solid rgba(170, 20, 60, 0.5);
             cursor: pointer;
             transition: all 0.3s ease;
-            box-shadow: 0 0 15px rgba(220, 20, 60, 0.2);
+            box-shadow: 0 0 15px rgba(170, 20, 60, 0.2);
         }
         
         .user-avatar-wrapper:hover {
             border-color: rgba(220, 20, 60, 0.8);
-            box-shadow: 0 0 20px rgba(220, 20, 60, 0.4);
+            box-shadow: 0 0 20px rgba(170, 20, 60, 0.4);
             transform: translateY(-2px);
         }
         
@@ -285,7 +285,7 @@
             color: #dc143c;
             margin-bottom: 15px;
             padding-bottom: 10px;
-            border-bottom: 1px solid rgba(220, 20, 60, 0.3);
+            border-bottom: 1px solid rgba(170, 20, 60, 0.3);
         }
         
         .panel-label {
@@ -296,7 +296,7 @@
             background: rgba(220, 20, 60, 0.1);
             padding: 3px 8px;
             border-radius: 4px;
-            border: 1px solid rgba(220, 20, 60, 0.3);
+            border: 1px solid rgba(170, 20, 60, 0.3);
         }
         
         .carousel-track {
@@ -321,7 +321,7 @@
                 0 0 0 1px rgba(255,215,0,0.1),
                 inset 0 1px 0 rgba(255,255,255,0.1);
             cursor: pointer;
-            transition: all 0.6s cubic-bezier(0.23, 1, 0.32, 1);
+            transition: all 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -553,7 +553,7 @@
             flex-direction: column;
             align-items: center;
             padding: 12px 40px;
-            background: linear-gradient(145deg, rgba(220, 20, 60, 0.9) 0%, rgba(139, 0, 0, 0.95) 100%);
+            background: linear-gradient(145deg, rgba(150, 20, 60, 0.9) 0%, rgba(139, 0, 0, 0.95) 100%);
             border: 2px solid rgba(220, 20, 60, 0.5);
             border-radius: 12px;
             cursor: pointer;
@@ -803,8 +803,8 @@
             flex-direction: column;
             align-items: center;
             padding: 6px 16px;
-            background: linear-gradient(145deg, rgba(220, 20, 60, 0.9) 0%, rgba(139, 0, 0, 0.95) 100%);
-            border: 2px solid rgba(220, 20, 60, 0.5);
+            background: linear-gradient(145deg, rgba(170, 20, 60, 0.9) 0%, rgba(139, 0, 0, 0.95) 100%);
+            border: 2px solid rgba(170, 20, 60, 0.5);
             border-radius: 10px;
             cursor: pointer;
             transition: all 0.3s ease;
@@ -869,7 +869,7 @@
                     <span class="badge-label">PLAYER</span>
                     <span id="userNickname" class="badge-value">玩家</span>
                 </div>
-                <!-- 筹码卡片 -->
+                <!-- 积分卡片 -->
                 <div class="user-badge chips-badge">
                     <span class="badge-label">CHIPS</span>
                     <span id="userChips" class="badge-value">0</span>
@@ -912,7 +912,7 @@
                 </div>
                 
                 <div class="panel">
-                    <h3><span class="panel-label">LEADERBOARD</span>筹码排行榜</h3>
+                    <h3><span class="panel-label">LEADERBOARD</span>积分排行榜</h3>
                     <div id="leaderboard" class="leaderboard">
                         <p>加载中...</p>
                     </div>
@@ -1049,7 +1049,32 @@
             loadAnnouncements();
             loadLeaderboard();
             checkAdminStatus();
+            startHeartbeat(); // 启动在线心跳
         });
+        
+        // 在线心跳 - 每30秒报告一次位置
+        function startHeartbeat() {
+            const reportLocation = async () => {
+                try {
+                    await fetch(`${API_BASE}/online/heartbeat`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Authorization': `Bearer ${token}`
+                        },
+                        body: JSON.stringify({ location: 'gamehall' })
+                    });
+                } catch (error) {
+                    // 静默失败，不影响用户体验
+                }
+            };
+            
+            // 立即报告一次
+            reportLocation();
+            
+            // 每30秒报告一次
+            setInterval(reportLocation, 30000);
+        }
         
         // 检查是否为管理员
         async function checkAdminStatus() {
@@ -1082,7 +1107,7 @@
             window.location.href = 'friends.html';
         }
         
-        // 格式化筹码显示 - 用 M 代表百万
+        // 格式化积分显示 - 用 M 代表百万
         function formatChips(chips) {
             const num = parseInt(chips) || 0;
             if (num >= 1000000) {
@@ -1160,7 +1185,7 @@
                     const uniqueTestGames = testGames.filter(g => !existingCodes.includes(g.game_code));
                     gamesData = [...backendGames, ...uniqueTestGames];
                     
-                    renderCarousel();
+                    initCarousel();
 
                 }
             } catch (error) {
@@ -1208,7 +1233,7 @@
                     },
 
                 ];
-                renderCarousel();
+                initCarousel();
 
             }
         }
@@ -1233,10 +1258,12 @@
             return images[gameCode] || images['default'];
         }
         
-        function renderCarousel() {
+        // 初始化轮播（只执行一次）
+        function initCarousel() {
             const track = document.getElementById('carouselTrack');
             const indicators = document.getElementById('carouselIndicators');
             
+            // 初始化时创建所有卡牌
             track.innerHTML = gamesData.map((game, index) => {
                 const cardImage = getGameCardImage(game.game_code, game.developing);
                 return `
@@ -1251,7 +1278,7 @@
             }).join('');
             
             indicators.innerHTML = gamesData.map((_, index) => `
-                <div class="carousel-indicator ${index === currentGameIndex ? 'active' : ''}" onclick="selectGame(${index})"></div>
+                <div class="carousel-indicator ${index === currentGameIndex ? 'active' : ''}" data-index="${index}" onclick="selectGame(${index})"></div>
             `).join('');
             
             // 添加触摸事件
@@ -1265,6 +1292,22 @@
             carousel.addEventListener('mousemove', handleMouseMove);
             carousel.addEventListener('mouseup', handleMouseUp);
             carousel.addEventListener('mouseleave', handleMouseUp);
+        }
+        
+        // 更新轮播状态（丝滑过渡，只更新类名）
+        function renderCarousel() {
+            const items = document.querySelectorAll('.carousel-item');
+            const indicators = document.querySelectorAll('.carousel-indicator');
+            
+            // 更新每个卡片的类名，触发 CSS 过渡动画
+            items.forEach((item, index) => {
+                item.className = 'carousel-item ' + getItemClass(index);
+            });
+            
+            // 更新指示器
+            indicators.forEach((indicator, index) => {
+                indicator.classList.toggle('active', index === currentGameIndex);
+            });
         }
         
         // 获取项目类名

@@ -37,6 +37,9 @@ async function init() {
   // 数据库迁移：添加 is_admin 列（如果不存在）
   await migrateAddAdminColumn();
   
+  // 数据库迁移：添加 is_locked 列（如果不存在）
+  await migrateAddLockedColumn();
+  
   console.log('数据库初始化完成');
 }
 
@@ -50,6 +53,22 @@ async function migrateAddAdminColumn() {
     if (!hasAdminColumn) {
       await run('ALTER TABLE users ADD COLUMN is_admin BOOLEAN DEFAULT 0');
       console.log('[DB] 已添加 is_admin 列');
+    }
+  } catch (err) {
+    console.error('[DB] 迁移失败:', err.message);
+  }
+}
+
+// 迁移：添加 is_locked 列（账号锁定）
+async function migrateAddLockedColumn() {
+  try {
+    // 检查列是否存在
+    const tableInfo = await all("PRAGMA table_info(users)");
+    const hasLockedColumn = tableInfo.some(col => col.name === 'is_locked');
+    
+    if (!hasLockedColumn) {
+      await run('ALTER TABLE users ADD COLUMN is_locked BOOLEAN DEFAULT 0');
+      console.log('[DB] 已添加 is_locked 列');
     }
   } catch (err) {
     console.error('[DB] 迁移失败:', err.message);

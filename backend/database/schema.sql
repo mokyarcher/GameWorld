@@ -52,7 +52,7 @@ CREATE TABLE IF NOT EXISTS friends (
     UNIQUE(user_id, friend_id)
 );
 
--- 德州扑克房间表
+-- 贵州扑克房间表
 CREATE TABLE IF NOT EXISTS poker_rooms (
     id TEXT PRIMARY KEY,
     name TEXT NOT NULL,
@@ -84,4 +84,4 @@ CREATE TABLE IF NOT EXISTS poker_room_players (
 
 -- 初始化游戏数据
 INSERT OR IGNORE INTO games (game_code, game_name, description, icon, min_chips, max_players, sort_order) VALUES
-('poker', '德州扑克', '经典的德州扑克游戏，考验你的策略和运气', 'poker.png', 100, 9, 1);
+('poker', '贵州扑克', '经典的贵州扑克游戏，考验你的策略和运气', 'poker.png', 100, 9, 1);

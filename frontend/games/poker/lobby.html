@@ -111,8 +111,8 @@
             flex-direction: column;
             align-items: center;
             padding: 6px 16px;
-            background: linear-gradient(145deg, rgba(220, 20, 60, 0.9) 0%, rgba(139, 0, 0, 0.95) 100%);
-            border: 2px solid rgba(220, 20, 60, 0.5);
+            background: linear-gradient(145deg, rgba(170, 20, 60, 0.9) 0%, rgba(139, 0, 0, 0.95) 100%);
+            border: 2px solid rgba(170, 20, 60, 0.5);
             border-radius: 10px;
             cursor: pointer;
             transition: all 0.3s ease;
@@ -174,7 +174,7 @@
 
         .btn-primary {
             padding: 15px 30px;
-            background: linear-gradient(135deg, #dc143c 0%, #8b0000 100%);
+            background: linear-gradient(135deg, #d04060 0%, #8b0000 100%);
             border: none;
             border-radius: 8px;
             color: white;
@@ -208,7 +208,7 @@
 
         .btn-rank {
             padding: 15px 30px;
-            background: linear-gradient(135deg, #dc143c 0%, #8b0000 100%);
+            background: linear-gradient(135deg, #e05070 0%, #8b0000 100%);
             border: none;
             border-radius: 8px;
             color: white;
@@ -303,7 +303,7 @@
 
         .btn-join {
             padding: 8px 20px;
-            background: linear-gradient(135deg, #dc143c 0%, #8b0000 100%);
+            background: linear-gradient(135deg, #d04060 0% #8b0000 100%);
             border: none;
             border-radius: 6px;
             color: white;
@@ -707,7 +707,7 @@
         }
         .game-modal-btn {
             padding: 12px 35px;
-            background: linear-gradient(135deg, #dc143c 0%, #8b0000 100%);
+            background: linear-gradient(135deg, #d04060 0% #8b0000 100%);
             border: none;
             border-radius: 8px;
             color: white;
@@ -868,10 +868,10 @@
             </div>
         </div>
         
-        <!-- 中间：POKER德州扑克 -->
+        <!-- 中间：POKER贵州扑克 -->
         <div class="logo">
             <span class="logo-tag">POKER</span>
-            <span class="logo-text">德州扑克</span>
+            <span class="logo-text">贵州扑克</span>
         </div>
         
         <!-- 右边：按钮 -->
@@ -957,7 +957,7 @@
     <div class="modal" id="leaderboardModal">
         <div class="leaderboard-modal-content">
             <div class="leaderboard-header">
-                <span>筹码排行榜</span>
+                <span>积分排行榜</span>
                 <button class="btn-close" onclick="hideLeaderboardModal()">关闭</button>
             </div>
             <div class="leaderboard-list" id="leaderboardList">
@@ -984,7 +984,7 @@
                     <span id="profileNickname">-</span>
                 </div>
                 <div class="profile-info-item">
-                    <span>当前筹码</span>
+                    <span>当前积分</span>
                     <span id="profileChips" style="color: #dc143c; font-weight: bold;">0</span>
                 </div>
             </div>
@@ -1027,7 +1027,7 @@
         const socket = io(`${window.location.protocol}//${window.location.host}/poker`);
         
         socket.on('connect', () => {
-            console.log('已连接到德州扑克服务器');
+            console.log('已连接到贵州扑克服务器');
             socket.emit('get-rooms');
             
             // 延迟检查进行中的游戏，确保 socket 连接稳定
@@ -1098,7 +1098,7 @@
             showInviteModal(data);
         });
 
-        // 格式化筹码显示
+        // 格式化积分显示
         function formatChips(chips) {
             const num = parseInt(chips) || 0;
             if (num >= 1000000) {

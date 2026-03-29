@@ -113,14 +113,27 @@ function authenticateToken(req, res, next) {
   });
 }
 
-// 更新用户位置（心跳接口）
+// 更新用户位置（心跳接口）- HTTP 方式上报在线状态
 router.post('/heartbeat', authenticateToken, async (req, res) => {
   try {
     const { location } = req.body;
     const userId = String(req.userId);
     
-    if (location && onlineUsers.has(userId)) {
+    // 如果用户不在线列表中，添加进去（HTTP 方式上线）
+    if (!onlineUsers.has(userId)) {
+      onlineUsers.set(userId, {
+        socketId: 'http-' + Date.now(), // HTTP 连接用特殊前缀
+        location: location || 'unknown',
+        lastActive: Date.now()
+      });
+      console.log(`[Online] 用户 ${userId} 通过 HTTP 上线，位置: ${location || 'unknown'}`);
+    } else if (location) {
+      // 已在线，更新位置
       updateLocation(userId, location);
+    } else {
+      // 已在线，只更新活跃时间
+      const user = onlineUsers.get(userId);
+      user.lastActive = Date.now();
     }
     
     res.json({ success: true });

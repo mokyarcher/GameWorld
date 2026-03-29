@@ -67,9 +67,9 @@ router.get('/announcements', async (req, res) => {
       {
         id: 1,
         title: '欢迎来到 GameWorld！',
-        content: 'GameWorld 是一个多游戏平台，目前支持德州扑克。更多游戏即将上线！',
+        content: 'GameWorld 是一个多游戏平台，目前支持贵州扑克。更多游戏即将上线！',
         created_at: new Date().toISOString()
-      },
+      },  
       {
         id: 2,
         title: '新手福利',

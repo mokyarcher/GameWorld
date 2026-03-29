@@ -14,7 +14,7 @@
         
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            background: linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 100%);
             min-height: 100vh;
             color: #fff;
         }
@@ -31,18 +31,35 @@
             justify-content: space-between;
             align-items: center;
             padding: 20px 30px;
-            background: rgba(255,255,255,0.05);
-            border-radius: 16px;
+            background: linear-gradient(145deg, rgba(20,20,20,0.9) 0%, rgba(10,10,10,0.95) 100%);
+            border-radius: 12px;
             margin-bottom: 30px;
-            border: 1px solid rgba(255,255,255,0.1);
+            border: 1px solid rgba(220, 20, 60, 0.3);
+            box-shadow: 0 0 30px rgba(220, 20, 60, 0.1);
         }
         
         .logo {
             font-size: 1.8rem;
             font-weight: bold;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .logo::before {
+            content: 'ADMIN';
+            font-size: 10px;
+            font-weight: 800;
+            letter-spacing: 2px;
+            color: #dc143c;
+            background: rgba(220, 20, 60, 0.1);
+            padding: 3px 8px;
+            border-radius: 4px;
+            border: 1px solid rgba(220, 20, 60, 0.3);
+        }
+        
+        .logo-text {
+            color: #fff;
         }
         
         .header-actions {
@@ -61,23 +78,27 @@
         }
         
         .btn-back {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(145deg, rgba(220, 20, 60, 0.9) 0%, rgba(139, 0, 0, 0.95) 100%);
             color: white;
+            border: 1px solid rgba(220, 20, 60, 0.5);
         }
         
         .btn-back:hover {
             transform: translateY(-2px);
-            box-shadow: 0 5px 20px rgba(102, 126, 234, 0.5);
+            box-shadow: 0 5px 20px rgba(220, 20, 60, 0.4);
+            border-color: rgba(220, 20, 60, 0.8);
         }
         
         .btn-refresh {
-            background: linear-gradient(135deg, #27ae60, #2ecc71);
+            background: linear-gradient(145deg, rgba(40,40,40,0.9) 0%, rgba(20,20,20,0.95) 100%);
             color: white;
+            border: 1px solid rgba(220, 20, 60, 0.3);
         }
         
         .btn-refresh:hover {
             transform: translateY(-2px);
-            box-shadow: 0 5px 20px rgba(39, 174, 96, 0.5);
+            box-shadow: 0 5px 20px rgba(220, 20, 60, 0.2);
+            border-color: rgba(220, 20, 60, 0.6);
         }
         
         /* 统计卡片 */
@@ -89,10 +110,16 @@
         }
         
         .stat-card {
-            background: rgba(255,255,255,0.05);
+            background: linear-gradient(145deg, rgba(20,20,20,0.9) 0%, rgba(10,10,10,0.95) 100%);
             padding: 25px;
-            border-radius: 16px;
-            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 12px;
+            border: 1px solid rgba(220, 20, 60, 0.2);
+            transition: all 0.3s ease;
+        }
+        
+        .stat-card:hover {
+            border-color: rgba(220, 20, 60, 0.4);
+            box-shadow: 0 0 20px rgba(220, 20, 60, 0.1);
         }
         
         .stat-card h3 {
@@ -104,23 +131,39 @@
         .stat-card .value {
             font-size: 2rem;
             font-weight: bold;
-            color: #ffd700;
+            color: #dc143c;
+            text-shadow: 0 0 10px rgba(220, 20, 60, 0.3);
         }
         
         /* 用户列表 */
         .users-section {
-            background: rgba(255,255,255,0.05);
-            border-radius: 16px;
-            border: 1px solid rgba(255,255,255,0.1);
+            background: linear-gradient(145deg, rgba(20,20,20,0.9) 0%, rgba(10,10,10,0.95) 100%);
+            border-radius: 12px;
+            border: 1px solid rgba(220, 20, 60, 0.2);
             overflow: hidden;
+            box-shadow: 0 0 30px rgba(220, 20, 60, 0.05);
         }
         
         .section-header {
             padding: 20px 30px;
-            border-bottom: 1px solid rgba(255,255,255,0.1);
+            border-bottom: 1px solid rgba(220, 20, 60, 0.2);
             display: flex;
             justify-content: space-between;
             align-items: center;
+        }
+        
+        .section-header h2 {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .section-header h2::before {
+            content: '';
+            width: 4px;
+            height: 20px;
+            background: #dc143c;
+            border-radius: 2px;
         }
         
         .section-header h2 {
@@ -134,16 +177,23 @@
         
         .search-box input {
             padding: 10px 15px;
-            border: 1px solid rgba(255,255,255,0.2);
+            border: 1px solid rgba(220, 20, 60, 0.3);
             border-radius: 8px;
-            background: rgba(255,255,255,0.1);
+            background: rgba(0,0,0,0.3);
             color: white;
             font-size: 0.95rem;
             width: 250px;
+            transition: all 0.3s;
+        }
+        
+        .search-box input:focus {
+            outline: none;
+            border-color: rgba(220, 20, 60, 0.6);
+            box-shadow: 0 0 10px rgba(220, 20, 60, 0.2);
         }
         
         .search-box input::placeholder {
-            color: rgba(255,255,255,0.5);
+            color: rgba(255,255,255,0.4);
         }
         
         .users-table {
@@ -159,14 +209,16 @@
         }
         
         .users-table th {
-            background: rgba(255,255,255,0.03);
+            background: rgba(220, 20, 60, 0.1);
             font-weight: 600;
-            color: rgba(255,255,255,0.7);
+            color: rgba(220, 20, 60, 0.9);
             font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
         }
         
         .users-table tr:hover {
-            background: rgba(255,255,255,0.03);
+            background: rgba(220, 20, 60, 0.05);
         }
         
         .user-info-cell {
@@ -178,9 +230,9 @@
         .user-avatar {
             width: 40px;
             height: 40px;
-            border-radius: 50%;
+            border-radius: 8px;
             object-fit: cover;
-            border: 2px solid rgba(255,255,255,0.2);
+            border: 2px solid rgba(220, 20, 60, 0.3);
         }
         
         .user-name {
@@ -200,25 +252,68 @@
         .admin-badge {
             display: inline-block;
             padding: 3px 10px;
-            background: linear-gradient(135deg, #e74c3c, #c0392b);
-            border-radius: 12px;
+            background: linear-gradient(135deg, #dc143c, #8b0000);
+            border-radius: 4px;
             font-size: 0.75rem;
             margin-left: 8px;
+            font-weight: 600;
         }
         
         .guest-badge {
             display: inline-block;
             padding: 3px 10px;
-            background: linear-gradient(135deg, #3498db, #2980b9);
-            border-radius: 12px;
+            background: linear-gradient(145deg, rgba(40,40,40,0.9) 0%, rgba(20,20,20,0.95) 100%);
+            border: 1px solid rgba(220, 20, 60, 0.3);
+            border-radius: 4px;
             font-size: 0.75rem;
             margin-left: 8px;
+            font-weight: 600;
+        }
+        
+        /* 在线状态 */
+        .status-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+        
+        .status-badge::before {
+            content: '';
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+        }
+        
+        .status-badge.online {
+            background: rgba(39, 174, 96, 0.15);
+            color: #27ae60;
+            border: 1px solid rgba(39, 174, 96, 0.3);
+        }
+        
+        .status-badge.online::before {
+            background: #27ae60;
+            box-shadow: 0 0 8px #27ae60;
+        }
+        
+        .status-badge.offline {
+            background: rgba(100, 100, 100, 0.15);
+            color: #888;
+            border: 1px solid rgba(100, 100, 100, 0.3);
+        }
+        
+        .status-badge.offline::before {
+            background: #666;
         }
         
         .chips-value {
-            color: #ffd700;
-            font-weight: 600;
+            color: #dc143c;
+            font-weight: 700;
             font-size: 1.1rem;
+            text-shadow: 0 0 5px rgba(220, 20, 60, 0.3);
         }
         
         .action-btns {
@@ -236,18 +331,93 @@
         }
         
         .btn-add {
-            background: linear-gradient(135deg, #27ae60, #2ecc71);
+            background: linear-gradient(145deg, rgba(40,40,40,0.9) 0%, rgba(20,20,20,0.95) 100%);
             color: white;
+            border: 1px solid rgba(220, 20, 60, 0.4);
+        }
+        
+        .btn-add:hover {
+            border-color: rgba(220, 20, 60, 0.8);
+            box-shadow: 0 0 10px rgba(220, 20, 60, 0.3);
         }
         
         .btn-sub {
-            background: linear-gradient(135deg, #e74c3c, #c0392b);
+            background: linear-gradient(135deg, #dc143c, #8b0000);
             color: white;
+            border: 1px solid rgba(220, 20, 60, 0.5);
+        }
+        
+        .btn-sub:hover {
+            box-shadow: 0 0 10px rgba(220, 20, 60, 0.4);
         }
         
         .btn-set {
-            background: linear-gradient(135deg, #f39c12, #e67e22);
+            background: linear-gradient(145deg, rgba(60,60,60,0.9) 0%, rgba(40,40,40,0.95) 100%);
+            border: 1px solid rgba(220, 20, 60, 0.3);
             color: white;
+        }
+        
+        /* 账号状态 */
+        .account-status {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+        
+        .account-status.normal {
+            background: rgba(39, 174, 96, 0.15);
+            color: #27ae60;
+            border: 1px solid rgba(39, 174, 96, 0.3);
+        }
+        
+        .account-status.locked {
+            background: rgba(220, 20, 60, 0.15);
+            color: #dc143c;
+            border: 1px solid rgba(220, 20, 60, 0.3);
+        }
+        
+        /* 锁定/解锁按钮 */
+        .btn-action.btn-lock {
+            background: linear-gradient(145deg, rgba(40,40,40,0.9) 0%, rgba(20,20,20,0.95) 100%);
+            border: 1px solid rgba(220, 20, 60, 0.4);
+            color: #dc143c;
+            padding: 6px 12px;
+            font-size: 0.8rem;
+        }
+        
+        .btn-action.btn-lock:hover {
+            border-color: rgba(220, 20, 60, 0.8);
+            box-shadow: 0 0 10px rgba(220, 20, 60, 0.3);
+        }
+        
+        .btn-action.btn-unlock {
+            background: linear-gradient(145deg, rgba(40,40,40,0.9) 0%, rgba(20,20,20,0.95) 100%);
+            border: 1px solid rgba(39, 174, 96, 0.4);
+            color: #27ae60;
+            padding: 6px 12px;
+            font-size: 0.8rem;
+        }
+        
+        .btn-action.btn-unlock:hover {
+            border-color: rgba(39, 174, 96, 0.8);
+            box-shadow: 0 0 10px rgba(39, 174, 96, 0.3);
+        }
+        
+        /* 积分操作按钮 */
+        .btn-action.btn-chips {
+            background: linear-gradient(135deg, #dc143c, #8b0000);
+            border: 1px solid rgba(220, 20, 60, 0.5);
+            color: white;
+            padding: 6px 16px;
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+        
+        .btn-action.btn-chips:hover {
+            box-shadow: 0 0 15px rgba(220, 20, 60, 0.4);
+            border-color: rgba(220, 20, 60, 0.8);
         }
         
         .btn-action:hover {
@@ -279,11 +449,11 @@
         }
         
         .modal-content {
-            background: linear-gradient(145deg, rgba(30,30,30,0.98), rgba(10,10,10,0.99));
+            background: linear-gradient(145deg, rgba(25,25,25,0.98), rgba(10,10,10,0.99));
             padding: 30px 40px;
-            border-radius: 16px;
-            border: 2px solid rgba(102, 126, 234, 0.5);
-            box-shadow: 0 20px 60px rgba(0,0,0,0.8);
+            border-radius: 12px;
+            border: 1px solid rgba(220, 20, 60, 0.4);
+            box-shadow: 0 20px 60px rgba(0,0,0,0.8), 0 0 30px rgba(220, 20, 60, 0.1);
             max-width: 400px;
             width: 90%;
         }
@@ -297,14 +467,16 @@
             text-align: center;
             margin-bottom: 20px;
             padding: 15px;
-            background: rgba(255,255,255,0.05);
-            border-radius: 12px;
+            background: rgba(220, 20, 60, 0.1);
+            border: 1px solid rgba(220, 20, 60, 0.2);
+            border-radius: 8px;
         }
         
         .modal-content .current-chips {
-            color: #ffd700;
+            color: #dc143c;
             font-size: 1.5rem;
             font-weight: bold;
+            text-shadow: 0 0 10px rgba(220, 20, 60, 0.3);
         }
         
         .form-group {
@@ -321,11 +493,19 @@
         .form-group select {
             width: 100%;
             padding: 12px 15px;
-            border: 1px solid rgba(255,255,255,0.2);
+            border: 1px solid rgba(220, 20, 60, 0.3);
             border-radius: 8px;
-            background: #1a1a2e;
+            background: rgba(0,0,0,0.3);
             color: white;
             font-size: 1rem;
+            transition: all 0.3s;
+        }
+        
+        .form-group input:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: rgba(220, 20, 60, 0.6);
+            box-shadow: 0 0 10px rgba(220, 20, 60, 0.2);
         }
         
         .form-group input::placeholder {
@@ -343,21 +523,25 @@
         }
         
         .btn-confirm {
-            background: linear-gradient(135deg, #27ae60, #2ecc71);
+            background: linear-gradient(135deg, #dc143c, #8b0000);
             color: white;
+            border: 1px solid rgba(220, 20, 60, 0.5);
         }
         
         .btn-cancel {
-            background: rgba(255,255,255,0.1);
+            background: linear-gradient(145deg, rgba(40,40,40,0.9) 0%, rgba(20,20,20,0.95) 100%);
             color: white;
+            border: 1px solid rgba(220, 20, 60, 0.3);
         }
         
         .btn-confirm:hover {
-            box-shadow: 0 5px 20px rgba(39, 174, 96, 0.5);
+            box-shadow: 0 5px 20px rgba(220, 20, 60, 0.4);
+            border-color: rgba(220, 20, 60, 0.8);
         }
         
         .btn-cancel:hover {
-            background: rgba(255,255,255,0.2);
+            border-color: rgba(220, 20, 60, 0.6);
+            box-shadow: 0 0 10px rgba(220, 20, 60, 0.2);
         }
         
         /* 提示消息 */
@@ -379,11 +563,14 @@
         }
         
         .toast.success {
-            background: linear-gradient(135deg, #27ae60, #2ecc71);
+            background: linear-gradient(135deg, #dc143c, #8b0000);
+            border: 1px solid rgba(220, 20, 60, 0.5);
         }
         
         .toast.error {
-            background: linear-gradient(135deg, #e74c3c, #c0392b);
+            background: linear-gradient(145deg, rgba(40,40,40,0.9) 0%, rgba(20,20,20,0.95) 100%);
+            border: 1px solid rgba(220, 20, 60, 0.5);
+            color: #dc143c;
         }
         
         /* 加载状态 */
@@ -404,10 +591,10 @@
     <div class="admin-container">
         <!-- 顶部导航 -->
         <header class="header">
-            <div class="logo">👑 GameWorld 后台管理</div>
+            <div class="logo"><span class="logo-text">GameWorld 后台管理</span></div>
             <div class="header-actions">
-                <button onclick="refreshData()" class="btn btn-refresh">🔄 刷新数据</button>
-                <button onclick="backToHall()" class="btn btn-back">🏠 返回大厅</button>
+                <button onclick="refreshData()" class="btn btn-refresh">刷新数据</button>
+                <button onclick="backToHall()" class="btn btn-back">返回大厅</button>
             </div>
         </header>
         
@@ -426,7 +613,7 @@
                 <div class="value" id="guestUsers">-</div>
             </div>
             <div class="stat-card">
-                <h3>系统总筹码</h3>
+                <h3>系统总积分</h3>
                 <div class="value" id="totalChips">-</div>
             </div>
         </div>
@@ -434,7 +621,7 @@
         <!-- 用户列表 -->
         <div class="users-section">
             <div class="section-header">
-                <h2>👥 用户管理</h2>
+                <h2>用户管理</h2>
                 <div class="search-box">
                     <input type="text" id="searchInput" placeholder="搜索用户名/昵称..." oninput="filterUsers()">
                 </div>
@@ -444,15 +631,18 @@
                     <tr>
                         <th>用户信息</th>
                         <th>类型</th>
-                        <th>当前筹码</th>
+                        <th>状态</th>
+                        <th>当前积分</th>
                         <th>注册时间</th>
                         <th>最后登录</th>
-                        <th>操作</th>
+                        <th>账号状态</th>
+                        <th>账号操作</th>
+                        <th>积分操作</th>
                     </tr>
                 </thead>
                 <tbody id="usersTableBody">
                     <tr>
-                        <td colspan="6" class="loading">加载中...</td>
+                        <td colspan="9" class="loading">加载中...</td>
                     </tr>
                 </tbody>
             </table>
@@ -462,7 +652,7 @@
     <!-- 筹码操作弹窗 -->
     <div class="modal-overlay" id="chipsModal">
         <div class="modal-content">
-            <h3>💰 调整筹码</h3>
+            <h3>± 积分调整</h3>
             <div class="user-info-modal">
                 <div id="modalUserName">用户名</div>
                 <div class="current-chips" id="modalCurrentChips">0</div>
@@ -470,13 +660,13 @@
             <div class="form-group">
                 <label>操作类型</label>
                 <select id="operationType">
-                    <option value="add">➕ 增加筹码</option>
-                    <option value="subtract">➖ 减少筹码</option>
+                    <option value="add">➕ 增加积分</option>
+                    <option value="subtract">➖ 减少积分</option>
                     <option value="set">📝 设置为指定数值</option>
                 </select>
             </div>
             <div class="form-group">
-                <label>筹码数量</label>
+                <label>积分数量</label>
                 <input type="number" id="chipsAmount" placeholder="请输入数量" min="0">
             </div>
             <div class="form-group">
@@ -547,7 +737,7 @@
             const tbody = document.getElementById('usersTableBody');
             
             if (users.length === 0) {
-                tbody.innerHTML = '<tr><td colspan="6" class="empty-state">暂无用户数据</td></tr>';
+                tbody.innerHTML = '<tr><td colspan="9" class="empty-state">暂无用户数据</td></tr>';
                 return;
             }
             
@@ -568,15 +758,30 @@
                     <td>
                         ${user.isGuest ? '<span class="guest-badge">游客</span>' : '注册用户'}
                     </td>
+                    <td>
+                        <span class="status-badge ${user.isOnline ? 'online' : 'offline'}">
+                            ${user.isOnline ? '在线' : '离线'}
+                        </span>
+                    </td>
                     <td class="chips-value">${user.chips.toLocaleString()}</td>
                     <td>${formatDate(user.createdAt)}</td>
                     <td>${formatDate(user.lastLogin)}</td>
                     <td>
-                        <div class="action-btns">
-                            <button class="btn-action btn-add" onclick="openChipsModal(${user.id}, 'add')" ${user.isAdmin ? 'disabled' : ''}>➕</button>
-                            <button class="btn-action btn-sub" onclick="openChipsModal(${user.id}, 'subtract')" ${user.isAdmin ? 'disabled' : ''}>➖</button>
-                            <button class="btn-action btn-set" onclick="openChipsModal(${user.id}, 'set')" ${user.isAdmin ? 'disabled' : ''}>📝</button>
-                        </div>
+                        <span class="account-status ${user.isLocked ? 'locked' : 'normal'}">
+                            ${user.isLocked ? '冻结' : '正常'}
+                        </span>
+                    </td>
+                    <td>
+                        <button class="btn-action ${user.isLocked ? 'btn-unlock' : 'btn-lock'}" 
+                            onclick="toggleUserLock(${user.id}, ${user.isLocked})" 
+                            ${user.isAdmin ? 'disabled' : ''}>
+                            ${user.isLocked ? '🔓 解锁' : '🔒 锁定'}
+                        </button>
+                    </td>
+                    <td>
+                        <button class="btn-action btn-chips" onclick="openChipsModal(${user.id})" ${user.isAdmin ? 'disabled' : ''}>
+                            ± 积分
+                        </button>
                     </td>
                 </tr>
             `).join('');
@@ -605,13 +810,13 @@
             renderUsers(filtered);
         }
         
-        // 打开筹码操作弹窗
+        // 打开积分操作弹窗
         function openChipsModal(userId, operation) {
             selectedUser = allUsers.find(u => u.id === userId);
             if (!selectedUser) return;
             
             document.getElementById('modalUserName').textContent = selectedUser.nickname;
-            document.getElementById('modalCurrentChips').textContent = selectedUser.chips.toLocaleString() + ' 筹码';
+            document.getElementById('modalCurrentChips').textContent = selectedUser.chips.toLocaleString() + ' 积分';
             document.getElementById('operationType').value = operation;
             document.getElementById('chipsAmount').value = '';
             document.getElementById('operationReason').value = '';
@@ -625,7 +830,7 @@
             selectedUser = null;
         }
         
-        // 确认筹码操作
+        // 确认积分操作
         async function confirmChipsOperation() {
             if (!selectedUser) return;
             
@@ -634,7 +839,7 @@
             const reason = document.getElementById('operationReason').value;
             
             if (isNaN(amount) || amount < 0) {
-                showToast('请输入有效的筹码数量', 'error');
+                showToast('请输入有效的积分数量', 'error');
                 return;
             }
             
@@ -658,6 +863,43 @@
                 if (data.success) {
                     showToast(data.message, 'success');
                     closeModal();
+                    loadUsers(); // 刷新数据
+                } else {
+                    showToast(data.error || '操作失败', 'error');
+                }
+            } catch (error) {
+                console.error('操作失败:', error);
+                showToast('网络错误，请重试', 'error');
+            }
+        }
+        
+        // 切换用户锁定状态
+        async function toggleUserLock(userId, isLocked) {
+            const user = allUsers.find(u => u.id === userId);
+            if (!user) return;
+            
+            const action = isLocked ? '解锁' : '锁定';
+            if (!confirm(`确定要${action}用户 "${user.nickname}" 吗？`)) {
+                return;
+            }
+            
+            try {
+                const response = await fetch(`${API_BASE}/admin/lock`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${token}`
+                    },
+                    body: JSON.stringify({
+                        userId,
+                        isLocked: !isLocked
+                    })
+                });
+                
+                const data = await response.json();
+                
+                if (data.success) {
+                    showToast(data.message, 'success');
                     loadUsers(); // 刷新数据
                 } else {
                     showToast(data.error || '操作失败', 'error');
@@ -713,8 +955,33 @@
             const isAdmin = await checkAdmin();
             if (isAdmin) {
                 loadUsers();
+                startHeartbeat(); // 启动在线心跳
             }
         });
+        
+        // 在线心跳 - 每30秒报告一次位置
+        function startHeartbeat() {
+            const reportLocation = async () => {
+                try {
+                    await fetch(`${API_BASE}/online/heartbeat`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Authorization': `Bearer ${token}`
+                        },
+                        body: JSON.stringify({ location: 'admin' })
+                    });
+                } catch (error) {
+                    // 静默失败
+                }
+            };
+            
+            // 立即报告一次
+            reportLocation();
+            
+            // 每30秒报告一次
+            setInterval(reportLocation, 30000);
+        }
         
         // 点击遮罩关闭弹窗
         document.getElementById('chipsModal').addEventListener('click', function(e) {

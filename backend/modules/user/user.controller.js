@@ -69,6 +69,11 @@ router.post('/login', async (req, res) => {
       return res.status(400).json({ error: '用户名或密码错误' });
     }
     
+    // 检查账号是否被锁定
+    if (user.is_locked === 1) {
+      return res.status(403).json({ error: '账号已被冻结，请联系管理员' });
+    }
+    
     // 更新最后登录时间
     await db.run('UPDATE users SET last_login = CURRENT_TIMESTAMP WHERE id = ?', [user.id]);
     

@@ -92,7 +92,7 @@
             flex-direction: column;
             align-items: center;
             padding: 6px 16px;
-            background: linear-gradient(145deg, rgba(220, 20, 60, 0.9) 0%, rgba(139, 0, 0, 0.95) 100%) !important;
+            background: linear-gradient(145deg, rgba(170, 20, 60, 0.9) 0%, rgba(139, 0, 0, 0.95) 100%) !important;
             border: 2px solid rgba(220, 20, 60, 0.5) !important;
             border-radius: 10px !important;
             cursor: pointer;
@@ -275,7 +275,7 @@
                 0 0 20px rgba(220,20,60,0.1);
         }
 
-        /* 筹码标签 */
+        /* 积分标签 */
         .pot-area::before {
             content: 'POT';
             position: absolute;
@@ -623,7 +623,7 @@
             text-overflow: ellipsis;
         }
 
-        /* 筹码数量 - 设计规范 */
+        /* 积分数量 - 设计规范 */
         .player-chips {
             color: #ffffff;
             font-size: clamp(0.8rem, 2.2vw, 1rem);
@@ -917,7 +917,7 @@
         }
 
         .btn-call {
-            background: linear-gradient(135deg, #9b59b6, #8e44ad);
+            background: linear-gradient(135deg, #9f2c2c,#d04060, #8e44ad);
             color: white;
         }
 
@@ -1346,7 +1346,7 @@
                 margin-bottom: 1px;
             }
             
-            /* 筹码显示字体大幅缩小 */
+            /* 积分显示字体大幅缩小 */
             .player-chips {
                 font-size: clamp(0.6rem, 1.4vw, 0.75rem);
             }
@@ -2235,7 +2235,7 @@ socket.on('game-ending-soon', (data) => {
                 document.body.appendChild(countdownDiv);
             }
             
-            // 获取我的筹码
+            // 获取我的积分
             const myPlayer = gameState ? gameState.players.find(p => String(p.userId) === String(user.id)) : null;
             const myChips = myPlayer ? myPlayer.chips : 0;
             const canContinue = myChips >= 1000;
@@ -2245,7 +2245,7 @@ socket.on('game-ending-soon', (data) => {
                 <div style="font-size: 24px; color: #ffffff; font-weight: bold;">${seconds}</div>
                 <div style="font-size: 12px; color: rgba(255,255,255,0.6);">秒后自动选择</div>
                 <div style="font-size: 12px; color: ${canContinue ? '#dc143c' : '#e74c3c'}; margin-top: 5px;">
-                    筹码: ${myChips} ${canContinue ? '(可继续)' : '(不足1000)'}
+                    积分: ${myChips} ${canContinue ? '(可继续)' : '(不足1000)'}
                 </div>
             `;
             countdownDiv.style.display = 'block';
@@ -2290,7 +2290,7 @@ socket.on('game-ending-soon', (data) => {
                 document.body.appendChild(decisionDiv);
             }
             
-            // 根据筹码决定显示哪些按钮
+            // 根据积分决定显示哪些按钮
             let buttonsHTML = '';
             if (canContinue) {
                 buttonsHTML += `
@@ -2303,7 +2303,7 @@ socket.on('game-ending-soon', (data) => {
             buttonsHTML += `
                 <button class="btn-action btn-fold" onclick="makeDecision('leave')" 
                     style="padding: 10px 25px; font-size: 14px; border-radius: 6px;">
-                    ${canContinue ? '返回大厅' : '筹码不足，返回大厅'}
+                    ${canContinue ? '返回大厅' : '积分不足，返回大厅'}
                 </button>
             `;
             

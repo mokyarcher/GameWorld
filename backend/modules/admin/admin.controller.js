@@ -2,6 +2,7 @@ const express = require('express');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const db = require('../../database/db');
+const { getUserStatus } = require('../online/online.controller');
 
 const router = express.Router();
 const JWT_SECRET = process.env.JWT_SECRET || 'gameworld-secret-key-2024';
@@ -69,22 +70,28 @@ async function authenticateAdmin(req, res, next) {
 router.get('/users', authenticateAdmin, async (req, res) => {
   try {
     const users = await db.all(
-      'SELECT id, username, nickname, avatar, chips, is_guest, is_admin, created_at, last_login FROM users ORDER BY id DESC'
+      'SELECT id, username, nickname, avatar, chips, is_guest, is_admin, is_locked, created_at, last_login FROM users ORDER BY id DESC'
     );
     
     res.json({
       success: true,
-      users: users.map(user => ({
-        id: user.id,
-        username: user.username,
-        nickname: user.nickname,
-        avatar: user.avatar,
-        chips: user.chips,
-        isGuest: user.is_guest === 1,
-        isAdmin: user.is_admin === 1,
-        createdAt: user.created_at,
-        lastLogin: user.last_login
-      }))
+      users: users.map(user => {
+        const status = getUserStatus(user.id);
+        return {
+          id: user.id,
+          username: user.username,
+          nickname: user.nickname,
+          avatar: user.avatar,
+          chips: user.chips,
+          isGuest: user.is_guest === 1,
+          isAdmin: user.is_admin === 1,
+          isLocked: user.is_locked === 1,
+          isOnline: status.isOnline,
+          location: status.locationName,
+          createdAt: user.created_at,
+          lastLogin: user.last_login
+        };
+      })
     });
   } catch (error) {
     console.error('[Admin] 获取用户列表失败:', error);
@@ -176,6 +183,40 @@ router.get('/chips-history/:userId', authenticateAdmin, async (req, res) => {
   } catch (error) {
     console.error('[Admin] 获取筹码流水失败:', error);
     res.status(500).json({ error: '获取筹码流水失败' });
+  }
+});
+
+// 锁定/解锁用户账号（管理员）
+router.post('/lock', authenticateAdmin, async (req, res) => {
+  try {
+    const { userId, isLocked } = req.body;
+    
+    if (!userId || isLocked === undefined) {
+      return res.status(400).json({ error: '参数不完整' });
+    }
+    
+    // 获取用户信息
+    const user = await db.get('SELECT * FROM users WHERE id = ?', [userId]);
+    if (!user) {
+      return res.status(404).json({ error: '用户不存在' });
+    }
+    
+    // 不能锁定其他管理员
+    if (user.is_admin && user.username !== ADMIN_USERNAME) {
+      return res.status(403).json({ error: '不能操作其他管理员账户' });
+    }
+    
+    // 更新锁定状态
+    await db.run('UPDATE users SET is_locked = ? WHERE id = ?', [isLocked ? 1 : 0, userId]);
+    
+    const actionText = isLocked ? '锁定' : '解锁';
+    res.json({
+      success: true,
+      message: `已将 ${user.nickname || user.username} ${actionText}`
+    });
+  } catch (error) {
+    console.error('[Admin] 锁定/解锁用户失败:', error);
+    res.status(500).json({ error: '操作失败' });
   }
 });
 
