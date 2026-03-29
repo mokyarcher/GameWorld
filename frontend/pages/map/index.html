@@ -35,13 +35,13 @@
             top: 0;
             left: 0;
             right: 0;
-            height: 60px;
+            height: 80px;
             background: linear-gradient(180deg, rgba(10,10,10,0.95) 0%, rgba(10,10,10,0.8) 100%);
             backdrop-filter: blur(10px);
             display: flex;
             align-items: center;
             justify-content: space-between;
-            padding: 0 20px;
+            padding: 0 40px;
             z-index: 1000;
             border-bottom: 1px solid rgba(220, 20, 60, 0.3);
         }
@@ -66,10 +66,7 @@
         .map-logo span:last-child {
             font-weight: 900;
             font-size: 1.4rem;
-            background: linear-gradient(135deg, #fff, #dc143c);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
+            color: #dc143c;
         }
 
         /* 足迹空间标题 */
@@ -85,11 +82,7 @@
             font-size: 1.6rem;
             font-weight: 900;
             letter-spacing: 4px;
-            background: linear-gradient(135deg, #fff 0%, #dc143c 50%, #ff6b6b 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            text-shadow: 0 0 30px rgba(220, 20, 60, 0.5);
+            color: #dc143c;
         }
 
         .map-title-sub {
@@ -106,33 +99,61 @@
             gap: 10px;
         }
 
-        .btn {
-            padding: 8px 16px;
-            border: none;
-            border-radius: 6px;
-            font-size: 0.9rem;
+        /* 足迹空间专用按钮样式 - glass-btn 风格 */
+        .map-header .btn {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 6px 16px;
+            background: linear-gradient(145deg, rgba(170, 20, 60, 0.9) 0%, rgba(139, 0, 0, 0.95) 100%);
+            border: 2px solid rgba(170, 20, 60, 0.5);
+            border-radius: 10px;
             cursor: pointer;
-            transition: all 0.3s;
-            font-weight: 600;
-        }
-
-        .btn-back {
-            background: rgba(255,255,255,0.1);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 0 20px rgba(220, 20, 60, 0.4);
             color: #fff;
-            border: 1px solid rgba(220, 20, 60, 0.3);
+            font-weight: 800;
         }
 
-        .btn-back:hover {
-            background: rgba(220, 20, 60, 0.2);
+        .map-header .btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.5), transparent);
+            opacity: 0.8;
         }
 
-        .btn-my-pins {
-            background: linear-gradient(135deg, #dc143c, #8b0000);
-            color: #fff;
+        .map-header .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 30px rgba(220, 20, 60, 0.6);
+            border-color: rgba(220, 20, 60, 0.8);
         }
 
-        .btn-my-pins:hover {
-            box-shadow: 0 0 15px rgba(220, 20, 60, 0.5);
+        .map-header .btn-back::after {
+            content: 'BACK';
+            font-size: 8px;
+            font-weight: 800;
+            letter-spacing: 2px;
+            color: rgba(255,255,255,0.7);
+            margin-bottom: 2px;
+            display: block;
+            order: -1;
+        }
+
+        .map-header .btn-my-pins::after {
+            content: 'MY PINS';
+            font-size: 8px;
+            font-weight: 800;
+            letter-spacing: 2px;
+            color: rgba(255,255,255,0.7);
+            margin-bottom: 2px;
+            display: block;
+            order: -1;
         }
 
         /* 发布按钮（右下角） - 统一风格 */
@@ -873,6 +894,27 @@
             color: #fff;
         }
 
+        .pin-item-actions {
+            display: flex;
+            gap: 8px;
+        }
+
+        .pin-item-edit {
+            background: rgba(39, 174, 96, 0.2);
+            border: 1px solid rgba(39, 174, 96, 0.4);
+            color: #27ae60;
+            padding: 4px 10px;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .pin-item-edit:hover {
+            background: rgba(39, 174, 96, 0.4);
+            color: #fff;
+        }
+
         .pin-item-content {
             color: rgba(255,255,255,0.7);
             font-size: 0.9rem;
@@ -924,14 +966,14 @@
         @media (max-width: 768px) {
             .map-header {
                 padding: 0 15px;
-                height: 50px;
+                height: 80px;
             }
 
             .map-logo {
                 font-size: 1rem;
             }
 
-            .btn {
+            .map-header .btn {
                 padding: 6px 12px;
                 font-size: 0.8rem;
             }
@@ -1137,6 +1179,28 @@
             <div class="sidebar-body" id="myPinsList">
                 <!-- 动态填充 -->
             </div>
+        </div>
+    </div>
+
+    <!-- 编辑足迹弹窗 -->
+    <div class="modal-overlay" id="editPinModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">✏️ 编辑足迹</h3>
+                <button class="modal-close" onclick="closeEditPinModal()">&times;</button>
+            </div>
+            
+            <div class="form-group">
+                <label>标题</label>
+                <input type="text" id="editPinTitle" placeholder="给这个位置起个名字..." maxlength="16">
+            </div>
+
+            <div class="form-group">
+                <label>分享内容</label>
+                <textarea id="editPinContent" placeholder="分享你在这里的故事..."></textarea>
+            </div>
+
+            <button class="btn-submit" onclick="submitEditPin()">保存修改</button>
         </div>
     </div>
 

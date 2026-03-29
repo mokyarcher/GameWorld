@@ -48,14 +48,38 @@
         }
         
         .logo-text {
-            color: #fff;
+            color: #dc143c;
+        }
+
+        /* ShareX Logo */
+        .sharex-logo {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            justify-self: start;
+        }
+
+        .sharex-logo span:first-child {
+            font-size: 10px;
+            font-weight: 700;
+            letter-spacing: 2px;
+            color: #dc143c;
+            background: rgba(220, 20, 60, 0.1);
+            padding: 2px 6px;
+            border-radius: 4px;
+            border: 1px solid rgba(220, 20, 60, 0.3);
+        }
+
+        .sharex-logo span:last-child {
+            font-weight: 900;
+            font-size: 1.4rem;
+            color: #dc143c;
         }
 
         .user-info {
             display: flex;
             align-items: center;
             gap: 12px;
-            justify-self: start;
         }
         
         /* 用户徽章样式 */
@@ -97,12 +121,19 @@
             text-shadow: 0 0 10px rgba(220, 20, 60, 0.5);
         }
 
+        /* 顶部右侧容器 */
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            justify-self: end;
+        }
+
         /* 顶部右侧按钮组 - 徽章风格 */
         .header-actions {
             display: flex;
             gap: 10px;
             align-items: center;
-            justify-self: end;
         }
 
         /* 徽章风格按钮 - 红色渐变背景 */
@@ -174,20 +205,19 @@
 
         .btn-primary {
             padding: 15px 30px;
-            background: linear-gradient(135deg, #d04060 0%, #8b0000 100%);
-            border: none;
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(220, 20, 60, 0.3);
             border-radius: 8px;
             color: white;
             font-size: 1rem;
             font-weight: 600;
             cursor: pointer;
             transition: all 0.3s;
-            box-shadow: 0 0 20px rgba(220, 20, 60, 0.3);
         }
 
         .btn-primary:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 25px rgba(220, 20, 60, 0.5);
+            background: rgba(220, 20, 60, 0.1);
+            border-color: rgba(220, 20, 60, 0.6);
         }
 
         .btn-secondary {
@@ -208,20 +238,19 @@
 
         .btn-rank {
             padding: 15px 30px;
-            background: linear-gradient(135deg, #e05070 0%, #8b0000 100%);
-            border: none;
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(220, 20, 60, 0.3);
             border-radius: 8px;
             color: white;
             font-size: 1rem;
             font-weight: 600;
             cursor: pointer;
             transition: all 0.3s;
-            box-shadow: 0 0 20px rgba(220, 20, 60, 0.3);
         }
 
         .btn-rank:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 25px rgba(220, 20, 60, 0.5);
+            background: rgba(220, 20, 60, 0.1);
+            border-color: rgba(220, 20, 60, 0.6);
         }
 
         .btn-reconnect {
@@ -916,16 +945,10 @@
     </div>
     
     <div class="header">
-        <!-- 左边：PLAYER/CHIPS -->
-        <div class="user-info">
-            <div class="user-badge">
-                <span class="badge-label">PLAYER</span>
-                <span id="username" class="badge-value">加载中...</span>
-            </div>
-            <div class="user-badge">
-                <span class="badge-label">CHIPS</span>
-                <span id="chips" class="badge-value">0</span>
-            </div>
+        <!-- 左边：ShareX Logo -->
+        <div class="sharex-logo">
+            <span>SHARE</span>
+            <span>X</span>
         </div>
         
         <!-- 中间：POKER贵州扑克 -->
@@ -934,20 +957,32 @@
             <span class="logo-text">贵州扑克</span>
         </div>
         
-        <!-- 右边：按钮 -->
-        <div class="header-actions">
-            <button class="badge-btn" onclick="backToGameHall()">
-                <span class="btn-label">BACK</span>
-                <span class="btn-text">返回大厅</span>
-            </button>
-            <button class="badge-btn" onclick="showProfileModal()">
-                <span class="btn-label">PROFILE</span>
-                <span class="btn-text">个人信息</span>
-            </button>
-            <button class="badge-btn" onclick="logout()">
-                <span class="btn-label">EXIT</span>
-                <span class="btn-text">退出</span>
-            </button>
+        <!-- 右边：PLAYER/CHIPS + 按钮 -->
+        <div class="header-right">
+            <div class="user-info">
+                <div class="user-badge">
+                    <span class="badge-label">PLAYER</span>
+                    <span id="username" class="badge-value">加载中...</span>
+                </div>
+                <div class="user-badge">
+                    <span class="badge-label">CHIPS</span>
+                    <span id="chips" class="badge-value">0</span>
+                </div>
+            </div>
+            <div class="header-actions">
+                <button class="badge-btn" onclick="backToGameHall()">
+                    <span class="btn-label">BACK</span>
+                    <span class="btn-text">返回大厅</span>
+                </button>
+                <button class="badge-btn" onclick="showProfileModal()">
+                    <span class="btn-label">PROFILE</span>
+                    <span class="btn-text">个人信息</span>
+                </button>
+                <button class="badge-btn" onclick="logout()">
+                    <span class="btn-label">EXIT</span>
+                    <span class="btn-text">退出</span>
+                </button>
+            </div>
         </div>
     </div>
 

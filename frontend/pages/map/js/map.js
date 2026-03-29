@@ -534,7 +534,10 @@ async function loadMyPinsList() {
                 <div class="pin-item" data-id="${pin.id}">
                     <div class="pin-item-header">
                         <div class="pin-item-title">${pin.title || '无标题'}</div>
-                        <button class="pin-item-delete" onclick="deleteMyPin(${pin.id}, event)">删除</button>
+                        <div class="pin-item-actions">
+                            <button class="pin-item-edit" onclick="editMyPin(${pin.id}, event)">编辑</button>
+                            <button class="pin-item-delete" onclick="deleteMyPin(${pin.id}, event)">删除</button>
+                        </div>
                     </div>
                     ${pin.content ? `<div class="pin-item-content">${escapeHtml(pin.content)}</div>` : ''}
                     <div class="pin-item-address">📍 ${pin.address || `${pin.lat.toFixed(4)}, ${pin.lng.toFixed(4)}`}</div>
@@ -554,8 +557,8 @@ async function loadMyPinsList() {
             // 添加点击事件（点击卡片查看详情）
             listContainer.querySelectorAll('.pin-item').forEach(item => {
                 item.addEventListener('click', function(e) {
-                    // 如果点击的是删除按钮，不触发查看详情
-                    if (e.target.classList.contains('pin-item-delete')) return;
+                    // 如果点击的是删除或编辑按钮，不触发查看详情
+                    if (e.target.classList.contains('pin-item-delete') || e.target.classList.contains('pin-item-edit')) return;
                     
                     const pinId = this.dataset.id;
                     const pin = data.pins.find(p => p.id == pinId);
@@ -598,6 +601,65 @@ async function deleteMyPin(pinId, event) {
     } catch (error) {
         console.error('[Map] 删除足迹失败:', error);
         showToast('删除失败');
+    }
+}
+
+// 编辑我的足迹
+let editingPinId = null;
+
+async function editMyPin(pinId, event) {
+    event.stopPropagation(); // 阻止冒泡
+    
+    try {
+        const data = await MapAPI.getPin(pinId);
+        if (!data.success || !data.pin) {
+            showToast('足迹不存在');
+            return;
+        }
+        
+        const pin = data.pin;
+        editingPinId = pinId;
+        
+        // 填充编辑表单
+        document.getElementById('editPinTitle').value = pin.title || '';
+        document.getElementById('editPinContent').value = pin.content || '';
+        
+        // 显示编辑弹窗
+        document.getElementById('editPinModal').classList.add('show');
+    } catch (error) {
+        console.error('[Map] 加载足迹失败:', error);
+        showToast('加载失败');
+    }
+}
+
+// 关闭编辑弹窗
+function closeEditPinModal() {
+    document.getElementById('editPinModal').classList.remove('show');
+    editingPinId = null;
+}
+
+// 提交编辑
+async function submitEditPin() {
+    if (!editingPinId) return;
+    
+    const title = document.getElementById('editPinTitle').value;
+    const content = document.getElementById('editPinContent').value;
+    
+    try {
+        const result = await MapAPI.updatePin(editingPinId, { title, content });
+        if (result.success) {
+            showToast('修改成功');
+            closeEditPinModal();
+            // 刷新列表
+            await loadMyPinsList();
+            // 刷新地图标记
+            loadPins();
+        } else {
+            showToast(result.error || '修改失败');
+        }
+    } catch (error) {
+        console.error('[Map] 修改足迹失败:', error);
+        showToast('修改失败');
     }
 }
 
@@ -820,6 +882,10 @@ function escapeHtml(text) {
 // 页面加载完成后初始化
 window.onload = function() {
     initMap();
+    // 延迟自动显示全部足迹，等待地图加载完成
+    setTimeout(() => {
+        showAllPinsInfo();
+    }, 1500);
 };
 
 // 点击弹窗外部关闭
@@ -839,6 +905,13 @@ document.getElementById('detailModal').addEventListener('click', function(e) {
 document.getElementById('helpModal').addEventListener('click', function(e) {
     if (e.target === this) {
         closeHelpModal();
+    }
+});
+
+// 点击编辑弹窗外部关闭
+document.getElementById('editPinModal').addEventListener('click', function(e) {
+    if (e.target === this) {
+        closeEditPinModal();
     }
 });
 
@@ -910,8 +983,17 @@ function refreshMap() {
     btn.classList.add('spinning');
     showToast('正在刷新...');
     
+    // 记录刷新前是否正在显示全部足迹
+    const wasShowingAll = isShowAllPins;
+    
     // 重新加载足迹
     loadPins().then(() => {
+        // 如果之前正在显示全部足迹，刷新后也重新显示
+        if (wasShowingAll) {
+            isShowAllPins = false; // 重置状态，让showAllPinsInfo能正确执行
+            showAllPinsInfo();
+        }
+        
         setTimeout(() => {
             btn.classList.remove('spinning');
             showToast('刷新完成');
@@ -1096,7 +1178,7 @@ async function showAllPinsInfo() {
             
             isShowAllPins = true;
             btn.classList.add('active');
-            showToast(`已显示 ${data.pins.length} 个足迹`);
+            showToast(`发现了 ${data.pins.length} 个足迹`);
         } else {
             showToast('暂无足迹');
         }

@@ -137,8 +137,27 @@ async function initMapDatabase() {
       }
       console.log('[DB] 地图模块数据库初始化完成');
     }
+    
+    // 迁移：添加 updated_at 列到 map_pins 表
+    await migrateAddUpdatedAtColumn();
   } catch (err) {
     console.error('[DB] 地图数据库初始化失败:', err.message);
+  }
+}
+
+// 迁移：添加 updated_at 列到 map_pins 表
+async function migrateAddUpdatedAtColumn() {
+  try {
+    // 检查列是否存在
+    const tableInfo = await all("PRAGMA table_info(map_pins)");
+    const hasUpdatedAtColumn = tableInfo.some(col => col.name === 'updated_at');
+    
+    if (!hasUpdatedAtColumn) {
+      await run('ALTER TABLE map_pins ADD COLUMN updated_at DATETIME DEFAULT CURRENT_TIMESTAMP');
+      console.log('[DB] 已添加 updated_at 列到 map_pins 表');
+    }
+  } catch (err) {
+    console.error('[DB] 迁移失败:', err.message);
   }
 }
 

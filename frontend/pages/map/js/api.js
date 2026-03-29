@@ -80,6 +80,14 @@ const MapAPI = {
         return request('/map/my-pins');
     },
     
+    // 更新标记
+    updatePin(id, data) {
+        return request(`/map/pins/${id}`, {
+            method: 'PUT',
+            body: JSON.stringify(data)
+        });
+    },
+    
     // 逆地理编码（通过后端代理）
     reverseGeocode(lat, lng) {
         return request(`/map/geocode/reverse?lat=${lat}&lng=${lng}`);

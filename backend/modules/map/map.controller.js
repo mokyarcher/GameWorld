@@ -243,6 +243,42 @@ router.delete('/pins/:id', authenticateToken, async (req, res) => {
 });
 
 /**
+ * 更新地图标记
+ * PUT /api/map/pins/:id
+ */
+router.put('/pins/:id', authenticateToken, async (req, res) => {
+    try {
+        const { id } = req.params;
+        const { title, content } = req.body;
+        const userId = req.user.userId;
+        
+        // 检查权限（只能修改自己的）
+        const pin = await db.get('SELECT user_id FROM map_pins WHERE id = ?', [id]);
+        if (!pin) {
+            return res.status(404).json({ error: '标记不存在' });
+        }
+        
+        if (pin.user_id !== userId) {
+            return res.status(403).json({ error: '无权修改此标记' });
+        }
+        
+        await db.run(`
+            UPDATE map_pins 
+            SET title = ?, content = ?, updated_at = CURRENT_TIMESTAMP
+            WHERE id = ?
+        `, [title || null, content || null, id]);
+        
+        res.json({
+            success: true,
+            message: '更新成功'
+        });
+    } catch (error) {
+        console.error('[Map] 更新标记失败:', error);
+        res.status(500).json({ error: '更新失败' });
+    }
+});
+
+/**
  * 获取我的标记
  * GET /api/map/my-pins
  */

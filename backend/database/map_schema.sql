@@ -14,6 +14,7 @@ CREATE TABLE IF NOT EXISTS map_pins (
     is_public BOOLEAN DEFAULT 1,        -- 是否公开
     view_count INTEGER DEFAULT 0,       -- 浏览次数
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    updated_at DATETIME DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE SET NULL
 );
 
