@@ -139,17 +139,17 @@ function updateSelectedMarker(position) {
         currentMarker.setMap(null);
     }
     
-    // 使用 SVG 创建高清红色标记（矮版）
-    const redMarkerSvg = `
+    // 使用 SVG 创建高清黑色标记（矮版）- 新建定位
+    const blackMarkerSvg = `
         <svg xmlns="http://www.w3.org/2000/svg" width="28" height="32" viewBox="0 0 28 32">
             <defs>
                 <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
                     <feDropShadow dx="0" dy="2" stdDeviation="2" flood-opacity="0.3"/>
                 </filter>
             </defs>
-            <path d="M14 0C6.27 0 0 5.8 0 13c0 9.5 14 19 14 19s14-9.5 14-19C28 5.8 21.73 0 14 0z" fill="#dc143c" filter="url(#shadow)"/>
+            <path d="M14 0C6.27 0 0 5.8 0 13c0 9.5 14 19 14 19s14-9.5 14-19C28 5.8 21.73 0 14 0z" fill="#1a1a1a" filter="url(#shadow)"/>
             <circle cx="14" cy="13" r="6" fill="white"/>
-            <circle cx="14" cy="13" r="4" fill="#dc143c"/>
+            <circle cx="14" cy="13" r="4" fill="#1a1a1a"/>
         </svg>
     `;
     
@@ -158,7 +158,7 @@ function updateSelectedMarker(position) {
         map: map,
         icon: new AMap.Icon({
             size: new AMap.Size(28, 32),
-            image: 'data:image/svg+xml;base64,' + btoa(unescape(encodeURIComponent(redMarkerSvg))),
+            image: 'data:image/svg+xml;base64,' + btoa(unescape(encodeURIComponent(blackMarkerSvg))),
             imageSize: new AMap.Size(28, 32),
             anchor: 'center bottom'
         }),
@@ -224,17 +224,17 @@ async function loadPins() {
 
 // 添加标记到地图（其他用户的足迹 - 蓝色）
 function addPinToMap(pin) {
-    // 使用 SVG 创建高清蓝色标记（矮版）
-    const blueMarkerSvg = `
+    // 使用 SVG 创建高清红色标记（矮版）- 发现的足迹
+    const redMarkerSvg = `
         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="30" viewBox="0 0 24 30">
             <defs>
                 <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
                     <feDropShadow dx="0" dy="2" stdDeviation="2" flood-opacity="0.3"/>
                 </filter>
             </defs>
-            <path d="M12 0C5.37 0 0 5.37 0 12c0 9 12 18 12 18s12-9 12-18C24 5.37 18.63 0 12 0z" fill="#3498db" filter="url(#shadow)"/>
+            <path d="M12 0C5.37 0 0 5.37 0 12c0 9 12 18 12 18s12-9 12-18C24 5.37 18.63 0 12 0z" fill="#dc143c" filter="url(#shadow)"/>
             <circle cx="12" cy="12" r="5" fill="white"/>
-            <circle cx="12" cy="12" r="3" fill="#3498db"/>
+            <circle cx="12" cy="12" r="3" fill="#dc143c"/>
         </svg>
     `;
     
@@ -244,7 +244,7 @@ function addPinToMap(pin) {
         title: pin.title || '位置分享',
         icon: new AMap.Icon({
             size: new AMap.Size(24, 30),
-            image: 'data:image/svg+xml;base64,' + btoa(unescape(encodeURIComponent(blueMarkerSvg))),
+            image: 'data:image/svg+xml;base64,' + btoa(unescape(encodeURIComponent(redMarkerSvg))),
             imageSize: new AMap.Size(24, 30),
             anchor: 'center bottom'
         }),
@@ -837,6 +837,16 @@ async function getCurrentLocation() {
 // 返回大厅
 function backToHall() {
     window.location.href = '../gamehall.html';
+}
+
+// 退出登录
+function logout() {
+    if (confirm('确定要退出登录吗？')) {
+        localStorage.removeItem('token');
+        localStorage.removeItem('userId');
+        localStorage.removeItem('username');
+        window.location.href = '../index.html';
+    }
 }
 
 // 显示提示

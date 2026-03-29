@@ -43,6 +43,9 @@ async function init() {
   // 初始化地图模块数据库
   await initMapDatabase();
   
+  // 初始化反馈模块数据库
+  await initFeedbackDatabase();
+  
   console.log('数据库初始化完成');
 }
 
@@ -158,6 +161,30 @@ async function migrateAddUpdatedAtColumn() {
     }
   } catch (err) {
     console.error('[DB] 迁移失败:', err.message);
+  }
+}
+
+// 初始化反馈模块数据库
+async function initFeedbackDatabase() {
+  try {
+    const feedbackSchemaPath = path.join(__dirname, 'feedback_schema.sql');
+    if (fs.existsSync(feedbackSchemaPath)) {
+      const feedbackSchema = fs.readFileSync(feedbackSchemaPath, 'utf8');
+      const statements = feedbackSchema.split(';').filter(stmt => stmt.trim());
+      
+      for (const statement of statements) {
+        try {
+          await run(statement);
+        } catch (err) {
+          if (!err.message.includes('already exists')) {
+            console.error('[DB] 反馈表初始化失败:', err.message);
+          }
+        }
+      }
+      console.log('[DB] 反馈模块数据库初始化完成');
+    }
+  } catch (err) {
+    console.error('[DB] 反馈数据库初始化失败:', err.message);
   }
 }
 

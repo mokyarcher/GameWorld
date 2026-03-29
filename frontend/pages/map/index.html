@@ -156,6 +156,17 @@
             order: -1;
         }
 
+        .map-header .btn-logout::after {
+            content: 'EXIT';
+            font-size: 8px;
+            font-weight: 800;
+            letter-spacing: 2px;
+            color: rgba(255,255,255,0.7);
+            margin-bottom: 2px;
+            display: block;
+            order: -1;
+        }
+
         /* 发布按钮（右下角） - 统一风格 */
         .fab-post {
             position: fixed;
@@ -1012,8 +1023,9 @@
             <div class="map-title-sub">FOOTPRINT SPACE</div>
         </div>
         <div class="map-actions">
-            <button class="btn btn-back" onclick="backToHall()">返回大厅</button>
             <button class="btn btn-my-pins" onclick="showMyPins()">我的足迹</button>
+            <button class="btn btn-back" onclick="backToHall()">返回大厅</button>
+            <button class="btn btn-logout" onclick="logout()">退出</button>
         </div>
     </header>
 

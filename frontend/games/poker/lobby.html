@@ -27,28 +27,27 @@
             border-bottom: 1px solid rgba(220,20,60,0.3);
         }
 
-        .logo {
-            font-size: 1.5rem;
-            font-weight: bold;
-            display: flex;
-            align-items: center;
-            gap: 8px;
+        /* 贵州扑克标题 - 与足迹空间统一风格 */
+        .poker-title {
             justify-self: center;
+            text-align: center;
         }
-        
-        .logo-tag {
-            font-size: 12px;
-            font-weight: 700;
-            letter-spacing: 2px;
+
+        .poker-title-main {
+            font-family: 'Orbitron', 'Montserrat', sans-serif;
+            font-size: 1.6rem;
+            font-weight: 900;
+            letter-spacing: 4px;
             color: #dc143c;
-            background: rgba(220, 20, 60, 0.1);
-            padding: 3px 8px;
-            border-radius: 4px;
-            border: 1px solid rgba(220, 20, 60, 0.3);
         }
-        
-        .logo-text {
-            color: #dc143c;
+
+        .poker-title-sub {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 0.65rem;
+            font-weight: 600;
+            letter-spacing: 6px;
+            color: rgba(220, 20, 60, 0.8);
+            margin-top: 2px;
         }
 
         /* ShareX Logo */
@@ -813,8 +812,13 @@
                 padding: 15px;
             }
             
-            .logo {
+            .poker-title-main {
                 font-size: 1.3rem;
+            }
+            
+            .poker-title-sub {
+                font-size: 0.55rem;
+                letter-spacing: 4px;
             }
             
             .user-info {
@@ -951,10 +955,10 @@
             <span>X</span>
         </div>
         
-        <!-- 中间：POKER贵州扑克 -->
-        <div class="logo">
-            <span class="logo-tag">POKER</span>
-            <span class="logo-text">贵州扑克</span>
+        <!-- 中间：贵州扑克标题 -->
+        <div class="poker-title">
+            <div class="poker-title-main">贵州扑克</div>
+            <div class="poker-title-sub">GUIZHOU POKER</div>
         </div>
         
         <!-- 右边：PLAYER/CHIPS + 按钮 -->
@@ -970,13 +974,13 @@
                 </div>
             </div>
             <div class="header-actions">
-                <button class="badge-btn" onclick="backToGameHall()">
-                    <span class="btn-label">BACK</span>
-                    <span class="btn-text">返回大厅</span>
-                </button>
                 <button class="badge-btn" onclick="showProfileModal()">
                     <span class="btn-label">PROFILE</span>
                     <span class="btn-text">个人信息</span>
+                </button>
+                <button class="badge-btn" onclick="backToGameHall()">
+                    <span class="btn-label">BACK</span>
+                    <span class="btn-text">返回大厅</span>
                 </button>
                 <button class="badge-btn" onclick="logout()">
                     <span class="btn-label">EXIT</span>

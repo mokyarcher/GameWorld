@@ -345,6 +345,99 @@ body {
     color: #dc143c;
 }
 
+/* 意见反馈入口 */
+.feedback-entry {
+    width: 300px;
+    height: 70px;
+    background: linear-gradient(145deg, rgba(20,20,20,0.6) 0%, rgba(10,10,10,0.8) 100%);
+    border-radius: 16px;
+    border: 1px solid rgba(220, 20, 60, 0.15);
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    padding: 0 20px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.feedback-entry::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, #dc143c, transparent);
+    opacity: 0.6;
+}
+
+.feedback-entry:hover {
+    border-color: rgba(220, 20, 60, 0.4);
+    box-shadow: 0 0 20px rgba(220, 20, 60, 0.2);
+    transform: translateY(-2px);
+}
+
+.feedback-entry.my-feedback {
+    position: relative;
+}
+
+.feedback-badge {
+    position: absolute;
+    top: -8px;
+    right: -8px;
+    width: 24px;
+    height: 24px;
+    background: linear-gradient(135deg, #dc143c, #8b0000);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    font-weight: 700;
+    color: #fff;
+    border: 2px solid #0a0a0a;
+    box-shadow: 0 2px 8px rgba(220, 20, 60, 0.4);
+    animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.1); }
+}
+
+.feedback-icon {
+    font-size: 28px;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(220, 20, 60, 0.1);
+    border-radius: 10px;
+    border: 1px solid rgba(220, 20, 60, 0.3);
+}
+
+.feedback-text {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.feedback-label {
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    color: rgba(220, 20, 60, 0.8);
+}
+
+.feedback-title {
+    font-size: 16px;
+    font-weight: 600;
+    color: rgba(255, 255, 255, 0.9);
+}
+
 .games-section {
     flex: 1;
 }
@@ -421,5 +514,297 @@ body {
     
     .games-list {
         grid-template-columns: 1fr;
+    }
+}
+
+/* 意见反馈弹窗 */
+.feedback-modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.8);
+    backdrop-filter: blur(5px);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+    padding: 20px;
+}
+
+.feedback-modal-overlay.active {
+    display: flex;
+}
+
+.feedback-modal-content {
+    background: linear-gradient(145deg, rgba(25,25,25,0.95) 0%, rgba(15,15,15,0.98) 100%);
+    border-radius: 20px;
+    border: 1px solid rgba(220, 20, 60, 0.3);
+    width: 100%;
+    max-width: 600px;
+    max-height: 90vh;
+    overflow-y: auto;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+}
+
+.feedback-modal-header {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    padding: 25px 25px 20px;
+    border-bottom: 1px solid rgba(220, 20, 60, 0.2);
+    position: relative;
+}
+
+.feedback-modal-icon {
+    font-size: 32px;
+    width: 50px;
+    height: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(220, 20, 60, 0.1);
+    border-radius: 12px;
+    border: 1px solid rgba(220, 20, 60, 0.3);
+}
+
+.feedback-modal-title {
+    font-size: 22px;
+    font-weight: 700;
+    color: #fff;
+}
+
+.feedback-close-btn {
+    position: absolute;
+    right: 20px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    color: rgba(255, 255, 255, 0.5);
+    font-size: 28px;
+    cursor: pointer;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+}
+
+.feedback-close-btn:hover {
+    background: rgba(220, 20, 60, 0.2);
+    color: #dc143c;
+}
+
+.feedback-form {
+    padding: 25px;
+}
+
+.feedback-type-section {
+    margin-bottom: 25px;
+}
+
+.feedback-label-text {
+    display: block;
+    font-size: 14px;
+    font-weight: 600;
+    color: rgba(255, 255, 255, 0.8);
+    margin-bottom: 12px;
+}
+
+.feedback-type-options {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+}
+
+.type-btn {
+    padding: 12px 8px;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 10px;
+    color: rgba(255, 255, 255, 0.7);
+    font-size: 13px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-align: center;
+}
+
+.type-btn:hover {
+    background: rgba(220, 20, 60, 0.1);
+    border-color: rgba(220, 20, 60, 0.3);
+}
+
+.type-btn.selected {
+    background: rgba(220, 20, 60, 0.2);
+    border-color: #dc143c;
+    color: #fff;
+    box-shadow: 0 0 15px rgba(220, 20, 60, 0.3);
+}
+
+.feedback-content-section {
+    margin-bottom: 25px;
+}
+
+.feedback-textarea {
+    width: 100%;
+    min-height: 120px;
+    padding: 15px;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 12px;
+    color: #fff;
+    font-size: 14px;
+    resize: vertical;
+    font-family: inherit;
+    transition: all 0.3s ease;
+}
+
+.feedback-textarea:focus {
+    outline: none;
+    border-color: #dc143c;
+    background: rgba(255, 255, 255, 0.08);
+}
+
+.feedback-textarea::placeholder {
+    color: rgba(255, 255, 255, 0.3);
+}
+
+.feedback-char-count {
+    text-align: right;
+    font-size: 12px;
+    color: rgba(255, 255, 255, 0.4);
+    margin-top: 8px;
+}
+
+.feedback-image-section {
+    margin-bottom: 25px;
+}
+
+.feedback-image-upload {
+    width: 100%;
+    height: 120px;
+    border: 2px dashed rgba(220, 20, 60, 0.3);
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.feedback-image-upload:hover {
+    border-color: rgba(220, 20, 60, 0.6);
+    background: rgba(220, 20, 60, 0.05);
+}
+
+.feedback-upload-placeholder {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+}
+
+.feedback-upload-icon {
+    font-size: 32px;
+}
+
+.feedback-upload-text {
+    font-size: 14px;
+    color: rgba(255, 255, 255, 0.7);
+}
+
+.feedback-upload-hint {
+    font-size: 12px;
+    color: rgba(255, 255, 255, 0.4);
+}
+
+.feedback-image-preview {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.feedback-image-remove {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    width: 30px;
+    height: 30px;
+    background: rgba(220, 20, 60, 0.9);
+    border: none;
+    border-radius: 50%;
+    color: #fff;
+    font-size: 18px;
+    cursor: pointer;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+}
+
+.feedback-image-remove:hover {
+    background: #dc143c;
+    transform: scale(1.1);
+}
+
+.feedback-image-remove.show {
+    display: flex;
+}
+
+.feedback-actions {
+    display: flex;
+    gap: 15px;
+    justify-content: flex-end;
+}
+
+.feedback-btn {
+    padding: 12px 30px;
+    border-radius: 10px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    border: none;
+}
+
+.feedback-btn-cancel {
+    background: rgba(255, 255, 255, 0.1);
+    color: rgba(255, 255, 255, 0.7);
+}
+
+.feedback-btn-cancel:hover {
+    background: rgba(255, 255, 255, 0.2);
+}
+
+.feedback-btn-submit {
+    background: linear-gradient(135deg, #d04060 0%, #8b0000 100%);
+    color: #fff;
+}
+
+.feedback-btn-submit:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(220, 20, 60, 0.4);
+}
+
+.feedback-btn-submit:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    transform: none;
+}
+
+/* 响应式 */
+@media (max-width: 600px) {
+    .feedback-type-options {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    
+    .feedback-modal-content {
+        max-height: 95vh;
     }
 }

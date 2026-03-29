@@ -469,10 +469,10 @@
         /* 翻页按钮 - 竖式简约风格 */
         .carousel-nav-btn {
             position: absolute;
-            top: 35%;
+            top: 40%;
             transform: translateY(-50%);
-            width: 28px;
-            height: 80px;
+            width: 35px;
+            height: 160px;
             background: linear-gradient(180deg, rgba(20,20,20,0.9) 0%, rgba(10,10,10,0.95) 100%);
             border: 1px solid rgba(220, 20, 60, 0.3);
             border-radius: 4px;
@@ -917,6 +917,25 @@
                         <p>加载中...</p>
                     </div>
                 </div>
+                
+                <!-- 意见反馈入口 -->
+                <div class="feedback-entry" onclick="openFeedbackModal()">
+                    <div class="feedback-icon">💬</div>
+                    <div class="feedback-text">
+                        <span class="feedback-label">FEEDBACK</span>
+                        <span class="feedback-title">意见与建议</span>
+                    </div>
+                </div>
+                
+                <!-- 我的反馈入口 -->
+                <div class="feedback-entry my-feedback" onclick="openMyFeedbackModal()">
+                    <div class="feedback-icon">📋</div>
+                    <div class="feedback-text">
+                        <span class="feedback-label">MY FEEDBACK</span>
+                        <span class="feedback-title">我的反馈</span>
+                    </div>
+
+                </div>
             </aside>
             
             <!-- 中间：滚轴式游戏选择器 -->
@@ -976,6 +995,70 @@
             <div class="invite-actions">
                 <button class="invite-btn reject" onclick="rejectInvite()">拒绝</button>
                 <button class="invite-btn accept" onclick="acceptInvite()">接受邀请</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 我的反馈弹窗 -->
+    <div class="feedback-modal-overlay" id="myFeedbackModal">
+        <div class="feedback-modal-content" style="max-width: 600px; max-height: 80vh; display: flex; flex-direction: column;">
+            <div class="feedback-modal-header">
+                <div class="feedback-modal-icon">📋</div>
+                <div class="feedback-modal-title">我的反馈</div>
+                <button class="feedback-close-btn" onclick="closeMyFeedbackModal()">×</button>
+            </div>
+            <div id="myFeedbackList" style="flex: 1; overflow-y: auto; padding: 20px;">
+                <div style="text-align: center; padding: 50px; color: rgba(255,255,255,0.5);">加载中...</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 意见反馈弹窗 -->
+    <div class="feedback-modal-overlay" id="feedbackModal">
+        <div class="feedback-modal-content">
+            <div class="feedback-modal-header">
+                <div class="feedback-modal-icon">💬</div>
+                <div class="feedback-modal-title">意见与建议</div>
+                <button class="feedback-close-btn" onclick="closeFeedbackModal()">×</button>
+            </div>
+            
+            <div class="feedback-form">
+                <div class="feedback-type-section">
+                    <label class="feedback-label-text">选择反馈类型</label>
+                    <div class="feedback-type-options">
+                        <button type="button" class="type-btn" data-type="game_poker" onclick="selectFeedbackType(this)">🎴 贵州扑克</button>
+                        <button type="button" class="type-btn" data-type="game_other" onclick="selectFeedbackType(this)">🎮 其他游戏</button>
+                        <button type="button" class="type-btn" data-type="feature_map" onclick="selectFeedbackType(this)">🗺️ 足迹空间</button>
+                        <button type="button" class="type-btn" data-type="feature_other" onclick="selectFeedbackType(this)">🔧 其他功能</button>
+                        <button type="button" class="type-btn" data-type="bug" onclick="selectFeedbackType(this)">🐛 Bug反馈</button>
+                        <button type="button" class="type-btn" data-type="other" onclick="selectFeedbackType(this)">💡 其他建议</button>
+                    </div>
+                </div>
+                
+                <div class="feedback-content-section">
+                    <label class="feedback-label-text" for="feedbackContent">详细描述</label>
+                    <textarea id="feedbackContent" class="feedback-textarea" placeholder="请详细描述您的意见或建议，我们会认真阅读每一条反馈..." maxlength="500"></textarea>
+                    <div class="feedback-char-count"><span id="charCount">0</span>/500</div>
+                </div>
+                
+                <div class="feedback-image-section">
+                    <label class="feedback-label-text">附加图片（可选）</label>
+                    <div class="feedback-image-upload" id="feedbackImageUpload" onclick="document.getElementById('feedbackImageInput').click()">
+                        <div class="feedback-upload-placeholder" id="feedbackUploadPlaceholder">
+                            <span class="feedback-upload-icon">📷</span>
+                            <span class="feedback-upload-text">点击上传图片</span>
+                            <span class="feedback-upload-hint">支持 JPG、PNG 格式，最大 5MB</span>
+                        </div>
+                        <img id="feedbackImagePreview" class="feedback-image-preview" style="display: none;">
+                        <button type="button" class="feedback-image-remove" id="feedbackImageRemove" onclick="removeFeedbackImage(event)">×</button>
+                    </div>
+                    <input type="file" id="feedbackImageInput" accept="image/*" style="display: none;" onchange="handleFeedbackImageSelect(event)">
+                </div>
+                
+                <div class="feedback-actions">
+                    <button type="button" class="feedback-btn feedback-btn-cancel" onclick="closeFeedbackModal()">取消</button>
+                    <button type="button" class="feedback-btn feedback-btn-submit" onclick="submitFeedback()">提交反馈</button>
+                </div>
             </div>
         </div>
     </div>
@@ -2279,6 +2362,271 @@
         // 页面加载时初始化邀请监听
         document.addEventListener('DOMContentLoaded', () => {
             initInviteListener();
+        });
+        
+        // ==================== 意见反馈功能 ====================
+        let selectedFeedbackType = null;
+        let feedbackImageFile = null;
+        
+        // 打开反馈弹窗
+        function openFeedbackModal() {
+            document.getElementById('feedbackModal').classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+        
+        // 关闭反馈弹窗
+        function closeFeedbackModal() {
+            document.getElementById('feedbackModal').classList.remove('active');
+            document.body.style.overflow = '';
+            resetFeedbackForm();
+        }
+        
+        // 重置表单
+        function resetFeedbackForm() {
+            selectedFeedbackType = null;
+            feedbackImageFile = null;
+            document.getElementById('feedbackContent').value = '';
+            document.getElementById('charCount').textContent = '0';
+            document.querySelectorAll('.type-btn').forEach(btn => btn.classList.remove('selected'));
+            removeFeedbackImage();
+        }
+        
+        // 选择反馈类型
+        function selectFeedbackType(btn) {
+            document.querySelectorAll('.type-btn').forEach(b => b.classList.remove('selected'));
+            btn.classList.add('selected');
+            selectedFeedbackType = btn.dataset.type;
+        }
+        
+        // 字数统计
+        document.getElementById('feedbackContent')?.addEventListener('input', function() {
+            document.getElementById('charCount').textContent = this.value.length;
+        });
+        
+        // 选择图片
+        function handleFeedbackImageSelect(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+            
+            if (file.size > 5 * 1024 * 1024) {
+                showModal('图片大小不能超过5MB', 'error');
+                return;
+            }
+            
+            feedbackImageFile = file;
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const preview = document.getElementById('feedbackImagePreview');
+                preview.src = e.target.result;
+                preview.style.display = 'block';
+                document.getElementById('feedbackUploadPlaceholder').style.display = 'none';
+                document.getElementById('feedbackImageRemove').classList.add('show');
+            };
+            reader.readAsDataURL(file);
+        }
+        
+        // 删除图片
+        function removeFeedbackImage(event) {
+            if (event) event.stopPropagation();
+            feedbackImageFile = null;
+            document.getElementById('feedbackImagePreview').style.display = 'none';
+            document.getElementById('feedbackImagePreview').src = '';
+            document.getElementById('feedbackUploadPlaceholder').style.display = 'flex';
+            document.getElementById('feedbackImageRemove').classList.remove('show');
+            document.getElementById('feedbackImageInput').value = '';
+        }
+        
+        // 提交反馈
+        async function submitFeedback() {
+            const content = document.getElementById('feedbackContent').value.trim();
+            
+            if (!selectedFeedbackType) {
+                showModal('请选择反馈类型', 'error');
+                return;
+            }
+            
+            if (!content) {
+                showModal('请填写反馈内容', 'error');
+                return;
+            }
+            
+            const submitBtn = document.querySelector('.feedback-btn-submit');
+            submitBtn.disabled = true;
+            submitBtn.textContent = '提交中...';
+            
+            try {
+                const formData = new FormData();
+                formData.append('type', selectedFeedbackType);
+                formData.append('content', content);
+                if (feedbackImageFile) {
+                    formData.append('image', feedbackImageFile);
+                }
+                
+                const token = localStorage.getItem('token');
+                const response = await fetch('/api/feedback', {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    },
+                    body: formData
+                });
+                
+                const data = await response.json();
+                
+                if (data.success) {
+                    showModal('感谢您的反馈！我们会认真阅读每一条建议。', 'success');
+                    closeFeedbackModal();
+                } else if (response.status === 401 || response.status === 403) {
+                    showModal('登录已过期，请重新登录', 'error');
+                    setTimeout(() => {
+                        window.location.href = 'login.html';
+                    }, 2000);
+                } else {
+                    showModal(data.error || '提交失败，请稍后重试', 'error');
+                }
+            } catch (error) {
+                console.error('提交反馈失败:', error);
+                showModal('提交失败，请检查网络连接', 'error');
+            } finally {
+                submitBtn.disabled = false;
+                submitBtn.textContent = '提交反馈';
+            }
+        }
+        
+        // 点击遮罩关闭弹窗
+        document.getElementById('feedbackModal')?.addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeFeedbackModal();
+            }
+        });
+        
+        // ==================== 我的反馈功能 ====================
+        let myFeedbackPage = 1;
+        
+        // 打开我的反馈弹窗
+        function openMyFeedbackModal() {
+            document.getElementById('myFeedbackModal').classList.add('active');
+            document.body.style.overflow = 'hidden';
+            loadMyFeedback();
+        }
+        
+        // 关闭我的反馈弹窗
+        function closeMyFeedbackModal() {
+            document.getElementById('myFeedbackModal').classList.remove('active');
+            document.body.style.overflow = '';
+        }
+        
+        // 加载我的反馈列表
+        async function loadMyFeedback(page = 1) {
+            myFeedbackPage = page;
+            const container = document.getElementById('myFeedbackList');
+            container.innerHTML = '<div style="text-align: center; padding: 50px; color: rgba(255,255,255,0.5);">加载中...</div>';
+            
+            try {
+                const response = await fetch(`${API_BASE}/feedback/my?page=${page}&limit=10`, {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+                const data = await response.json();
+                
+                if (data.success) {
+                    renderMyFeedback(data.feedbacks, data.pagination);
+                } else {
+                    container.innerHTML = `<div style="text-align: center; padding: 50px; color: rgba(255,255,255,0.5);">${data.error || '加载失败'}</div>`;
+                }
+            } catch (error) {
+                console.error('加载我的反馈失败:', error);
+                container.innerHTML = '<div style="text-align: center; padding: 50px; color: rgba(255,255,255,0.5);">加载失败，请重试</div>';
+            }
+        }
+        
+        // 渲染我的反馈列表
+        function renderMyFeedback(feedbacks, pagination) {
+            const container = document.getElementById('myFeedbackList');
+            
+            if (feedbacks.length === 0) {
+                container.innerHTML = '<div style="text-align: center; padding: 50px; color: rgba(255,255,255,0.5);">您还没有提交过反馈</div>';
+                return;
+            }
+            
+            const typeMap = {
+                'game_poker': '🎴 贵州扑克',
+                'game_other': '🎮 其他游戏',
+                'feature_map': '🗺️ 足迹空间',
+                'feature_other': '🔧 其他功能',
+                'bug': '🐛 Bug反馈',
+                'other': '💡 其他建议'
+            };
+            
+            const statusMap = {
+                'pending': { text: '待处理', color: '#f1c40f' },
+                'processing': { text: '处理中', color: '#3498db' },
+                'resolved': { text: '已解决', color: '#27ae60' },
+                'rejected': { text: '已拒绝', color: '#95a5a6' }
+            };
+            
+            const html = `
+                <div style="display: flex; flex-direction: column; gap: 15px;">
+                    ${feedbacks.map(f => {
+                        const status = statusMap[f.status];
+                        return `
+                        <div style="background: linear-gradient(145deg, rgba(25,25,25,0.9) 0%, rgba(15,15,15,0.95) 100%); border: 1px solid rgba(220, 20, 60, 0.15); border-radius: 12px; padding: 15px;">
+                            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; flex-wrap: wrap; gap: 8px;">
+                                <div style="display: flex; align-items: center; gap: 10px;">
+                                    <span style="padding: 3px 10px; background: rgba(220, 20, 60, 0.15); border: 1px solid rgba(220, 20, 60, 0.3); border-radius: 6px; font-size: 0.8rem; color: #dc143c;">${typeMap[f.type] || f.type}</span>
+                                    <span style="font-size: 0.8rem; color: rgba(255,255,255,0.4);">${formatDate(f.created_at)}</span>
+                                </div>
+                                <span style="padding: 3px 10px; border-radius: 10px; font-size: 0.75rem; font-weight: 600; background: ${status.color}20; color: ${status.color}; border: 1px solid ${status.color}40;">${status.text}</span>
+                            </div>
+                            <div style="color: rgba(255,255,255,0.85); line-height: 1.5; margin-bottom: 10px; white-space: pre-wrap;">${escapeHtml(f.content)}</div>
+                            ${f.imageUrl ? `<img src="${f.imageUrl}" style="max-width: 200px; max-height: 150px; border-radius: 8px; border: 1px solid rgba(220, 20, 60, 0.2); cursor: pointer; margin-bottom: 10px;" onclick="window.open('${f.imageUrl}', '_blank')">` : ''}
+                            ${f.admin_reply ? `
+                                <div style="background: rgba(220, 20, 60, 0.1); border-left: 3px solid #dc143c; padding: 10px 12px; border-radius: 0 8px 8px 0;">
+                                    <div style="font-size: 0.75rem; color: #dc143c; font-weight: 600; margin-bottom: 5px;">📢 管理员回复</div>
+                                    <div style="color: rgba(255,255,255,0.8); font-size: 0.9rem;">${escapeHtml(f.admin_reply)}</div>
+                                </div>
+                            ` : '<div style="font-size: 0.8rem; color: rgba(255,255,255,0.4); font-style: italic;">暂无回复，请耐心等待...</div>'}
+                        </div>
+                        `;
+                    }).join('')}
+                </div>
+                ${pagination.totalPages > 1 ? `
+                    <div style="display: flex; justify-content: center; align-items: center; gap: 15px; margin-top: 20px; padding-top: 20px; border-top: 1px solid rgba(220, 20, 60, 0.1);">
+                        <button onclick="loadMyFeedback(${pagination.page - 1})" ${pagination.page <= 1 ? 'disabled' : ''} style="padding: 8px 16px; background: linear-gradient(145deg, rgba(40,40,40,0.9) 0%, rgba(20,20,20,0.95) 100%); border: 1px solid rgba(220, 20, 60, 0.3); border-radius: 6px; color: white; cursor: pointer;">上一页</button>
+                        <span style="color: rgba(255,255,255,0.6); font-size: 0.9rem;">第 ${pagination.page} / ${pagination.totalPages} 页</span>
+                        <button onclick="loadMyFeedback(${pagination.page + 1})" ${pagination.page >= pagination.totalPages ? 'disabled' : ''} style="padding: 8px 16px; background: linear-gradient(145deg, rgba(40,40,40,0.9) 0%, rgba(20,20,20,0.95) 100%); border: 1px solid rgba(220, 20, 60, 0.3); border-radius: 6px; color: white; cursor: pointer;">下一页</button>
+                    </div>
+                ` : ''}
+            `;
+            
+            container.innerHTML = html;
+        }
+        
+        // HTML转义
+        function escapeHtml(text) {
+            if (!text) return '';
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+        
+        // 格式化日期
+        function formatDate(dateStr) {
+            if (!dateStr) return '-';
+            const date = new Date(dateStr);
+            return date.toLocaleString('zh-CN', {
+                year: 'numeric',
+                month: '2-digit',
+                day: '2-digit',
+                hour: '2-digit',
+                minute: '2-digit'
+            });
+        }
+        
+        // 点击遮罩关闭弹窗
+        document.getElementById('myFeedbackModal')?.addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeMyFeedbackModal();
+            }
         });
     </script>
 </body>

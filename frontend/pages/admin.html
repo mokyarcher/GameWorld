@@ -601,6 +601,306 @@
             padding: 50px;
             color: rgba(255,255,255,0.5);
         }
+        
+        /* 反馈管理样式 - 列表模式 */
+        .feedback-list {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        
+        .feedback-row {
+            display: grid;
+            grid-template-columns: 60px 120px 120px 100px 140px 100px;
+            align-items: center;
+            gap: 10px;
+            background: linear-gradient(145deg, rgba(25,25,25,0.9) 0%, rgba(15,15,15,0.95) 100%);
+            border: 1px solid rgba(220, 20, 60, 0.15);
+            border-radius: 8px;
+            padding: 12px 15px;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+        
+        .feedback-row:hover {
+            border-color: rgba(220, 20, 60, 0.4);
+            box-shadow: 0 0 15px rgba(220, 20, 60, 0.1);
+            background: linear-gradient(145deg, rgba(35,25,25,0.9) 0%, rgba(25,15,15,0.95) 100%);
+        }
+        
+        .feedback-col {
+            font-size: 0.85rem;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+        
+        .feedback-col.id {
+            color: rgba(255,255,255,0.4);
+            font-family: monospace;
+        }
+        
+        .feedback-col.type {
+            font-weight: 600;
+        }
+        
+        .feedback-col.user {
+            color: rgba(255,255,255,0.8);
+        }
+        
+        .feedback-col.content {
+            color: rgba(255,255,255,0.6);
+            max-width: 100%;
+        }
+        
+        .feedback-col.time {
+            color: rgba(255,255,255,0.4);
+            font-size: 0.75rem;
+        }
+        
+        .feedback-col.status {
+            text-align: center;
+        }
+        
+        /* 反馈类型标签 */
+        .feedback-type-tag {
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            background: rgba(220, 20, 60, 0.15);
+            border: 1px solid rgba(220, 20, 60, 0.3);
+            color: #dc143c;
+        }
+        
+        .feedback-type-tag.game_poker { background: rgba(155, 89, 182, 0.15); border-color: rgba(155, 89, 182, 0.3); color: #9b59b6; }
+        .feedback-type-tag.game_other { background: rgba(52, 152, 219, 0.15); border-color: rgba(52, 152, 219, 0.3); color: #3498db; }
+        .feedback-type-tag.feature_map { background: rgba(46, 204, 113, 0.15); border-color: rgba(46, 204, 113, 0.3); color: #2ecc71; }
+        .feedback-type-tag.feature_other { background: rgba(241, 196, 15, 0.15); border-color: rgba(241, 196, 15, 0.3); color: #f1c40f; }
+        .feedback-type-tag.bug { background: rgba(231, 76, 60, 0.15); border-color: rgba(231, 76, 60, 0.3); color: #e74c3c; }
+        .feedback-type-tag.other { background: rgba(149, 165, 166, 0.15); border-color: rgba(149, 165, 166, 0.3); color: #95a5a6; }
+        
+        /* 反馈状态标签 */
+        .feedback-status-tag {
+            padding: 3px 10px;
+            border-radius: 10px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+        
+        .feedback-status-tag.pending { background: rgba(241, 196, 15, 0.15); color: #f1c40f; border: 1px solid rgba(241, 196, 15, 0.3); }
+        .feedback-status-tag.processing { background: rgba(52, 152, 219, 0.15); color: #3498db; border: 1px solid rgba(52, 152, 219, 0.3); }
+        .feedback-status-tag.resolved { background: rgba(39, 174, 96, 0.15); color: #27ae60; border: 1px solid rgba(39, 174, 96, 0.3); }
+        .feedback-status-tag.rejected { background: rgba(149, 165, 166, 0.15); color: #95a5a6; border: 1px solid rgba(149, 165, 166, 0.3); }
+        
+        /* 反馈列表表头 */
+        .feedback-header-row {
+            display: grid;
+            grid-template-columns: 60px 120px 120px 100px 140px 100px;
+            align-items: center;
+            gap: 10px;
+            padding: 10px 15px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: rgba(255,255,255,0.5);
+            border-bottom: 1px solid rgba(220, 20, 60, 0.2);
+            margin-bottom: 8px;
+        }
+        
+        /* 反馈详情弹窗 */
+        .feedback-detail-modal .modal-content {
+            max-width: 700px;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+        
+        .feedback-detail-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid rgba(220, 20, 60, 0.2);
+        }
+        
+        .feedback-detail-meta {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        
+        .feedback-detail-meta-row {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+        
+        .feedback-detail-content {
+            background: rgba(0,0,0,0.3);
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 20px;
+            color: rgba(255,255,255,0.9);
+            line-height: 1.7;
+            white-space: pre-wrap;
+            font-size: 0.95rem;
+        }
+        
+        .feedback-detail-image {
+            max-width: 100%;
+            max-height: 400px;
+            border-radius: 8px;
+            border: 1px solid rgba(220, 20, 60, 0.2);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-bottom: 20px;
+        }
+        
+        .feedback-detail-image:hover {
+            box-shadow: 0 0 20px rgba(220, 20, 60, 0.2);
+        }
+        
+        .feedback-detail-reply {
+            background: rgba(220, 20, 60, 0.1);
+            border-left: 3px solid #dc143c;
+            padding: 15px;
+            border-radius: 0 8px 8px 0;
+            margin-bottom: 20px;
+        }
+        
+        .feedback-detail-reply-label {
+            font-size: 0.8rem;
+            color: #dc143c;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+        
+        .feedback-detail-reply-text {
+            color: rgba(255,255,255,0.85);
+            line-height: 1.6;
+        }
+        
+        .feedback-detail-actions {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            padding-top: 15px;
+            border-top: 1px solid rgba(220, 20, 60, 0.2);
+        }
+        
+        .feedback-btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 6px;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 600;
+        }
+        
+        .feedback-btn:hover {
+            transform: translateY(-1px);
+        }
+        
+        .feedback-btn-reply {
+            background: linear-gradient(135deg, #dc143c, #8b0000);
+            color: white;
+        }
+        
+        .feedback-btn-status {
+            background: linear-gradient(145deg, rgba(40,40,40,0.9) 0%, rgba(20,20,20,0.95) 100%);
+            border: 1px solid rgba(220, 20, 60, 0.4);
+            color: white;
+        }
+        
+        .feedback-btn-delete {
+            background: transparent;
+            border: 1px solid rgba(220, 20, 60, 0.4);
+            color: #dc143c;
+        }
+        
+        .feedback-btn-delete:hover {
+            background: rgba(220, 20, 60, 0.1);
+        }
+        
+        .feedback-btn-close {
+            background: rgba(255,255,255,0.1);
+            border: 1px solid rgba(255,255,255,0.2);
+            color: white;
+        }
+        
+        .feedback-pagination {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 15px;
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 1px solid rgba(220, 20, 60, 0.1);
+        }
+        
+        .feedback-pagination button {
+            padding: 8px 16px;
+            background: linear-gradient(145deg, rgba(40,40,40,0.9) 0%, rgba(20,20,20,0.95) 100%);
+            border: 1px solid rgba(220, 20, 60, 0.3);
+            border-radius: 6px;
+            color: white;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .feedback-pagination button:hover:not(:disabled) {
+            border-color: rgba(220, 20, 60, 0.6);
+        }
+        
+        .feedback-pagination button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+        
+        .feedback-pagination span {
+            color: rgba(255,255,255,0.6);
+            font-size: 0.9rem;
+        }
+        
+        /* 响应式调整 */
+        @media (max-width: 900px) {
+            .feedback-row, .feedback-header-row {
+                grid-template-columns: 50px 100px 100px 80px 100px 80px;
+                gap: 8px;
+                padding: 10px;
+            }
+            .feedback-col {
+                font-size: 0.75rem;
+            }
+        }
+        
+        /* 图片预览弹窗 */
+        .image-preview-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.9);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 20000;
+            cursor: zoom-out;
+        }
+        
+        .image-preview-modal.show {
+            display: flex;
+        }
+        
+        .image-preview-modal img {
+            max-width: 90%;
+            max-height: 90%;
+            border-radius: 8px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+        }
     </style>
 </head>
 <body>
@@ -631,6 +931,26 @@
             <div class="stat-card">
                 <h3>系统总积分</h3>
                 <div class="value" id="totalChips">-</div>
+            </div>
+        </div>
+        
+        <!-- 反馈管理 -->
+        <div class="users-section" style="margin-bottom: 30px;">
+            <div class="section-header">
+                <h2>💬 意见反馈管理</h2>
+                <div class="search-box">
+                    <select id="feedbackFilter" onchange="loadFeedback()" style="width: 150px; padding: 10px; margin-right: 10px;">
+                        <option value="">全部状态</option>
+                        <option value="pending">待处理</option>
+                        <option value="processing">处理中</option>
+                        <option value="resolved">已解决</option>
+                        <option value="rejected">已拒绝</option>
+                    </select>
+                    <button onclick="loadFeedback()" class="btn btn-refresh" style="padding: 10px 20px;">刷新</button>
+                </div>
+            </div>
+            <div id="feedbackContainer" style="padding: 20px;">
+                <div class="loading">加载中...</div>
             </div>
         </div>
         
@@ -666,6 +986,73 @@
         </div>
     </div>
     
+    <!-- 反馈回复弹窗 -->
+    <!-- 反馈详情弹窗 -->
+    <div class="modal-overlay feedback-detail-modal" id="feedbackDetailModal">
+        <div class="modal-content">
+            <h3>💬 反馈详情 <span id="detailId" style="color: rgba(255,255,255,0.5); font-size: 0.8em;"></span></h3>
+            <div class="feedback-detail-header">
+                <div class="feedback-detail-meta">
+                    <div class="feedback-detail-meta-row">
+                        <span class="feedback-type-tag" id="detailType">-</span>
+                        <span class="feedback-status-tag" id="detailStatus">-</span>
+                    </div>
+                    <div class="feedback-detail-meta-row">
+                        <span style="color: rgba(255,255,255,0.7);">👤 <span id="detailUser">-</span></span>
+                        <span style="color: rgba(255,255,255,0.5); font-size: 0.85rem;">🕐 <span id="detailTime">-</span></span>
+                    </div>
+                </div>
+            </div>
+            <div class="feedback-detail-content" id="detailContent">-</div>
+            <div id="detailImageContainer"></div>
+            
+            <!-- 回复历史区域 -->
+            <div id="detailRepliesSection" style="margin-top: 20px; border-top: 1px solid rgba(220, 20, 60, 0.2); padding-top: 15px;">
+                <div style="font-size: 0.85rem; color: rgba(255,255,255,0.6); margin-bottom: 12px; font-weight: 600;">📝 处理记录</div>
+                <div id="detailRepliesList"></div>
+            </div>
+            
+            <div class="feedback-detail-actions">
+                <button class="feedback-btn feedback-btn-reply" onclick="openFeedbackReplyModalFromDetail()">💬 继续回复</button>
+                <button class="feedback-btn feedback-btn-status" onclick="quickUpdateFeedbackStatusFromDetail('processing')">🔄 标记处理中</button>
+                <button class="feedback-btn feedback-btn-status" onclick="quickUpdateFeedbackStatusFromDetail('resolved')">✅ 标记已解决</button>
+                <button class="feedback-btn feedback-btn-delete" onclick="deleteFeedbackFromDetail()">🗑️ 删除</button>
+                <button class="feedback-btn feedback-btn-close" onclick="closeFeedbackDetailModal()">关闭</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 回复反馈弹窗 -->
+    <div class="modal-overlay" id="feedbackReplyModal">
+        <div class="modal-content" style="max-width: 500px;">
+            <h3>💬 回复反馈</h3>
+            <div class="user-info-modal" style="text-align: left;">
+                <div style="margin-bottom: 10px;"><strong>用户：</strong><span id="replyUserName">-</span></div>
+                <div style="margin-bottom: 10px;"><strong>类型：</strong><span id="replyType">-</span></div>
+                <div style="background: rgba(0,0,0,0.3); padding: 10px; border-radius: 6px; margin-bottom: 10px;">
+                    <strong>反馈内容：</strong>
+                    <div id="replyContent" style="margin-top: 5px; color: rgba(255,255,255,0.8);">-</div>
+                </div>
+            </div>
+            <div class="form-group">
+                <label>添加新回复</label>
+                <textarea id="replyText" rows="4" style="width: 100%; padding: 12px; background: rgba(0,0,0,0.3); border: 1px solid rgba(220, 20, 60, 0.3); border-radius: 8px; color: white; resize: vertical;" placeholder="请输入新的回复内容，会追加到历史记录中..."></textarea>
+            </div>
+            <div class="form-group">
+                <label>更新状态</label>
+                <select id="replyStatus" style="width: 100%; padding: 12px; background: rgba(0,0,0,0.3); border: 1px solid rgba(220, 20, 60, 0.3); border-radius: 8px; color: white;">
+                    <option value="processing">处理中</option>
+                    <option value="resolved">已解决</option>
+                    <option value="rejected">已拒绝</option>
+                </select>
+            </div>
+            <div class="modal-actions">
+                <button onclick="submitFeedbackReply()" class="btn btn-confirm">提交回复</button>
+                <button onclick="closeFeedbackReplyModal()" class="btn btn-cancel">取消</button>
+            </div>
+        </div>
+    </div>
+
     <!-- 筹码操作弹窗 -->
     <div class="modal-overlay" id="chipsModal">
         <div class="modal-content">
@@ -998,7 +1385,369 @@
         // 刷新数据
         function refreshData() {
             loadUsers();
+            loadFeedback();
             showToast('数据已刷新', 'success');
+        }
+        
+        // ==================== 反馈管理功能 ====================
+        
+        // 反馈类型映射
+        const feedbackTypeMap = {
+            'game_poker': '🎴 贵州扑克',
+            'game_other': '🎮 其他游戏',
+            'feature_map': '🗺️ 足迹空间',
+            'feature_other': '🔧 其他功能',
+            'bug': '🐛 Bug反馈',
+            'other': '💡 其他建议'
+        };
+        
+        const feedbackStatusMap = {
+            'pending': '待处理',
+            'processing': '处理中',
+            'resolved': '已解决',
+            'rejected': '已拒绝'
+        };
+        
+        let currentFeedbackPage = 1;
+        let currentFeedbackId = null;
+        
+        // 加载反馈列表
+        async function loadFeedback(page = 1) {
+            currentFeedbackPage = page;
+            const container = document.getElementById('feedbackContainer');
+            const status = document.getElementById('feedbackFilter').value;
+            
+            container.innerHTML = '<div class="loading">加载中...</div>';
+            
+            try {
+                let url = `${API_BASE}/feedback?page=${page}&limit=10`;
+                if (status) url += `&status=${status}`;
+                
+                const response = await fetch(url, {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+                const data = await response.json();
+                
+                if (data.success) {
+                    renderFeedback(data.feedbacks, data.pagination);
+                } else {
+                    container.innerHTML = `<div class="empty-state">${data.error || '加载失败'}</div>`;
+                }
+            } catch (error) {
+                console.error('加载反馈失败:', error);
+                container.innerHTML = '<div class="empty-state">加载失败，请重试</div>';
+            }
+        }
+        
+        // 渲染反馈列表（列表模式）
+        function renderFeedback(feedbacks, pagination) {
+            const container = document.getElementById('feedbackContainer');
+            
+            if (feedbacks.length === 0) {
+                container.innerHTML = '<div class="empty-state">暂无反馈数据</div>';
+                return;
+            }
+            
+            const html = `
+                <div class="feedback-header-row">
+                    <div class="feedback-col">ID</div>
+                    <div class="feedback-col">类型</div>
+                    <div class="feedback-col">用户</div>
+                    <div class="feedback-col">内容预览</div>
+                    <div class="feedback-col">时间</div>
+                    <div class="feedback-col" style="text-align: center;">状态</div>
+                </div>
+                <div class="feedback-list">
+                    ${feedbacks.map(f => `
+                        <div class="feedback-row" onclick="openFeedbackDetail(${f.id})">
+                            <div class="feedback-col id">#${f.id}</div>
+                            <div class="feedback-col type">
+                                <span class="feedback-type-tag ${f.type}">${feedbackTypeMap[f.type] || f.type}</span>
+                            </div>
+                            <div class="feedback-col user">${f.username || '匿名'}</div>
+                            <div class="feedback-col content" title="${escapeHtml(f.content)}">${escapeHtml(f.content.substring(0, 8))}${f.content.length > 8 ? '...' : ''}</div>
+                            <div class="feedback-col time">${formatDate(f.created_at)}</div>
+                            <div class="feedback-col status">
+                                <span class="feedback-status-tag ${f.status}">${feedbackStatusMap[f.status]}</span>
+                            </div>
+                        </div>
+                    `).join('')}
+                </div>
+                ${pagination.totalPages > 1 ? `
+                    <div class="feedback-pagination">
+                        <button onclick="loadFeedback(${pagination.page - 1})" ${pagination.page <= 1 ? 'disabled' : ''}>上一页</button>
+                        <span>第 ${pagination.page} / ${pagination.totalPages} 页 (共 ${pagination.total} 条)</span>
+                        <button onclick="loadFeedback(${pagination.page + 1})" ${pagination.page >= pagination.totalPages ? 'disabled' : ''}>下一页</button>
+                    </div>
+                ` : `<div class="feedback-pagination"><span>共 ${pagination.total} 条反馈</span></div>`}
+            `;
+            
+            container.innerHTML = html;
+        }
+        
+        // 打开反馈详情弹窗
+        async function openFeedbackDetail(feedbackId) {
+            currentFeedbackId = feedbackId;
+            
+            try {
+                const response = await fetch(`${API_BASE}/feedback/${feedbackId}`, {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+                const data = await response.json();
+                
+                if (data.success) {
+                    const f = data.feedback;
+                    const modal = document.getElementById('feedbackDetailModal');
+                    
+                    // 填充详情
+                    document.getElementById('detailId').textContent = `#${f.id}`;
+                    document.getElementById('detailType').textContent = feedbackTypeMap[f.type] || f.type;
+                    document.getElementById('detailType').className = `feedback-type-tag ${f.type}`;
+                    document.getElementById('detailUser').textContent = f.username || '匿名用户';
+                    document.getElementById('detailTime').textContent = formatDate(f.created_at);
+                    document.getElementById('detailStatus').textContent = feedbackStatusMap[f.status];
+                    document.getElementById('detailStatus').className = `feedback-status-tag ${f.status}`;
+                    document.getElementById('detailContent').textContent = f.content;
+                    
+                    // 图片
+                    const imgContainer = document.getElementById('detailImageContainer');
+                    if (f.imageUrl) {
+                        imgContainer.innerHTML = `<img src="${f.imageUrl}" class="feedback-detail-image" onclick="previewFeedbackImage('${f.imageUrl}')">`;
+                    } else {
+                        imgContainer.innerHTML = '';
+                    }
+                    
+                    // 渲染回复历史列表
+                    renderRepliesList(f.replies || []);
+                    
+                    modal.classList.add('show');
+                } else {
+                    // API 返回错误
+                    currentFeedbackId = null;
+                    showToast(data.error || '反馈不存在', 'error');
+                }
+            } catch (error) {
+                console.error('加载反馈详情失败:', error);
+                currentFeedbackId = null;
+                showToast('加载失败', 'error');
+            }
+        }
+        
+        // 关闭详情弹窗
+        function closeFeedbackDetailModal() {
+            document.getElementById('feedbackDetailModal').classList.remove('show');
+            currentFeedbackId = null;
+        }
+        
+        // 打开回复弹窗
+        async function openFeedbackReplyModal(feedbackId) {
+            currentFeedbackId = feedbackId;
+            
+            try {
+                const response = await fetch(`${API_BASE}/feedback/${feedbackId}`, {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+                const data = await response.json();
+                
+                if (data.success) {
+                    const f = data.feedback;
+                    document.getElementById('replyUserName').textContent = f.username || '匿名用户';
+                    document.getElementById('replyType').textContent = feedbackTypeMap[f.type] || f.type;
+                    document.getElementById('replyContent').textContent = f.content;
+                    // 清空输入框，支持多次回复
+                    document.getElementById('replyText').value = '';
+                    document.getElementById('replyStatus').value = f.status;
+                    document.getElementById('feedbackReplyModal').classList.add('show');
+                } else {
+                    // API 返回错误
+                    currentFeedbackId = null;
+                    showToast(data.error || '反馈不存在', 'error');
+                }
+            } catch (error) {
+                console.error('加载反馈详情失败:', error);
+                currentFeedbackId = null;
+                showToast('加载失败', 'error');
+            }
+        }
+        
+        // 关闭回复弹窗
+        function closeFeedbackReplyModal() {
+            document.getElementById('feedbackReplyModal').classList.remove('show');
+            currentFeedbackId = null;
+        }
+        
+        // 提交回复
+        async function submitFeedbackReply() {
+            if (!currentFeedbackId) return;
+            
+            const reply = document.getElementById('replyText').value.trim();
+            const status = document.getElementById('replyStatus').value;
+            
+            try {
+                const response = await fetch(`${API_BASE}/feedback/${currentFeedbackId}`, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${token}`
+                    },
+                    body: JSON.stringify({ admin_reply: reply, status })
+                });
+                
+                const data = await response.json();
+                
+                if (data.success) {
+                    showToast('回复已提交', 'success');
+                    closeFeedbackReplyModal();
+                    // 刷新列表和当前详情
+                    loadFeedback(currentFeedbackPage);
+                    // 如果详情弹窗是打开状态，刷新它
+                    const detailModal = document.getElementById('feedbackDetailModal');
+                    if (detailModal.classList.contains('show') && currentFeedbackId) {
+                        openFeedbackDetail(currentFeedbackId);
+                    }
+                } else {
+                    showToast(data.error || '提交失败', 'error');
+                }
+            } catch (error) {
+                console.error('提交回复失败:', error);
+                showToast('网络错误', 'error');
+            }
+        }
+        
+        // 快速更新状态
+        async function quickUpdateFeedbackStatus(feedbackId, status) {
+            try {
+                const response = await fetch(`${API_BASE}/feedback/${feedbackId}`, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${token}`
+                    },
+                    body: JSON.stringify({ status })
+                });
+                
+                const data = await response.json();
+                
+                if (data.success) {
+                    showToast('状态已更新', 'success');
+                    loadFeedback(currentFeedbackPage);
+                } else {
+                    showToast(data.error || '更新失败', 'error');
+                }
+            } catch (error) {
+                console.error('更新状态失败:', error);
+                showToast('网络错误', 'error');
+            }
+        }
+        
+        // 删除反馈
+        async function deleteFeedback(feedbackId) {
+            if (!confirm('确定要删除这条反馈吗？此操作不可恢复。')) return;
+            
+            try {
+                const response = await fetch(`${API_BASE}/feedback/${feedbackId}`, {
+                    method: 'DELETE',
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+                
+                const data = await response.json();
+                
+                if (data.success) {
+                    showToast('反馈已删除', 'success');
+                    loadFeedback(currentFeedbackPage);
+                } else {
+                    showToast(data.error || '删除失败', 'error');
+                }
+            } catch (error) {
+                console.error('删除反馈失败:', error);
+                showToast('网络错误', 'error');
+            }
+        }
+        
+        // 渲染回复历史列表
+        function renderRepliesList(replies) {
+            const container = document.getElementById('detailRepliesList');
+            
+            if (!replies || replies.length === 0) {
+                container.innerHTML = '<div style="color: rgba(255,255,255,0.4); font-size: 0.85rem; padding: 10px;">暂无处理记录</div>';
+                return;
+            }
+            
+            const html = replies.map((reply, index) => `
+                <div class="feedback-reply-item" style="
+                    background: rgba(220, 20, 60, 0.08);
+                    border-left: 3px solid #dc143c;
+                    padding: 12px 15px;
+                    margin-bottom: 10px;
+                    border-radius: 0 8px 8px 0;
+                ">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
+                        <span style="font-size: 0.8rem; color: #dc143c; font-weight: 600;">
+                            📢 回复 #${index + 1} · ${reply.admin_username || '管理员'}
+                        </span>
+                        <span style="font-size: 0.75rem; color: rgba(255,255,255,0.4);">
+                            ${formatDate(reply.created_at)}
+                        </span>
+                    </div>
+                    <div style="color: rgba(255,255,255,0.85); font-size: 0.9rem; line-height: 1.5;">
+                        ${escapeHtml(reply.reply_content)}
+                    </div>
+                    ${reply.status_changed_to ? `
+                        <div style="margin-top: 8px; font-size: 0.75rem; color: rgba(255,255,255,0.5);">
+                            状态变更为: <span class="feedback-status-tag ${reply.status_changed_to}" style="font-size: 0.7rem; padding: 2px 8px;">${feedbackStatusMap[reply.status_changed_to]}</span>
+                        </div>
+                    ` : ''}
+                </div>
+            `).join('');
+            
+            container.innerHTML = html;
+        }
+        
+        // 从详情弹窗打开回复弹窗
+        async function openFeedbackReplyModalFromDetail() {
+            if (!currentFeedbackId) return;
+            const feedbackId = currentFeedbackId; // 保存 ID
+            closeFeedbackDetailModal();
+            await openFeedbackReplyModal(feedbackId);
+        }
+        
+        // 从详情弹窗快速更新状态
+        async function quickUpdateFeedbackStatusFromDetail(status) {
+            if (!currentFeedbackId) return;
+            await quickUpdateFeedbackStatus(currentFeedbackId, status);
+            closeFeedbackDetailModal();
+        }
+        
+        // 从详情弹窗删除反馈
+        async function deleteFeedbackFromDetail() {
+            if (!currentFeedbackId) return;
+            await deleteFeedback(currentFeedbackId);
+            closeFeedbackDetailModal();
+        }
+        
+        // 预览图片
+        function previewFeedbackImage(url) {
+            window.open(url, '_blank');
+        }
+        
+        // 格式化日期
+        function formatDate(dateStr) {
+            if (!dateStr) return '-';
+            const date = new Date(dateStr);
+            return date.toLocaleString('zh-CN', {
+                month: '2-digit',
+                day: '2-digit',
+                hour: '2-digit',
+                minute: '2-digit'
+            });
+        }
+        
+        // HTML转义
+        function escapeHtml(text) {
+            if (!text) return '';
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
         }
         
         // 返回大厅
@@ -1016,6 +1765,7 @@
             const isAdmin = await checkAdmin();
             if (isAdmin) {
                 loadUsers();
+                loadFeedback(); // 加载反馈
                 startHeartbeat(); // 启动在线心跳
             }
         });
@@ -1048,6 +1798,18 @@
         document.getElementById('chipsModal').addEventListener('click', function(e) {
             if (e.target === this) {
                 closeModal();
+            }
+        });
+        
+        document.getElementById('feedbackReplyModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeFeedbackReplyModal();
+            }
+        });
+        
+        document.getElementById('feedbackDetailModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeFeedbackDetailModal();
             }
         });
     </script>

@@ -66,7 +66,7 @@ router.get('/announcements', async (req, res) => {
     const announcements = [
       {
         id: 1,
-        title: '欢迎来到 ShareX！',
+        title: '欢迎来到 ShareX！   分享无限',
         content: 'ShareX 是一个分享平台，支持游戏、工具和其他有趣的内容。更多功能即将上线！',
         created_at: new Date().toISOString()
       },  
