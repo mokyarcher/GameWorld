@@ -6,11 +6,22 @@ let map = null;
 let currentMarker = null;
 let selectedPosition = null;
 let uploadedFiles = [];
-let currentLayer = 'default'; // 当前地图图层
+let currentMapStyle = 'dark'; // 当前地图风格：默认暗夜黑
+let currentLayerType = 'vector'; // 当前图层类型：vector / satellite
 let satelliteLayer = null; // 卫星图层
 let trafficLayer = null; // 交通图层
 let allInfoWindows = []; // 存储所有打开的信息窗体
 let isShowAllPins = false; // 是否正在显示全部足迹
+
+// 可用地图风格列表
+const mapStyles = {
+    graffiti: { name: '涂鸦游戏', style: 'amap://styles/graffiti' },
+    dark: { name: '暗夜黑', style: 'amap://styles/dark' },
+    blue: { name: '靛青蓝', style: 'amap://styles/blue' },
+    whitesmoke: { name: '烟灰白', style: 'amap://styles/whitesmoke' },
+    macaron: { name: '马卡龙', style: 'amap://styles/macaron' },
+    fresh: { name: '草色青', style: 'amap://styles/fresh' }
+};
 
 // 限制标题长度（最多8个汉字，即16个字符）
 function limitTitleLength(input) {
@@ -109,8 +120,8 @@ function initMap() {
         zoom: 5,
         center: [104.195397, 35.86166], // 中国中心
         viewMode: '2D',
-        // 移动设备使用默认样式，桌面使用深色主题
-        mapStyle: isMobile ? null : 'amap://styles/dark',
+        // 默认使用暗夜黑风格
+        mapStyle: mapStyles[currentMapStyle].style,
     });
 
     // 添加地图点击事件
@@ -139,17 +150,25 @@ function updateSelectedMarker(position) {
         currentMarker.setMap(null);
     }
     
-    // 使用 SVG 创建高清黑色标记（矮版）- 新建定位
+    // 使用 SVG 创建霓虹红色标记（游戏风格）- 新建定位
+    // viewBox扩大留出8px边距给发光效果
     const blackMarkerSvg = `
-        <svg xmlns="http://www.w3.org/2000/svg" width="28" height="32" viewBox="0 0 28 32">
+        <svg xmlns="http://www.w3.org/2000/svg" width="48" height="54" viewBox="-8 -8 48 54">
             <defs>
-                <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
-                    <feDropShadow dx="0" dy="2" stdDeviation="2" flood-opacity="0.3"/>
+                <filter id="glow" x="-100%" y="-100%" width="300%" height="300%">
+                    <feGaussianBlur stdDeviation="4" result="coloredBlur"/>
+                    <feMerge>
+                        <feMergeNode in="coloredBlur"/>
+                        <feMergeNode in="SourceGraphic"/>
+                    </feMerge>
+                </filter>
+                <filter id="shadow" x="-50%" y="-50%" width="200%" height="200%">
+                    <feDropShadow dx="0" dy="2" stdDeviation="2" flood-color="#dc143c" flood-opacity="0.6"/>
                 </filter>
             </defs>
-            <path d="M14 0C6.27 0 0 5.8 0 13c0 9.5 14 19 14 19s14-9.5 14-19C28 5.8 21.73 0 14 0z" fill="#1a1a1a" filter="url(#shadow)"/>
-            <circle cx="14" cy="13" r="6" fill="white"/>
-            <circle cx="14" cy="13" r="4" fill="#1a1a1a"/>
+            <path d="M16 0C7.16 0 0 6.5 0 14.5c0 10.5 16 23.5 16 23.5s16-13 16-23.5C32 6.5 24.84 0 16 0z" fill="#1a1a1a" stroke="#dc143c" stroke-width="2.5" filter="url(#shadow)"/>
+            <circle cx="16" cy="14.5" r="7" fill="#dc143c" filter="url(#glow)"/>
+            <circle cx="16" cy="14.5" r="3.5" fill="#1a1a1a"/>
         </svg>
     `;
     
@@ -157,12 +176,12 @@ function updateSelectedMarker(position) {
         position: [position.lng, position.lat],
         map: map,
         icon: new AMap.Icon({
-            size: new AMap.Size(28, 32),
+            size: new AMap.Size(48, 54),
             image: 'data:image/svg+xml;base64,' + btoa(unescape(encodeURIComponent(blackMarkerSvg))),
-            imageSize: new AMap.Size(28, 32),
+            imageSize: new AMap.Size(48, 54),
             anchor: 'center bottom'
         }),
-        offset: new AMap.Pixel(-14, -32)
+        offset: new AMap.Pixel(-16, -38)
     });
 }
 
@@ -222,19 +241,27 @@ async function loadPins() {
     }
 }
 
-// 添加标记到地图（其他用户的足迹 - 蓝色）
+// 添加标记到地图（其他用户的足迹 - 霓虹红发光效果）
 function addPinToMap(pin) {
-    // 使用 SVG 创建高清红色标记（矮版）- 发现的足迹
+    // 使用 SVG 创建霓虹发光足迹标记（游戏风格）
+    // viewBox扩大留出6px边距给发光效果
     const redMarkerSvg = `
-        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="30" viewBox="0 0 24 30">
+        <svg xmlns="http://www.w3.org/2000/svg" width="40" height="46" viewBox="-6 -6 40 46">
             <defs>
-                <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
-                    <feDropShadow dx="0" dy="2" stdDeviation="2" flood-opacity="0.3"/>
+                <filter id="glow" x="-100%" y="-100%" width="300%" height="300%">
+                    <feGaussianBlur stdDeviation="3.5" result="coloredBlur"/>
+                    <feMerge>
+                        <feMergeNode in="coloredBlur"/>
+                        <feMergeNode in="SourceGraphic"/>
+                    </feMerge>
+                </filter>
+                <filter id="shadow" x="-50%" y="-50%" width="200%" height="200%">
+                    <feDropShadow dx="0" dy="2" stdDeviation="2" flood-color="#dc143c" flood-opacity="0.6"/>
                 </filter>
             </defs>
-            <path d="M12 0C5.37 0 0 5.37 0 12c0 9 12 18 12 18s12-9 12-18C24 5.37 18.63 0 12 0z" fill="#dc143c" filter="url(#shadow)"/>
-            <circle cx="12" cy="12" r="5" fill="white"/>
-            <circle cx="12" cy="12" r="3" fill="#dc143c"/>
+            <path d="M14 0C6.27 0 0 5.8 0 13c0 9.5 14 21 14 21s14-11.5 14-21C28 5.8 21.73 0 14 0z" fill="#1a1a1a" stroke="#dc143c" stroke-width="2.5" filter="url(#shadow)"/>
+            <circle cx="14" cy="13" r="6" fill="#dc143c" filter="url(#glow)"/>
+            <circle cx="14" cy="13" r="3.5" fill="#1a1a1a"/>
         </svg>
     `;
     
@@ -243,12 +270,12 @@ function addPinToMap(pin) {
         map: map,
         title: pin.title || '位置分享',
         icon: new AMap.Icon({
-            size: new AMap.Size(24, 30),
+            size: new AMap.Size(40, 46),
             image: 'data:image/svg+xml;base64,' + btoa(unescape(encodeURIComponent(redMarkerSvg))),
-            imageSize: new AMap.Size(24, 30),
+            imageSize: new AMap.Size(40, 46),
             anchor: 'center bottom'
         }),
-        offset: new AMap.Pixel(-12, -30)
+        offset: new AMap.Pixel(-14, -34)
     });
     
     // 创建信息窗体（悬浮卡片）
@@ -685,17 +712,25 @@ async function locateMe() {
             // 平滑动画移动到当前位置
             animateToPosition(map, lng, lat, 15, 3000);
             
-            // 添加一个临时标记（不作为发布位置）- 绿色（矮版）
+            // 添加一个临时标记（不作为发布位置）- 霓虹绿发光效果
+            // viewBox扩大留出6px边距给发光效果
             const greenMarkerSvg = `
-                <svg xmlns="http://www.w3.org/2000/svg" width="28" height="34" viewBox="0 0 28 34">
+                <svg xmlns="http://www.w3.org/2000/svg" width="42" height="48" viewBox="-6 -6 42 48">
                     <defs>
-                        <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
-                            <feDropShadow dx="0" dy="2" stdDeviation="2" flood-opacity="0.3"/>
+                        <filter id="glow" x="-100%" y="-100%" width="300%" height="300%">
+                            <feGaussianBlur stdDeviation="3.5" result="coloredBlur"/>
+                            <feMerge>
+                                <feMergeNode in="coloredBlur"/>
+                                <feMergeNode in="SourceGraphic"/>
+                            </feMerge>
+                        </filter>
+                        <filter id="shadow" x="-50%" y="-50%" width="200%" height="200%">
+                            <feDropShadow dx="0" dy="2" stdDeviation="2" flood-color="#27ae60" flood-opacity="0.6"/>
                         </filter>
                     </defs>
-                    <path d="M14 0C6.27 0 0 6.2 0 14c0 10.5 14 20 14 20s14-9.5 14-20C28 6.2 21.73 0 14 0z" fill="#27ae60" filter="url(#shadow)"/>
-                    <circle cx="14" cy="14" r="6" fill="white"/>
-                    <circle cx="14" cy="14" r="4" fill="#27ae60"/>
+                    <path d="M15 0C6.7 0 0 6.2 0 14c0 10.5 15 22 15 22s15-11.5 15-22C30 6.2 23.3 0 15 0z" fill="#1a1a1a" stroke="#27ae60" stroke-width="2.5" filter="url(#shadow)"/>
+                    <circle cx="15" cy="14" r="6.5" fill="#27ae60" filter="url(#glow)"/>
+                    <circle cx="15" cy="14" r="3.5" fill="#1a1a1a"/>
                 </svg>
             `;
             
@@ -704,12 +739,12 @@ async function locateMe() {
                 map: map,
                 title: '您的位置',
                 icon: new AMap.Icon({
-                    size: new AMap.Size(28, 34),
+                    size: new AMap.Size(42, 48),
                     image: 'data:image/svg+xml;base64,' + btoa(unescape(encodeURIComponent(greenMarkerSvg))),
-                    imageSize: new AMap.Size(28, 34),
+                    imageSize: new AMap.Size(42, 48),
                     anchor: 'center bottom'
                 }),
-                offset: new AMap.Pixel(-14, -34)
+                offset: new AMap.Pixel(-15, -36)
             });
             
             // 获取地址信息
@@ -1201,64 +1236,99 @@ async function showAllPinsInfo() {
     }
 }
 
-// 切换地图图层
-function switchMapLayer(layerType) {
-    if (!map) return;
+// 切换地图风格
+function switchMapStyle(styleName) {
+    if (!map || !mapStyles[styleName]) return;
     
-    currentLayer = layerType;
+    currentMapStyle = styleName;
+    
+    // 应用新风格
+    map.setMapStyle(mapStyles[styleName].style);
     
     // 更新按钮状态
-    document.querySelectorAll('.layer-option').forEach(btn => {
+    document.querySelectorAll('.layer-option[data-style]').forEach(btn => {
         btn.classList.remove('active');
-        if (btn.dataset.layer === layerType) {
+        if (btn.dataset.style === styleName) {
             btn.classList.add('active');
         }
     });
     
-    // 关闭菜单
-    document.getElementById('layerMenu').classList.remove('show');
+    showToast(`已切换到：${mapStyles[styleName].name}`);
+}
+
+// 切换图层类型（矢量/卫星）
+function switchLayerType(layerType) {
+    if (!map) return;
+    
+    currentLayerType = layerType;
+    
+    // 更新按钮状态
+    document.querySelectorAll('.layer-option[data-layer]').forEach(btn => {
+        if (btn.dataset.layer === 'vector' || btn.dataset.layer === 'satellite') {
+            btn.classList.remove('active');
+            if (btn.dataset.layer === layerType) {
+                btn.classList.add('active');
+            }
+        }
+    });
     
     switch(layerType) {
-        case 'default':
-            // 标准地图
-            map.setMapStyle('amap://styles/dark');
+        case 'vector':
+            // 矢量图层 - 显示当前风格的矢量地图
             if (satelliteLayer) {
                 satelliteLayer.hide();
             }
-            if (trafficLayer) {
-                trafficLayer.hide();
-            }
-            showToast('已切换到标准地图');
+            showToast('已切换到矢量图层');
             break;
             
         case 'satellite':
-            // 卫星地图
-            map.setMapStyle('amap://styles/normal');
+            // 卫星图层
             if (!satelliteLayer) {
                 satelliteLayer = new AMap.TileLayer.Satellite();
                 satelliteLayer.setMap(map);
             } else {
                 satelliteLayer.show();
             }
-            if (trafficLayer) {
-                trafficLayer.hide();
-            }
-            showToast('已切换到卫星地图');
-            break;
-            
-        case 'traffic':
-            // 交通地图
-            map.setMapStyle('amap://styles/normal');
-            if (!trafficLayer) {
-                trafficLayer = new AMap.TileLayer.Traffic();
-                trafficLayer.setMap(map);
-            } else {
-                trafficLayer.show();
-            }
-            if (satelliteLayer) {
-                satelliteLayer.hide();
-            }
-            showToast('已切换到交通地图');
+            showToast('已切换到卫星影像');
             break;
     }
+}
+
+// 切换交通路况图层
+function toggleTrafficLayer() {
+    if (!map) return;
+    
+    const statusSpan = document.getElementById('trafficStatus');
+    const trafficBtn = document.getElementById('trafficBtn');
+    
+    if (!trafficLayer) {
+        // 开启交通图层
+        trafficLayer = new AMap.TileLayer.Traffic();
+        trafficLayer.setMap(map);
+        statusSpan.textContent = '开';
+        statusSpan.style.color = '#27ae60';
+        trafficBtn.classList.add('active');
+        showToast('交通路况：已开启');
+    } else {
+        if (trafficLayer.getMap()) {
+            // 关闭交通图层
+            trafficLayer.setMap(null);
+            statusSpan.textContent = '关';
+            statusSpan.style.color = '#666';
+            trafficBtn.classList.remove('active');
+            showToast('交通路况：已关闭');
+        } else {
+            // 开启交通图层
+            trafficLayer.setMap(map);
+            statusSpan.textContent = '开';
+            statusSpan.style.color = '#27ae60';
+            trafficBtn.classList.add('active');
+            showToast('交通路况：已开启');
+        }
+    }
+}
+
+// 兼容旧版函数（保留但不再使用）
+function switchMapLayer(layerType) {
+    console.log('[Map] switchMapLayer 已弃用，请使用 switchMapStyle 或 switchLayerType');
 }

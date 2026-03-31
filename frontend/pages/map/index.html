@@ -438,16 +438,18 @@
             position: fixed;
             bottom: 160px;
             right: 30px;
-            background: rgba(26, 26, 26, 0.95);
-            border: 1px solid rgba(155, 89, 182, 0.3);
-            border-radius: 12px;
-            padding: 10px;
+            background: rgba(26, 26, 26, 0.98);
+            border: 1px solid rgba(220, 20, 60, 0.3);
+            border-radius: 16px;
+            padding: 12px;
             z-index: 1000;
             display: none;
             flex-direction: column;
-            gap: 5px;
-            min-width: 140px;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+            gap: 4px;
+            min-width: 160px;
+            max-height: 70vh;
+            overflow-y: auto;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.6);
         }
 
         .layer-menu.show {
@@ -455,27 +457,34 @@
         }
 
         .layer-option {
-            padding: 10px 15px;
+            padding: 10px 14px;
             border: none;
             background: transparent;
             color: #fff;
-            font-size: 0.9rem;
+            font-size: 0.85rem;
             cursor: pointer;
-            border-radius: 8px;
-            transition: all 0.3s;
+            border-radius: 10px;
+            transition: all 0.25s ease;
             text-align: left;
             display: flex;
             align-items: center;
-            gap: 8px;
+            gap: 10px;
         }
 
         .layer-option:hover {
-            background: rgba(155, 89, 182, 0.2);
+            background: rgba(220, 20, 60, 0.15);
+            transform: translateX(3px);
         }
 
         .layer-option.active {
-            background: rgba(155, 89, 182, 0.3);
-            color: #9b59b6;
+            background: linear-gradient(135deg, rgba(220, 20, 60, 0.3), rgba(139, 0, 0, 0.3));
+            color: #ff6b6b;
+            font-weight: 600;
+            box-shadow: 0 2px 8px rgba(220, 20, 60, 0.2);
+        }
+
+        .layer-option.active:hover {
+            background: linear-gradient(135deg, rgba(220, 20, 60, 0.4), rgba(139, 0, 0, 0.4));
         }
 
         /* 发布弹窗 */
@@ -1041,8 +1050,8 @@
     <!-- 显示全部足迹按钮（左下偏上） -->
     <button class="fab-show-all" onclick="showAllPinsInfo()" title="显示全部足迹">🐾</button>
 
-    <!-- 图层切换按钮 -->
-    <button class="fab-layer" onclick="toggleLayerMenu()" title="切换地图">🌐</button>
+    <!-- 地图设置按钮 -->
+    <button class="fab-layer" onclick="toggleLayerMenu()" title="地图设置">🌐</button>
     
     <!-- 全屏按钮 -->
     <button class="fab-fullscreen" id="fullscreenBtn" onclick="toggleFullscreen()" title="全屏">⛶</button>
@@ -1050,16 +1059,41 @@
     <!-- 使用说明按钮 -->
     <button class="fab-help" onclick="showHelpModal()" title="使用说明">❓</button>
     
-    <!-- 图层选择菜单 -->
+    <!-- 图层选择菜单（风格 + 图层类型） -->
     <div class="layer-menu" id="layerMenu">
-        <button class="layer-option active" onclick="switchMapLayer('default')" data-layer="default">
-            🗺️ 标准地图
+        <div style="color: #888; font-size: 0.75rem; padding: 5px 10px; border-bottom: 1px solid rgba(220, 20, 60, 0.2); margin-bottom: 5px;">
+            🎨 地图风格
+        </div>
+        <button class="layer-option" onclick="switchMapStyle('graffiti')" data-style="graffiti">
+            🎮 涂鸦游戏
         </button>
-        <button class="layer-option" onclick="switchMapLayer('satellite')" data-layer="satellite">
-            🛰️ 卫星地图
+        <button class="layer-option active" onclick="switchMapStyle('dark')" data-style="dark">
+            🌙 暗夜黑
         </button>
-        <button class="layer-option" onclick="switchMapLayer('traffic')" data-layer="traffic">
-            🚦 交通地图
+        <button class="layer-option" onclick="switchMapStyle('blue')" data-style="blue">
+            💎 靛青蓝
+        </button>
+        <button class="layer-option" onclick="switchMapStyle('whitesmoke')" data-style="whitesmoke">
+            ☁️ 烟灰白
+        </button>
+        <button class="layer-option" onclick="switchMapStyle('macaron')" data-style="macaron">
+            🍬 马卡龙
+        </button>
+        <button class="layer-option" onclick="switchMapStyle('fresh')" data-style="fresh">
+            🌿 草色青
+        </button>
+        
+        <div style="color: #888; font-size: 0.75rem; padding: 10px 10px 5px; border-top: 1px solid rgba(220, 20, 60, 0.2); margin-top: 5px; border-bottom: 1px solid rgba(220, 20, 60, 0.2);">
+            🗺️ 图层类型
+        </div>
+        <button class="layer-option active" onclick="switchLayerType('vector')" data-layer="vector">
+            📊 矢量图层
+        </button>
+        <button class="layer-option" onclick="switchLayerType('satellite')" data-layer="satellite">
+            🛰️ 卫星影像
+        </button>
+        <button class="layer-option" onclick="toggleTrafficLayer()" data-layer="traffic" id="trafficBtn">
+            🚦 交通路况 <span id="trafficStatus" style="color: #666;">关</span>
         </button>
     </div>
 
@@ -1155,10 +1189,24 @@
                         <li><strong>📍</strong> 定位按钮：快速定位到您的当前位置</li>
                         <li><strong>↻</strong> 刷新按钮：刷新地图上的足迹数据</li>
                         <li><strong>🐾</strong> 显示全部：显示所有用户的足迹卡片</li>
-                        <li><strong>🌐</strong> 图层切换：切换标准/卫星/交通地图</li>
+                        <li><strong>🌐</strong> 地图设置：切换地图风格和图层类型</li>
                         <li><strong>⛶</strong> 全屏按钮：进入全屏模式</li>
                         <li><strong>我的足迹</strong>：查看和管理您发布的所有足迹</li>
                     </ul>
+                </div>
+                
+                <div class="help-section">
+                    <h4>🎨 地图风格切换</h4>
+                    <p>点击 <strong>🌐 地图设置</strong> 按钮，可自由组合以下选项：</p>
+                    <ul>
+                        <li><strong>🎮 涂鸦游戏</strong>：黑底涂鸦风，酷炫游戏感</li>
+                        <li><strong>🌙 暗夜黑</strong>：纯黑色调，极简高级</li>
+                        <li><strong>💎 静青蓝</strong>：深蓝科技感</li>
+                        <li><strong>☁️ 烟灰白</strong>：灰白清爽</li>
+                        <li><strong>🍬 马卡龙</strong>：温柔马卡龙色</li>
+                        <li><strong>🌿 草色青</strong>：清新自然风</li>
+                    </ul>
+                    <p style="margin-top: 8px; color: #888;">还可以切换 <strong>矢量/卫星</strong> 图层，以及开关 <strong>交通路况</strong> 层！</p>
                 </div>
                 
                 <div class="help-section">

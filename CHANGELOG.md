@@ -1,5 +1,55 @@
 # ShareX 项目更新日志
 
+## 2026-03-31
+
+### 部署
+
+#### 1. 服务器部署
+- **服务器**: 香港云服务器 (45.113.2.31)
+- **系统**: Ubuntu 22.04 LTS
+- **域名**: sharex.my / www.sharex.my
+
+#### 2. 技术栈配置
+- **Node.js**: 18.x LTS
+- **Nginx**: 1.18.0 (反向代理 + 静态文件服务)
+- **PM2**: 进程管理器 (自动重启)
+- **SQLite3**: 数据库
+
+#### 3. HTTPS 配置
+- **SSL 证书**: Let's Encrypt 免费证书
+- **自动续期**: 已配置
+- **到期时间**: 2026-06-29
+- **HTTP**: 自动 301 跳转到 HTTPS
+
+#### 4. 数据库备份
+- **备份脚本**: `/opt/gameworld/deploy/backup-database.sh`
+- **自动备份**: 每天凌晨 3 点
+- **保留策略**: 最近 30 天
+- **备份位置**: `/opt/gameworld/backups/`
+- **压缩格式**: `.db.gz`
+
+### 访问地址
+
+| 服务 | 地址 |
+|------|------|
+| 主页 | https://sharex.my/pages/login.html |
+| 游戏大厅 | https://sharex.my/pages/gamehall.html |
+| 足迹空间 | https://sharex.my/pages/map/index.html |
+| Poker 游戏 | https://sharex.my/games/poker/lobby.html |
+
+### 部署脚本
+
+新增部署相关脚本：
+- `deploy/deploy-all.sh` - 一键部署脚本
+- `deploy/01-setup-server.sh` - 服务器基础配置
+- `deploy/03-deploy-backend.sh` - 后端部署
+- `deploy/04-setup-nginx.sh` - Nginx + HTTPS 配置
+- `deploy/backup-database.sh` - 数据库备份
+- `deploy/setup-backup-cron.sh` - 自动备份定时任务
+- `docs/database-backup.md` - 数据库备份文档
+
+---
+
 ## 2026-03-29
 
 ### 新增功能
