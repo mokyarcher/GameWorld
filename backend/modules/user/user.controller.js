@@ -34,7 +34,7 @@ router.post('/register', async (req, res) => {
     // 记录初始筹码
     await db.run(
       'INSERT INTO chips_transactions (user_id, amount, type, description) VALUES (?, ?, ?, ?)',
-      [result.id, 200000, 'initial', '注册赠送筹码']
+      [result.id, 200000, 'initial', '注册赠送积分']
     );
     
     res.json({ 
@@ -116,7 +116,7 @@ router.post('/guest', async (req, res) => {
     // 记录初始筹码
     await db.run(
       'INSERT INTO chips_transactions (user_id, amount, type, description) VALUES (?, ?, ?, ?)',
-      [result.id, 200000, 'initial', '游客初始筹码']
+      [result.id, 200000, 'initial', '游客初始积分']
     );
     
     // 生成 JWT
@@ -190,7 +190,7 @@ router.put('/profile', authenticateToken, async (req, res) => {
   }
 });
 
-// 获取筹码流水
+// 获取积分流水
 router.get('/chips-history', authenticateToken, async (req, res) => {
   try {
     const transactions = await db.all(
@@ -200,8 +200,51 @@ router.get('/chips-history', authenticateToken, async (req, res) => {
     
     res.json({ success: true, transactions });
   } catch (error) {
-    console.error('获取筹码流水失败:', error);
+    console.error('获取积分流水失败:', error);
     res.status(500).json({ error: '获取筹码流水失败' });
+  }
+});
+
+// 修改密码
+router.put('/password', authenticateToken, async (req, res) => {
+  try {
+    const { oldPassword, newPassword } = req.body;
+    
+    // 验证参数
+    if (!oldPassword || !newPassword) {
+      return res.status(400).json({ error: '请提供当前密码和新密码' });
+    }
+    
+    if (newPassword.length < 6) {
+      return res.status(400).json({ error: '新密码至少需要6位' });
+    }
+    
+    // 获取用户当前密码
+    const user = await db.get('SELECT password FROM users WHERE id = ?', [req.userId]);
+    if (!user) {
+      return res.status(404).json({ error: '用户不存在' });
+    }
+    
+    // 验证当前密码
+    const isValidPassword = await bcrypt.compare(oldPassword, user.password);
+    if (!isValidPassword) {
+      return res.status(400).json({ error: '当前密码错误' });
+    }
+    
+    // 加密新密码
+    const hashedPassword = await bcrypt.hash(newPassword, 10);
+    
+    // 更新密码
+    await db.run(
+      'UPDATE users SET password = ? WHERE id = ?',
+      [hashedPassword, req.userId]
+    );
+    
+    console.log(`[用户] ${req.username} 修改了密码`);
+    res.json({ success: true, message: '密码修改成功' });
+  } catch (error) {
+    console.error('修改密码失败:', error);
+    res.status(500).json({ error: '修改密码失败' });
   }
 });
 

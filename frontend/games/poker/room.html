@@ -976,6 +976,15 @@
                 display: none !important;
             }
         }
+        .notice-bar {
+            background: rgba(220, 20, 60, 0.15);
+            color: rgba(255,255,255,0.85);
+            font-size: 0.8rem;
+            text-align: center;
+            padding: 6px;
+            border-bottom: 1px solid rgba(220, 20, 60, 0.2);
+            letter-spacing: 1px;
+        }
     </style>
 </head>
 <body>
@@ -1000,6 +1009,7 @@
         </div>
         <button class="btn-leave" onclick="leaveRoom()">离开房间</button>
     </div>
+    <div class="notice-bar">注意：该平台仅用于学习交流 无盈利行为</div>
 
     <div class="main-layout">
         <div class="container">
@@ -1346,7 +1356,7 @@
             if (!currentRoom) return;
             document.getElementById('roomName').textContent = currentRoom.roomName || '房间';
             document.getElementById('roomSettings').textContent = 
-                `盲注 ${currentRoom.smallBlind || 10}/${currentRoom.bigBlind || 20} | 最多 ${currentRoom.maxPlayers || 9} 人`;
+                `基础分 ${currentRoom.smallBlind || 10}/${currentRoom.bigBlind || 20} | 最多 ${currentRoom.maxPlayers || 9} 人`;
             
             // 设置房间头部的头像
             const avatarFilename = user.avatar || 'default.png';
@@ -1968,5 +1978,31 @@
             }
         });
     </script>
+    
+    <!-- 底部备案信息区域 -->
+    <style>
+        .footer-info {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: rgba(0, 0, 0, 0.85);
+            border-top: 1px solid rgba(220, 20, 60, 0.2);
+            padding: 6px 15px;
+            text-align: center;
+            font-size: 0.6rem;
+            color: rgba(255, 255, 255, 0.5);
+            z-index: 1000;
+        }
+        .footer-info .age-tip {
+            color: rgba(220, 20, 60, 0.9);
+            font-weight: 600;
+            margin-right: 8px;
+        }
+    </style>
+    <div class="footer-info">
+        <span class="age-tip">⚠️ 18+ 学习交流</span>
+        <span>无盈利 | 备案号：待申请</span>
+    </div>
 </body>
 </html>

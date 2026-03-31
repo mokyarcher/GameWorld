@@ -122,6 +122,103 @@
             from { transform: scale(0.8); opacity: 0; }
             to { transform: scale(1); opacity: 1; }
         }
+        /* 免责声明弹窗样式 */
+        .disclaimer-modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.95);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 20000;
+            animation: fadeIn 0.3s ease;
+        }
+        .disclaimer-modal-overlay.show {
+            display: flex;
+        }
+        .disclaimer-modal-content {
+            background: linear-gradient(145deg, rgba(25,25,25,0.98), rgba(10,10,10,0.99));
+            padding: 35px 30px 30px;
+            border-radius: 12px;
+            text-align: left;
+            border: 1px solid rgba(220, 20, 60, 0.4);
+            box-shadow: 0 20px 60px rgba(0,0,0,0.9), 0 0 40px rgba(220, 20, 60, 0.15);
+            max-width: 90%;
+            width: 450px;
+            max-height: 85vh;
+            overflow-y: auto;
+            animation: scaleIn 0.3s ease;
+        }
+        .disclaimer-modal-content h2 {
+            color: #dc143c;
+            font-size: 1.5rem;
+            margin-bottom: 20px;
+            text-align: center;
+            letter-spacing: 2px;
+        }
+        .disclaimer-content {
+            color: rgba(255,255,255,0.85);
+            font-size: 0.95rem;
+            line-height: 1.8;
+            margin-bottom: 25px;
+        }
+        .disclaimer-content p {
+            margin-bottom: 12px;
+        }
+        .disclaimer-content .warning {
+            color: #dc143c;
+            font-weight: 600;
+            border-left: 3px solid #dc143c;
+            padding-left: 12px;
+            margin: 15px 0;
+            background: rgba(220, 20, 60, 0.1);
+            padding: 12px 12px 12px 15px;
+            border-radius: 0 6px 6px 0;
+        }
+        .disclaimer-content ul {
+            margin: 10px 0 10px 20px;
+            padding: 0;
+        }
+        .disclaimer-content li {
+            margin-bottom: 8px;
+        }
+        .disclaimer-actions {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+        }
+        .disclaimer-btn {
+            padding: 12px 35px;
+            border: 1px solid rgba(220, 20, 60, 0.5);
+            border-radius: 6px;
+            font-size: 14px;
+            font-weight: 600;
+            letter-spacing: 2px;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-transform: uppercase;
+        }
+        .disclaimer-btn.agree {
+            background: rgba(220, 20, 60, 0.2);
+            color: #dc143c;
+        }
+        .disclaimer-btn.agree:hover {
+            background: rgba(220, 20, 60, 0.3);
+            border-color: rgba(220, 20, 60, 0.8);
+            box-shadow: 0 0 20px rgba(220, 20, 60, 0.3);
+        }
+        .disclaimer-btn.disagree {
+            background: transparent;
+            color: rgba(255,255,255,0.6);
+            border-color: rgba(255,255,255,0.3);
+        }
+        .disclaimer-btn.disagree:hover {
+            background: rgba(255,255,255,0.1);
+            border-color: rgba(255,255,255,0.5);
+        }
     </style>
 </head>
 <body>
@@ -170,6 +267,37 @@
             </div>
             
             <button onclick="guestLogin()" class="btn btn-guest">游客登录</button>
+        </div>
+    </div>
+
+    <!-- 免责声明弹窗 -->
+    <div class="disclaimer-modal-overlay" id="disclaimerModal">
+        <div class="disclaimer-modal-content">
+            <h2>⚠️ 免责声明</h2>
+            <div class="disclaimer-content">
+                <p class="warning">本平台仅供娱乐，严禁赌博！</p>
+                
+                <p><strong>一、游戏性质说明</strong></p>
+                <ul>
+                    <li>本平台为朋友间娱乐交流平台，不涉及任何真实货币交易</li>
+                    <li>游戏内积分仅为游戏道具，不具备任何实际价值</li>
+                    <li>积分不可充值、不可兑换现金或任何实物</li>
+                </ul>
+                
+                <p><strong>二、用户承诺</strong></p>
+                <ul>
+                    <li>不将本平台用于任何形式的赌博活动</li>
+                    <li>不进行积分转让、卖卖或其他非法交易</li>
+                    <li>遵守国家相关法律法规</li>
+                </ul>
+                
+                <p><strong>三、法律责任</strong></p>
+                <p>如用户违反上述承诺，使用本平台进行赌博或其他非法活动，将独自承担相应法律责任。本平台不对用户的任何违法行为承担责任。</p>
+            </div>
+            <div class="disclaimer-actions">
+                <button class="disclaimer-btn disagree" onclick="disagreeDisclaimer()">不同意</button>
+                <button class="disclaimer-btn agree" onclick="agreeDisclaimer()">同意并继续</button>
+            </div>
         </div>
     </div>
 
@@ -269,6 +397,30 @@
             }
         }
         
+        // 等待免责声明确认后执行的登录/注册操作
+        let pendingAction = null;
+
+        function showDisclaimerModal() {
+            document.getElementById('disclaimerModal').classList.add('show');
+        }
+
+        function hideDisclaimerModal() {
+            document.getElementById('disclaimerModal').classList.remove('show');
+        }
+
+        function agreeDisclaimer() {
+            hideDisclaimerModal();
+            if (pendingAction) {
+                pendingAction();
+                pendingAction = null;
+            }
+        }
+
+        function disagreeDisclaimer() {
+            alert('您必须同意免责声明才能继续使用本平台。');
+            window.location.href = 'about:blank';
+        }
+
         // 登录
         document.getElementById('loginForm').addEventListener('submit', async (e) => {
             e.preventDefault();
@@ -276,27 +428,31 @@
             const username = document.getElementById('loginUsername').value;
             const password = document.getElementById('loginPassword').value;
             
-            try {
-                const response = await fetch(`${API_BASE}/user/login`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ username, password })
-                });
-                
-                const data = await response.json();
-                
-                if (data.success) {
-                    localStorage.setItem('token', data.token);
-                    localStorage.setItem('user', JSON.stringify(data.user));
-                    showModal('登录成功！', 'success', function() {
-                        window.location.href = 'gamehall.html';
+            pendingAction = async () => {
+                try {
+                    const response = await fetch(`${API_BASE}/user/login`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ username, password })
                     });
-                } else {
-                    showModal(data.error || '登录失败', 'error');
+                    
+                    const data = await response.json();
+                    
+                    if (data.success) {
+                        localStorage.setItem('token', data.token);
+                        localStorage.setItem('user', JSON.stringify(data.user));
+                        showModal('登录成功！', 'success', function() {
+                            window.location.href = 'gamehall.html';
+                        });
+                    } else {
+                        showModal(data.error || '登录失败', 'error');
+                    }
+                } catch (error) {
+                    showModal('网络错误，请稍后重试', 'error');
                 }
-            } catch (error) {
-                showModal('网络错误，请稍后重试', 'error');
-            }
+            };
+            
+            showDisclaimerModal();
         });
         
         // 注册
@@ -307,49 +463,57 @@
             const nickname = document.getElementById('registerNickname').value;
             const password = document.getElementById('registerPassword').value;
             
-            try {
-                const response = await fetch(`${API_BASE}/user/register`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ username, nickname, password })
-                });
-                
-                const data = await response.json();
-                
-                if (data.success) {
-                    showModal('注册成功！请登录', 'success', function() {
-                        switchTab('login');
+            pendingAction = async () => {
+                try {
+                    const response = await fetch(`${API_BASE}/user/register`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ username, nickname, password })
                     });
-                } else {
-                    showModal(data.error || '注册失败', 'error');
+                    
+                    const data = await response.json();
+                    
+                    if (data.success) {
+                        showModal('注册成功！请登录', 'success', function() {
+                            switchTab('login');
+                        });
+                    } else {
+                        showModal(data.error || '注册失败', 'error');
+                    }
+                } catch (error) {
+                    showModal('网络错误，请稍后重试', 'error');
                 }
-            } catch (error) {
-                showModal('网络错误，请稍后重试', 'error');
-            }
+            };
+            
+            showDisclaimerModal();
         });
         
         // 游客登录
-        async function guestLogin() {
-            try {
-                const response = await fetch(`${API_BASE}/user/guest`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' }
-                });
-                
-                const data = await response.json();
-                
-                if (data.success) {
-                    localStorage.setItem('token', data.token);
-                    localStorage.setItem('user', JSON.stringify(data.user));
-                    showModal('游客登录成功！', 'success', function() {
-                        window.location.href = 'gamehall.html';
+        function guestLogin() {
+            pendingAction = async () => {
+                try {
+                    const response = await fetch(`${API_BASE}/user/guest`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' }
                     });
-                } else {
-                    showModal(data.error || '登录失败', 'error');
+                    
+                    const data = await response.json();
+                    
+                    if (data.success) {
+                        localStorage.setItem('token', data.token);
+                        localStorage.setItem('user', JSON.stringify(data.user));
+                        showModal('游客登录成功！', 'success', function() {
+                            window.location.href = 'gamehall.html';
+                        });
+                    } else {
+                        showModal(data.error || '登录失败', 'error');
+                    }
+                } catch (error) {
+                    showModal('网络错误，请稍后重试', 'error');
                 }
-            } catch (error) {
-                showModal('网络错误，请稍后重试', 'error');
-            }
+            };
+            
+            showDisclaimerModal();
         }
         
         // 检查是否已登录
@@ -357,5 +521,39 @@
             window.location.href = 'gamehall.html';
         }
     </script>
+    
+    <!-- 底部备案信息区域 -->
+    <style>
+        .footer-info {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: rgba(0, 0, 0, 0.85);
+            border-top: 1px solid rgba(220, 20, 60, 0.2);
+            padding: 12px 20px;
+            text-align: center;
+            font-size: 0.75rem;
+            color: rgba(255, 255, 255, 0.5);
+            z-index: 1000;
+        }
+        .footer-info a {
+            color: rgba(220, 20, 60, 0.8);
+            text-decoration: none;
+        }
+        .footer-info .age-tip {
+            color: rgba(220, 20, 60, 0.9);
+            font-weight: 600;
+            margin-right: 15px;
+        }
+        .footer-info .beian {
+            margin-left: 15px;
+        }
+    </style>
+    <div class="footer-info">
+        <span class="age-tip">18岁以上用户适用</span>
+        <span>本平台仅供学习交流，无盈利行为</span>
+        <span class="beian">备案号：待申请 | <a href="#">隐私政策</a></span>
+    </div>
 </body>
 </html>

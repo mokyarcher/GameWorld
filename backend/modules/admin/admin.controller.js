@@ -99,7 +99,7 @@ router.get('/users', authenticateAdmin, async (req, res) => {
   }
 });
 
-// 修改用户筹码（管理员）
+// 修改用户积分（管理员）
 router.post('/chips', authenticateAdmin, async (req, res) => {
   try {
     const { userId, amount, operation, reason } = req.body;
@@ -143,19 +143,19 @@ router.post('/chips', authenticateAdmin, async (req, res) => {
         break;
     }
     
-    // 更新用户筹码
+    // 更新用户积分
     await db.run('UPDATE users SET chips = ? WHERE id = ?', [newChips, userId]);
     
-    // 记录筹码流水
+    // 记录积分流水
     const operationText = { add: '增加', subtract: '减少', set: '设置为' }[operation];
     await db.run(
       'INSERT INTO chips_transactions (user_id, amount, type, description) VALUES (?, ?, ?, ?)',
-      [userId, changeAmount, 'admin_adjust', `管理员${operationText}筹码: ${reason || '无备注'}`]
+      [userId, changeAmount, 'admin_adjust', `管理员${operationText}积分: ${reason || '无备注'}`]
     );
     
     res.json({
       success: true,
-      message: `已将 ${user.nickname || user.username} 的筹码${operationText} ${Math.abs(changeAmount)}`,
+      message: `已将 ${user.nickname || user.username} 的积分${operationText} ${Math.abs(changeAmount)}`,
       user: {
         id: user.id,
         username: user.username,
@@ -164,12 +164,12 @@ router.post('/chips', authenticateAdmin, async (req, res) => {
       }
     });
   } catch (error) {
-    console.error('[Admin] 修改筹码失败:', error);
+    console.error('[Admin] 修改积分失败:', error);
     res.status(500).json({ error: '修改筹码失败' });
   }
 });
 
-// 获取筹码流水（管理员可查看任意用户）
+// 获取积分流水（管理员可查看任意用户）
 router.get('/chips-history/:userId', authenticateAdmin, async (req, res) => {
   try {
     const { userId } = req.params;
@@ -181,7 +181,7 @@ router.get('/chips-history/:userId', authenticateAdmin, async (req, res) => {
     
     res.json({ success: true, transactions });
   } catch (error) {
-    console.error('[Admin] 获取筹码流水失败:', error);
+    console.error('[Admin] 获取积分流水失败:', error);
     res.status(500).json({ error: '获取筹码流水失败' });
   }
 });
@@ -244,7 +244,7 @@ router.delete('/users/:userId', authenticateAdmin, async (req, res) => {
     await db.run('BEGIN TRANSACTION');
     
     try {
-      // 删除筹码流水记录
+      // 删除积分流水记录
       await db.run('DELETE FROM chips_transactions WHERE user_id = ?', [userId]);
       
       // 删除好友关系

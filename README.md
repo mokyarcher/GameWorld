@@ -2,7 +2,7 @@
 
 ## 项目概述
 
-GameWorld 是一个多人在线游戏平台，采用 Node.js + Express 后端和原生 JavaScript 前端架构。目前支持德州扑克游戏，设计为可扩展的多游戏平台。
+GameWorld 是一个多人在线游戏平台，采用 Node.js + Express 后端和原生 JavaScript 前端架构。目前支持贵州扑克游戏，设计为可扩展的多游戏平台。
 
 ## 技术栈
 
@@ -35,7 +35,7 @@ GameWorld/
 │   │   └── gamehall/          # 游戏大厅模块
 │   │       └── gamehall.controller.js
 │   ├── games/                 # 游戏逻辑
-│   │   └── poker/             # 德州扑克
+│   │   └── poker/             # 贵州扑克
 │   │       ├── poker.socket.js    # Socket.io 事件处理
 │   │       └── PokerGame.js       # 游戏核心逻辑
 │   └── package.json
@@ -157,7 +157,7 @@ CREATE TABLE poker_room_players (
 - `GET /api/gamehall/leaderboard` - 排行榜
 - `GET /api/gamehall/announcements` - 公告
 
-### 3. 德州扑克游戏
+### 3. 贵州扑克游戏
 
 **核心文件**:
 - `backend/games/poker/poker.socket.js` - Socket 事件处理
@@ -324,7 +324,7 @@ npm start
 
 ### 1. Socket.io 命名空间
 
-德州扑克使用 `/poker` 命名空间：
+贵州扑克使用 `/poker` 命名空间：
 ```javascript
 const socket = io('/poker');
 ```

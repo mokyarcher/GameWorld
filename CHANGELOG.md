@@ -15,6 +15,19 @@
 - 管理员每次回复都会记录到历史表
 - 详情弹窗显示完整回复历史列表
 
+#### 3. 用户修改密码功能
+- 在资料修改页面（profile.html）添加密码修改区域
+- 需要验证当前密码，新密码至少6位
+- 后端 API：`PUT /api/user/password`
+
+#### 4. "加入我们"功能
+- 当用户转动到"正在开发"的卡牌时，按钮变为"加入项目"
+- 点击跳转到 join.html 页面，可提交开发计划
+- 开发计划包括：项目名称、类型、功能、特点、规划、图片
+- 页面附带 GitHub 项目链接按钮
+- 后端 API：`POST /api/join` 提交申请
+- 管理员可在后台查看申请列表
+
 ### 优化
 
 #### 1. 管理员反馈界面优化
@@ -49,9 +62,31 @@ CREATE TABLE IF NOT EXISTS feedback_replies (
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (feedback_id) REFERENCES feedback(id) ON DELETE CASCADE
 );
+
+-- 新增开发计划申请表
+CREATE TABLE IF NOT EXISTS join_applications (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    user_id INTEGER,
+    username TEXT,
+    project_name TEXT NOT NULL,
+    project_type TEXT NOT NULL,
+    project_features TEXT NOT NULL,
+    project_highlights TEXT,
+    project_plan TEXT,
+    image TEXT,
+    status TEXT DEFAULT 'pending',
+    admin_reply TEXT,
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    updated_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE SET NULL
+);
 ```
 
 ### API 变更
 
 - `GET /api/feedback/:id` - 现在返回 `replies` 数组（回复历史）
 - `PUT /api/feedback/:id` - 支持追加回复，自动记录到历史表
+- `PUT /api/user/password` - 用户修改密码
+- `POST /api/join` - 提交开发计划申请
+- `GET /api/join` - 获取开发计划申请列表（管理员）
+- `PUT /api/join/:id` - 更新申请状态（管理员）

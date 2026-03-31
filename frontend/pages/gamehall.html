@@ -241,11 +241,11 @@
             text-shadow: 0 0 10px rgba(170, 20, 60, 0.5);
         }
         
-        .chips-badge {
+        .points-badge {
             cursor: default;
         }
         
-        .chips-badge:hover {
+        .points-badge:hover {
             border-color: rgba(170, 20, 60, 0.3);
             box-shadow: none;
             transform: none;
@@ -599,6 +599,19 @@
             text-shadow: 0 0 10px rgba(255,255,255,0.3);
         }
         
+        /* 加入项目按钮样式 */
+        .enter-game-btn.join-project {
+            background: linear-gradient(145deg, rgba(46, 204, 113, 0.9) 0%, rgba(39, 174, 96, 0.95) 100%);
+            border-color: rgba(46, 204, 113, 0.5);
+            box-shadow: 0 5px 20px rgba(46, 204, 113, 0.3);
+        }
+        
+        .enter-game-btn.join-project:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 40px rgba(46, 204, 113, 0.5);
+            border-color: rgba(46, 204, 113, 0.8);
+        }
+        
         .carousel-indicator {
             width: 10px;
             height: 10px;
@@ -870,9 +883,9 @@
                     <span id="userNickname" class="badge-value">玩家</span>
                 </div>
                 <!-- 积分卡片 -->
-                <div class="user-badge chips-badge">
-                    <span class="badge-label">CHIPS</span>
-                    <span id="userChips" class="badge-value">0</span>
+                <div class="user-badge points-badge">
+                    <span class="badge-label">POINT</span>
+                    <span id="userPoints" class="badge-value">0</span>
                 </div>
             </div>
             
@@ -964,9 +977,9 @@
                     
                     <!-- 进入游戏按钮 -->
                     <div class="enter-game-wrapper">
-                        <div class="enter-game-btn" onclick="enterCurrentGame()">
+                        <div class="enter-game-btn" id="enterGameBtn" onclick="enterCurrentGame()">
                             <span class="enter-label">ENTER</span>
-                            <span class="enter-text">进入游戏</span>
+                            <span class="enter-text" id="enterBtnText">进入游戏</span>
                         </div>
                     </div>
                 </div>
@@ -1191,8 +1204,8 @@
         }
         
         // 格式化积分显示 - 用 M 代表百万
-        function formatChips(chips) {
-            const num = parseInt(chips) || 0;
+        function formatPoints(points) {
+            const num = parseInt(points) || 0;
             if (num >= 1000000) {
                 return (num / 1000000).toFixed(1) + 'M';
             } else if (num >= 1000) {
@@ -1205,7 +1218,7 @@
         async function loadUserInfo() {
             const user = JSON.parse(localStorage.getItem('user') || '{}');
             document.getElementById('userNickname').textContent = user.nickname || user.username || '玩家';
-            document.getElementById('userChips').textContent = formatChips(user.chips || 0);
+            document.getElementById('userPoints').textContent = formatPoints(user.chips || 0);
             if (user.avatar) {
                 document.getElementById('userAvatar').src = `../avatars/${user.avatar}`;
             }
@@ -1232,7 +1245,7 @@
                             game_code: 'chess',
                             game_name: '正在开发',
                             description: '经典策略棋类游戏，敬请期待',
-                            min_chips: 100,
+                            min_points: 100,
                             max_players: 2,
                             developing: true
                         },
@@ -1240,7 +1253,7 @@
                             game_code: 'mahjong',
                             game_name: '正在开发',
                             description: '四川麻将，敬请期待',
-                            min_chips: 500,
+                            min_points: 500,
                             max_players: 4,
                             developing: true
                         },
@@ -1248,7 +1261,7 @@
                             game_code: 'dice',
                             game_name: '正在开发',
                             description: '骰子大战，敬请期待',
-                            min_chips: 50,
+                            min_points: 50,
                             max_players: 6,
                             developing: true
                         },
@@ -1256,14 +1269,14 @@
                             game_code: 'slot',
                             game_name: '正在开发',
                             description: '幸运老虎机，敬请期待',
-                            min_chips: 10,
+                            min_points: 10,
                             max_players: 1,
                             developing: true
                         },
 
                     ];
                     
-                    // 去重合并，地图分享放到第二位（德州扑克之后）
+                    // 去重合并，地图分享放到第二位（贵州扑克之后）
                     const existingCodes = backendGames.map(g => g.game_code);
                     const uniqueTestGames = testGames.filter(g => !existingCodes.includes(g.game_code));
                     
@@ -1299,16 +1312,16 @@
                     },
                     {
                         game_code: 'poker',
-                        game_name: '德州扑克',
-                        description: '经典的德州扑克游戏，考验你的牌技和心理',
-                        min_chips: 1000,
+                        game_name: '贵州扑克',
+                        description: '经典的贵州扑克游戏，考验你的牌技和心理',
+                        min_points: 1000,
                         max_players: 9
                     },
                     {
                         game_code: 'chess',
                         game_name: '正在开发',
                         description: '经典策略棋类游戏，敬请期待',
-                        min_chips: 100,
+                        min_points: 100,
                         max_players: 2,
                         developing: true
                     },
@@ -1316,7 +1329,7 @@
                         game_code: 'mahjong',
                         game_name: '正在开发',
                         description: '四川麻将，敬请期待',
-                        min_chips: 500,
+                        min_points: 500,
                         max_players: 4,
                         developing: true
                     },
@@ -1324,7 +1337,7 @@
                         game_code: 'dice',
                         game_name: '正在开发',
                         description: '骰子大战，敬请期待',
-                        min_chips: 50,
+                        min_points: 50,
                         max_players: 6,
                         developing: true
                     },
@@ -1332,7 +1345,7 @@
                         game_code: 'slot',
                         game_name: '正在开发',
                         description: '幸运老虎机，敬请期待',
-                        min_chips: 10,
+                        min_points: 10,
                         max_players: 1,
                         developing: true
                     },
@@ -1414,6 +1427,9 @@
             indicators.forEach((indicator, index) => {
                 indicator.classList.toggle('active', index === currentGameIndex);
             });
+            
+            // 更新进入按钮状态
+            updateEnterButton();
         }
         
         // 获取项目类名
@@ -2277,7 +2293,29 @@
         // 进入当前选中的游戏
         function enterCurrentGame() {
             if (gamesData[currentGameIndex]) {
-                enterGame(gamesData[currentGameIndex].game_code);
+                const game = gamesData[currentGameIndex];
+                if (game.developing) {
+                    // 如果是开发中的项目，跳转到加入我们页面
+                    window.location.href = 'join.html';
+                } else {
+                    enterGame(game.game_code);
+                }
+            }
+        }
+        
+        // 更新进入按钮状态
+        function updateEnterButton() {
+            if (gamesData[currentGameIndex]) {
+                const game = gamesData[currentGameIndex];
+                const btnText = document.getElementById('enterBtnText');
+                const btn = document.getElementById('enterGameBtn');
+                if (game.developing) {
+                    btnText.textContent = '加入项目';
+                    btn.classList.add('join-project');
+                } else {
+                    btnText.textContent = '进入游戏';
+                    btn.classList.remove('join-project');
+                }
             }
         }
         
@@ -2629,5 +2667,39 @@
             }
         });
     </script>
+    
+    <!-- 底部备案信息区域 -->
+    <style>
+        .footer-info {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: rgba(0, 0, 0, 0.85);
+            border-top: 1px solid rgba(220, 20, 60, 0.2);
+            padding: 10px 20px;
+            text-align: center;
+            font-size: 0.7rem;
+            color: rgba(255, 255, 255, 0.5);
+            z-index: 1000;
+        }
+        .footer-info a {
+            color: rgba(220, 20, 60, 0.8);
+            text-decoration: none;
+        }
+        .footer-info .age-tip {
+            color: rgba(220, 20, 60, 0.9);
+            font-weight: 600;
+            margin-right: 10px;
+        }
+        .footer-info .beian {
+            margin-left: 10px;
+        }
+    </style>
+    <div class="footer-info">
+        <span class="age-tip">⚠️ 18+</span>
+        <span>仅供学习交流，无盈利行为</span>
+        <span class="beian">备案号：待申请</span>
+    </div>
 </body>
 </html>

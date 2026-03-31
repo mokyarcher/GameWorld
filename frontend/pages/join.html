@@ -1,0 +1,495 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ShareX - 加入我们</title>
+    <link rel="stylesheet" href="../css/style.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Microsoft YaHei', sans-serif;
+            background: linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 100%);
+            min-height: 100vh;
+            color: #fff;
+        }
+        
+        .join-container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        /* 顶部导航 */
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 20px;
+            background: linear-gradient(180deg, rgba(20,20,20,0.95) 0%, rgba(10,10,10,0.9) 100%);
+            border-radius: 12px;
+            margin-bottom: 20px;
+            border-bottom: 2px solid rgba(46, 204, 113, 0.4);
+            box-shadow: 0 5px 20px rgba(0,0,0,0.8);
+        }
+        
+        .logo {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #fff;
+            letter-spacing: 2px;
+        }
+        
+        .logo::before {
+            content: 'JOIN US';
+            font-size: 9px;
+            font-weight: 800;
+            letter-spacing: 2px;
+            color: #2ecc71;
+            background: rgba(46, 204, 113, 0.1);
+            padding: 2px 6px;
+            border-radius: 4px;
+            border: 1px solid rgba(46, 204, 113, 0.3);
+            margin-right: 8px;
+            vertical-align: middle;
+        }
+        
+        .btn-back {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 5px 12px;
+            background: linear-gradient(145deg, rgba(46, 204, 113, 0.9) 0%, rgba(39, 174, 96, 0.95) 100%);
+            border: 1px solid rgba(46, 204, 113, 0.5);
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            color: #fff;
+            font-size: 12px;
+        }
+        
+        .btn-back::before {
+            content: 'BACK';
+            font-size: 7px;
+            font-weight: 800;
+            letter-spacing: 1px;
+            color: rgba(255,255,255,0.7);
+            margin-bottom: 2px;
+        }
+        
+        .btn-back:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(46, 204, 113, 0.5);
+        }
+        
+        /* 介绍区域 */
+        .intro-section {
+            background: linear-gradient(145deg, rgba(20,20,20,0.9) 0%, rgba(10,10,10,0.95) 100%);
+            border-radius: 16px;
+            border: 1px solid rgba(46, 204, 113, 0.3);
+            padding: 30px;
+            margin-bottom: 20px;
+            box-shadow: 0 5px 30px rgba(0,0,0,0.8);
+            text-align: center;
+        }
+        
+        .intro-section h1 {
+            font-size: 2rem;
+            margin-bottom: 15px;
+            color: #2ecc71;
+            text-shadow: 0 0 20px rgba(46, 204, 113, 0.3);
+        }
+        
+        .intro-section p {
+            color: rgba(255,255,255,0.7);
+            line-height: 1.8;
+            font-size: 1rem;
+        }
+        
+        /* GitHub 链接按钮 */
+        .github-section {
+            margin: 25px 0;
+        }
+        
+        .btn-github {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            padding: 15px 30px;
+            background: linear-gradient(145deg, rgba(40,40,40,0.9) 0%, rgba(20,20,20,0.95) 100%);
+            border: 1px solid rgba(255,255,255,0.2);
+            border-radius: 10px;
+            color: #fff;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+        }
+        
+        .btn-github:hover {
+            transform: translateY(-3px);
+            border-color: rgba(46, 204, 113, 0.5);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        }
+        
+        .btn-github svg {
+            width: 24px;
+            height: 24px;
+            fill: currentColor;
+        }
+        
+        /* 表单区域 */
+        .form-section {
+            background: linear-gradient(145deg, rgba(20,20,20,0.9) 0%, rgba(10,10,10,0.95) 100%);
+            border-radius: 16px;
+            border: 1px solid rgba(46, 204, 113, 0.3);
+            padding: 30px;
+            box-shadow: 0 5px 30px rgba(0,0,0,0.8);
+        }
+        
+        .form-section h2 {
+            font-size: 1.3rem;
+            margin-bottom: 25px;
+            color: #2ecc71;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-group label {
+            display: block;
+            font-size: 13px;
+            font-weight: 600;
+            color: rgba(255,255,255,0.7);
+            margin-bottom: 8px;
+            letter-spacing: 1px;
+        }
+        
+        .form-group input,
+        .form-group textarea,
+        .form-group select {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid rgba(46, 204, 113, 0.3);
+            border-radius: 8px;
+            background: rgba(0,0,0,0.3);
+            color: white;
+            font-size: 14px;
+            transition: all 0.3s;
+            font-family: inherit;
+        }
+        
+        .form-group input:focus,
+        .form-group textarea:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: #2ecc71;
+            box-shadow: 0 0 10px rgba(46, 204, 113, 0.2);
+        }
+        
+        .form-group textarea {
+            min-height: 120px;
+            resize: vertical;
+        }
+        
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+        
+        /* 图片上传 */
+        .image-upload {
+            border: 2px dashed rgba(46, 204, 113, 0.3);
+            border-radius: 10px;
+            padding: 30px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+            background: rgba(0,0,0,0.2);
+        }
+        
+        .image-upload:hover {
+            border-color: rgba(46, 204, 113, 0.6);
+            background: rgba(46, 204, 113, 0.05);
+        }
+        
+        .image-upload input[type="file"] {
+            display: none;
+        }
+        
+        .image-upload-icon {
+            font-size: 2rem;
+            margin-bottom: 10px;
+        }
+        
+        .image-upload-text {
+            color: rgba(255,255,255,0.6);
+            font-size: 0.9rem;
+        }
+        
+        .image-preview {
+            max-width: 100%;
+            max-height: 300px;
+            border-radius: 8px;
+            margin-top: 15px;
+            border: 1px solid rgba(46, 204, 113, 0.3);
+        }
+        
+        /* 提交按钮 */
+        .form-actions {
+            text-align: center;
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid rgba(46, 204, 113, 0.2);
+        }
+        
+        .btn-submit {
+            padding: 15px 50px;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: 700;
+            letter-spacing: 2px;
+            cursor: pointer;
+            transition: all 0.3s;
+            background: linear-gradient(145deg, rgba(46, 204, 113, 0.9) 0%, rgba(39, 174, 96, 0.95) 100%);
+            color: white;
+            border: 1px solid rgba(46, 204, 113, 0.5);
+            text-transform: uppercase;
+        }
+        
+        .btn-submit:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 30px rgba(46, 204, 113, 0.4);
+        }
+        
+        .btn-submit:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+        
+        /* 提示消息 */
+        .toast {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 15px 25px;
+            border-radius: 8px;
+            color: white;
+            font-weight: 600;
+            z-index: 10001;
+            transform: translateX(150%);
+            transition: transform 0.3s ease;
+        }
+        
+        .toast.show {
+            transform: translateX(0);
+        }
+        
+        .toast.success {
+            background: linear-gradient(145deg, rgba(46, 204, 113, 0.9) 0%, rgba(39, 174, 96, 0.95) 100%);
+            border: 1px solid rgba(46, 204, 113, 0.5);
+        }
+        
+        .toast.error {
+            background: linear-gradient(145deg, rgba(231, 76, 60, 0.9) 0%, rgba(192, 57, 43, 0.95) 100%);
+            border: 1px solid rgba(231, 76, 60, 0.5);
+        }
+        
+        /* 响应式 */
+        @media (max-width: 600px) {
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+            
+            .intro-section h1 {
+                font-size: 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="join-container">
+        <!-- 顶部导航 -->
+        <header class="header">
+            <div class="logo">ShareX</div>
+            <button onclick="backToHall()" class="btn-back">返回大厅</button>
+        </header>
+        
+        <!-- 介绍区域 -->
+        <section class="intro-section">
+            <h1>🚀 加入 ShareX 开发团队</h1>
+            <p>
+                我们正在构建下一代社交娱乐平台！如果你有好的游戏创意或功能想法，<br>
+                欢迎提交你的开发计划，成为 ShareX 生态的贡献者。
+            </p>
+            
+            <!-- GitHub 链接 -->
+            <div class="github-section">
+                <a href="https://github.com/mokyarcher/GameWorld" target="_blank" class="btn-github">
+                    <svg viewBox="0 0 24 24"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg>
+                    查看项目源码
+                </a>
+            </div>
+        </section>
+        
+        <!-- 表单区域 -->
+        <section class="form-section">
+            <h2>📝 提交你的开发计划</h2>
+            
+            <form id="joinForm">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>项目名称 *</label>
+                        <input type="text" id="projectName" placeholder="给你的项目起个名字" required>
+                    </div>
+                    <div class="form-group">
+                        <label>项目类型 *</label>
+                        <select id="projectType" required>
+                            <option value="">请选择类型</option>
+                            <option value="game_card">卡牌游戏</option>
+                            <option value="game_board">棋盘游戏</option>
+                            <option value="game_casino">娱乐游戏</option>
+                            <option value="feature_social">社交功能</option>
+                            <option value="feature_tool">工具功能</option>
+                            <option value="other">其他</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label>核心功能描述 *</label>
+                    <textarea id="projectFeatures" placeholder="描述你的项目核心功能，玩法规则等..." required></textarea>
+                </div>
+                
+                <div class="form-group">
+                    <label>项目特点 / 创新点</label>
+                    <textarea id="projectHighlights" placeholder="你的项目有什么独特之处？与现有游戏/功能有什么不同？"></textarea>
+                </div>
+                
+                <div class="form-group">
+                    <label>简要规划</label>
+                    <textarea id="projectPlan" placeholder="描述你的开发计划、时间安排、需要的资源等..."></textarea>
+                </div>
+                
+                <div class="form-group">
+                    <label>规划图片 / 示意图</label>
+                    <div class="image-upload" onclick="document.getElementById('projectImage').click()">
+                        <input type="file" id="projectImage" accept="image/*" onchange="previewImage(event)">
+                        <div class="image-upload-icon">📷</div>
+                        <div class="image-upload-text">点击上传图片（可选）</div>
+                    </div>
+                    <img id="imagePreview" class="image-preview" style="display: none;">
+                </div>
+                
+                <div class="form-actions">
+                    <button type="submit" class="btn-submit" id="submitBtn">提交计划</button>
+                </div>
+            </form>
+        </section>
+    </div>
+    
+    <!-- 提示消息 -->
+    <div class="toast" id="toast"></div>
+    
+    <script>
+        const API_BASE = `${window.location.protocol}//${window.location.host}/api`;
+        const token = localStorage.getItem('token');
+        
+        // 验证登录
+        if (!token) {
+            window.location.href = 'login.html';
+        }
+        
+        // 图片预览
+        function previewImage(event) {
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const preview = document.getElementById('imagePreview');
+                    preview.src = e.target.result;
+                    preview.style.display = 'block';
+                };
+                reader.readAsDataURL(file);
+            }
+        }
+        
+        // 表单提交
+        document.getElementById('joinForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const submitBtn = document.getElementById('submitBtn');
+            submitBtn.disabled = true;
+            submitBtn.textContent = '提交中...';
+            
+            const formData = new FormData();
+            formData.append('projectName', document.getElementById('projectName').value);
+            formData.append('projectType', document.getElementById('projectType').value);
+            formData.append('projectFeatures', document.getElementById('projectFeatures').value);
+            formData.append('projectHighlights', document.getElementById('projectHighlights').value);
+            formData.append('projectPlan', document.getElementById('projectPlan').value);
+            
+            const imageFile = document.getElementById('projectImage').files[0];
+            if (imageFile) {
+                formData.append('image', imageFile);
+            }
+            
+            try {
+                const response = await fetch(`${API_BASE}/join`, {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    },
+                    body: formData
+                });
+                
+                const data = await response.json();
+                
+                if (data.success) {
+                    showToast('提交成功！我们会尽快审核你的计划', 'success');
+                    setTimeout(() => {
+                        backToHall();
+                    }, 2000);
+                } else {
+                    showToast(data.error || '提交失败', 'error');
+                }
+            } catch (error) {
+                console.error('提交失败:', error);
+                showToast('网络错误，请重试', 'error');
+            } finally {
+                submitBtn.disabled = false;
+                submitBtn.textContent = '提交计划';
+            }
+        });
+        
+        // 显示提示
+        function showToast(message, type = 'success') {
+            const toast = document.getElementById('toast');
+            toast.textContent = message;
+            toast.className = `toast ${type} show`;
+            
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, 3000);
+        }
+        
+        // 返回大厅
+        function backToHall() {
+            window.location.href = 'gamehall.html';
+        }
+    </script>
+</body>
+</html>

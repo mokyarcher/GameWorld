@@ -12,6 +12,7 @@ const friendsController = require('../modules/friends/friends.controller');
 const { router: onlineController, userOnline, userOffline, updateLocation } = require('../modules/online/online.controller');
 const mapController = require('../modules/map/map.controller');
 const feedbackController = require('../modules/feedback/feedback.controller');
+const joinController = require('../modules/join/join.controller');
 
 const app = express();
 const server = http.createServer(app);
@@ -57,6 +58,7 @@ async function startServer() {
   app.use('/api/online', onlineController);
   app.use('/api/map', mapController);
   app.use('/api/feedback', feedbackController);
+  app.use('/api/join', joinController);
   
   // 初始化管理员账户
   await initAdminAccount();

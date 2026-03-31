@@ -73,7 +73,7 @@ router.get('/announcements', async (req, res) => {
       {
         id: 2,
         title: '新手福利',
-        content: '新注册用户可获得 1000 筹码初始资金！',
+        content: '新注册用户可获得 1000 积分初始资金！',
         created_at: new Date().toISOString()
       }
     ];

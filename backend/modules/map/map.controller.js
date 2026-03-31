@@ -1,6 +1,6 @@
 /**
  * ShareX 地图分享模块 - 控制器
- * 完全独立，与德州扑克零耦合
+ * 完全独立，与贵州扑克零耦合
  */
 
 const express = require('express');

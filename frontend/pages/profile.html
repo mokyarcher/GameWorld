@@ -355,9 +355,26 @@
                 </div>
             </div>
             
+            <!-- 密码修改区域 -->
+            <div class="password-section" style="margin-top: 25px; padding-top: 25px; border-top: 1px solid rgba(220, 20, 60, 0.2);">
+                <h3 style="font-size: 12px; font-weight: 600; color: rgba(255,255,255,0.6); margin-bottom: 15px; letter-spacing: 1px;">🔐 修改密码</h3>
+                <div class="password-form" style="display: flex; flex-direction: column; gap: 12px;">
+                    <div>
+                        <input type="password" id="oldPassword" placeholder="当前密码" style="width: 100%; padding: 12px 15px; border: 1px solid rgba(220, 20, 60, 0.3); border-radius: 8px; background: rgba(0,0,0,0.3); color: white; font-size: 14px;">
+                    </div>
+                    <div>
+                        <input type="password" id="newPassword" placeholder="新密码（至少6位）" style="width: 100%; padding: 12px 15px; border: 1px solid rgba(220, 20, 60, 0.3); border-radius: 8px; background: rgba(0,0,0,0.3); color: white; font-size: 14px;">
+                    </div>
+                    <div>
+                        <input type="password" id="confirmPassword" placeholder="确认新密码" style="width: 100%; padding: 12px 15px; border: 1px solid rgba(220, 20, 60, 0.3); border-radius: 8px; background: rgba(0,0,0,0.3); color: white; font-size: 14px;">
+                    </div>
+                    <button onclick="changePassword()" class="btn-save" id="passwordBtn" style="margin-top: 5px; padding: 10px 30px; font-size: 13px;">修改密码</button>
+                </div>
+            </div>
+            
             <!-- 保存按钮 -->
-            <div class="form-actions">
-                <button onclick="saveProfile()" class="btn-save" id="saveBtn">确认修改</button>
+            <div class="form-actions" style="margin-top: 25px; padding-top: 20px; border-top: 1px solid rgba(220, 20, 60, 0.2);">
+                <button onclick="saveProfile()" class="btn-save" id="saveBtn">确认修改资料</button>
             </div>
         </div>
     </div>
@@ -502,6 +519,65 @@
             setTimeout(() => {
                 toast.classList.remove('show');
             }, 3000);
+        }
+        
+        // 修改密码
+        async function changePassword() {
+            const oldPassword = document.getElementById('oldPassword').value;
+            const newPassword = document.getElementById('newPassword').value;
+            const confirmPassword = document.getElementById('confirmPassword').value;
+            
+            // 验证
+            if (!oldPassword || !newPassword || !confirmPassword) {
+                showToast('请填写所有密码字段', 'error');
+                return;
+            }
+            
+            if (newPassword.length < 6) {
+                showToast('新密码至少需要6位', 'error');
+                return;
+            }
+            
+            if (newPassword !== confirmPassword) {
+                showToast('两次输入的新密码不一致', 'error');
+                return;
+            }
+            
+            const passwordBtn = document.getElementById('passwordBtn');
+            passwordBtn.disabled = true;
+            passwordBtn.textContent = '修改中...';
+            
+            try {
+                const response = await fetch(`${API_BASE}/user/password`, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${token}`
+                    },
+                    body: JSON.stringify({
+                        oldPassword: oldPassword,
+                        newPassword: newPassword
+                    })
+                });
+                
+                const data = await response.json();
+                
+                if (data.success) {
+                    showToast('密码修改成功！', 'success');
+                    // 清空密码输入框
+                    document.getElementById('oldPassword').value = '';
+                    document.getElementById('newPassword').value = '';
+                    document.getElementById('confirmPassword').value = '';
+                } else {
+                    showToast(data.error || '修改失败', 'error');
+                }
+            } catch (error) {
+                console.error('修改密码失败:', error);
+                showToast('网络错误，请重试', 'error');
+            } finally {
+                passwordBtn.disabled = false;
+                passwordBtn.textContent = '修改密码';
+            }
         }
         
         // 返回大厅

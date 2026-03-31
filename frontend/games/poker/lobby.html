@@ -900,6 +900,15 @@
                 display: none !important;
             }
         }
+        .notice-bar {
+            background: rgba(220, 20, 60, 0.15);
+            color: rgba(255,255,255,0.85);
+            font-size: 0.8rem;
+            text-align: center;
+            padding: 6px;
+            border-bottom: 1px solid rgba(220, 20, 60, 0.2);
+            letter-spacing: 1px;
+        }
     </style>
 </head>
 <body>
@@ -961,7 +970,7 @@
             <div class="poker-title-sub">GUIZHOU POKER</div>
         </div>
         
-        <!-- 右边：PLAYER/CHIPS + 按钮 -->
+        <!-- 右边：PLAYER/POINTS + 按钮 -->
         <div class="header-right">
             <div class="user-info">
                 <div class="user-badge">
@@ -969,7 +978,7 @@
                     <span id="username" class="badge-value">加载中...</span>
                 </div>
                 <div class="user-badge">
-                    <span class="badge-label">CHIPS</span>
+                    <span class="badge-label">POINTS</span>
                     <span id="chips" class="badge-value">0</span>
                 </div>
             </div>
@@ -989,6 +998,7 @@
             </div>
         </div>
     </div>
+    <div class="notice-bar">注意：该平台仅用于学习交流 无盈利行为</div>
 
     <div class="container">
         <div class="actions">
@@ -1002,7 +1012,7 @@
             <div class="room-list-header">
                 <div>房间名称</div>
                 <div>房主</div>
-                <div>盲注</div>
+                <div>基础分</div>
                 <div>人数</div>
                 <div>状态</div>
                 <div>操作</div>
@@ -1036,7 +1046,7 @@
                     </select>
                 </div>
                 <div class="form-group">
-                    <label>盲注设置</label>
+                    <label>基础分设置</label>
                     <select id="blindSetting">
                         <option value="10,20" selected>小盲 10 / 大盲 20</option>
                         <option value="20,40">小盲 20 / 大盲 40</option>
@@ -1479,7 +1489,7 @@
             const infoHtml = `
                 <div style="margin-bottom: 10px;"><strong>${inviteData.inviterName}</strong> 邀请你加入游戏</div>
                 <div style="color: #aaa; font-size: 0.9rem;">房间: ${inviteData.roomName}</div>
-                <div style="color: #aaa; font-size: 0.9rem;">盲注: ${inviteData.smallBlind}/${inviteData.bigBlind}</div>
+                <div style="color: #aaa; font-size: 0.9rem;">基础分: ${inviteData.smallBlind}/${inviteData.bigBlind}</div>
             `;
             
             document.getElementById('inviteInfo').innerHTML = infoHtml;
@@ -1506,5 +1516,31 @@
             hideInviteModal();
         }
     </script>
+    
+    <!-- 底部备案信息区域 -->
+    <style>
+        .footer-info {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: rgba(0, 0, 0, 0.85);
+            border-top: 1px solid rgba(220, 20, 60, 0.2);
+            padding: 8px 15px;
+            text-align: center;
+            font-size: 0.65rem;
+            color: rgba(255, 255, 255, 0.5);
+            z-index: 1000;
+        }
+        .footer-info .age-tip {
+            color: rgba(220, 20, 60, 0.9);
+            font-weight: 600;
+            margin-right: 8px;
+        }
+    </style>
+    <div class="footer-info">
+        <span class="age-tip">⚠️ 18+ 学习交流</span>
+        <span>无盈利行为 | 备案号：待申请</span>
+    </div>
 </body>
 </html>

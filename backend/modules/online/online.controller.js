@@ -14,9 +14,9 @@ const LOCATION_NAMES = {
   'profile': '个人资料',
   'friends': '好友页面',
   'admin': '管理后台',
-  'poker_lobby': '德州扑克-大厅',
-  'poker_room': '德州扑克-等待房间',
-  'poker_game': '德州扑克-游戏中',
+  'poker_lobby': '贵州扑克-大厅',
+  'poker_room': '贵州扑克-等待房间',
+  'poker_game': '贵州扑克-游戏中',
   'unknown': '未知位置'
 };
 

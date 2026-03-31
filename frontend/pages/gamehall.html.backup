@@ -828,7 +828,7 @@
                 </div>
                 
                 <div class="panel">
-                    <h3>🏆 筹码排行榜</h3>
+                    <h3>🏆 积分排行榜</h3>
                     <div id="leaderboard" class="leaderboard">
                         <p>加载中...</p>
                     </div>
@@ -1058,8 +1058,8 @@
                 gamesData = [
                     {
                         game_code: 'poker',
-                        game_name: '德州扑克',
-                        description: '经典的德州扑克游戏，考验你的牌技和心理',
+                        game_name: '贵州扑克',
+                        description: '经典的贵州扑克游戏，考验你的牌技和心理',
                         min_chips: 1000,
                         max_players: 9
                     },

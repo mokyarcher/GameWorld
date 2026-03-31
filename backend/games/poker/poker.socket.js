@@ -207,7 +207,7 @@ async function botAction(game, io, player) {
       action = 'call';
       amount = toCall;
     } else {
-      // 筹码不够，全下
+      // 积分不够，全下
       action = 'allin';
       amount = player.chips;
     }
@@ -593,7 +593,7 @@ async function processGameDecisions(io, roomId, game) {
   game.players.forEach(p => {
     const choice = roomChoices.get(p.userId);
     
-    // 人机自动继续（如果筹码足够且还有真人玩家）
+    // 人机自动继续（如果积分足够且还有真人玩家）
     if (p.isBot) {
       if (p.chips >= 1000) {
         console.log(`bot ${p.nickname} auto continue with chips ${p.chips}`);
@@ -605,7 +605,7 @@ async function processGameDecisions(io, roomId, game) {
       return;
     }
     
-    // 明确选择继续且筹码足够
+    // 明确选择继续且积分足够
     if (choice === 'continue' && p.chips >= 1000) {
       continuingPlayers.push(p);
     } else if (choice === 'leave') {
@@ -615,11 +615,11 @@ async function processGameDecisions(io, roomId, game) {
       // 立即从数据库删除，防止玩家重新进入房间
       db.run('DELETE FROM poker_room_players WHERE room_id = ? AND user_id = ?', [roomId, p.userId]);
     } else if (!choice && p.chips >= 1000) {
-      // 未选择但筹码足够，自动继续
+      // 未选择但积分足够，自动继续
       console.log(`player ${p.nickname} did not choose, auto continue with chips ${p.chips}`);
       continuingPlayers.push(p);
     } else {
-      // 选择继续但筹码不足，或未选择且筹码不足
+      // 选择继续但积分不足，或未选择且积分不足
       if (choice === 'continue' && p.chips < 1000) {
         console.log(`player ${p.nickname} chose continue but chips ${p.chips} < 1000, auto leave`);
       } else if (!choice && p.chips < 1000) {

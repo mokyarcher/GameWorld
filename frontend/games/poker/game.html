@@ -150,7 +150,7 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            padding: 15px;
+            padding: 10px 15px 5px;
             min-height: 0;
             overflow: hidden;
         }
@@ -766,12 +766,12 @@
             background: linear-gradient(135deg, #9b59b6, #8e44ad);
         }
 
-        /* 加注 - 橙色 */
+        /* 加小分 - 橙色 */
         .player-action-display.raise {
             background: linear-gradient(135deg, #dc143c, #8b0000);
         }
 
-        /* 全下 - 红色 */
+        /* 大积分 - 红色 */
         .player-action-display.allin {
             background: linear-gradient(135deg, #e74c3c, #c0392b);
             animation: action-pop 0.3s ease, action-shine 1s infinite;
@@ -877,10 +877,10 @@
         }
 
         .btn-action {
-            padding: clamp(12px, 3.5vw, 18px) clamp(20px, 5vw, 40px);
+            padding: clamp(8px, 2.5vw, 14px) clamp(16px, 4vw, 32px);
             border: none;
-            border-radius: 12px;
-            font-size: clamp(0.9rem, 2.5vw, 1.2rem);
+            border-radius: 10px;
+            font-size: clamp(0.85rem, 2.2vw, 1.1rem);
             font-weight: 700;
             cursor: pointer;
             transition: all 0.3s ease;
@@ -1302,8 +1302,9 @@
             }
             
             .action-area {
-                padding: 8px 10px;
-                min-height: 55px;
+                padding: 4px 8px;
+                min-height: 42px;
+                margin-bottom: 38px;
             }
             
             .btn-action {
@@ -1429,9 +1430,9 @@
             
             /* 操作区域调整 */
             .action-area {
-                padding: 10px 12px;
-                min-height: 65px;
-                gap: 8px;
+                padding: 5px 10px;
+                min-height: 48px;
+                gap: 6px;
             }
             
             /* 操作按钮调整 */
@@ -1692,6 +1693,15 @@
                 display: none !important;
             }
         }
+        .notice-bar {
+            background: rgba(220, 20, 60, 0.15);
+            color: rgba(255,255,255,0.85);
+            font-size: 0.8rem;
+            text-align: center;
+            padding: 6px;
+            border-bottom: 1px solid rgba(220, 20, 60, 0.2);
+            letter-spacing: 1px;
+        }
     </style>
 </head>
 <body>
@@ -1709,7 +1719,7 @@
         <div class="top-bar">
             <div class="room-info">
                 <span class="room-name" id="roomName">贵州扑克</span>
-                <span class="blinds-info" id="blindsInfo">盲注: 10/20</span>
+                <span class="blinds-info" id="blindsInfo">基础分: 10/20</span>
             </div>
             <div class="top-actions">
                 <button class="badge-btn" onclick="backToLobby()">
@@ -1727,15 +1737,16 @@
             </div>
 
         </div>
+        <div class="notice-bar">注意：该平台仅用于学习交流 无盈利行为</div>
 
         <!-- 游戏桌区域 -->
         <div class="table-area">
             <div class="poker-table">
                 <!-- 碳纤维纹理 -->
                 <div class="carbon-fiber"></div>
-                <!-- 底池 -->
+                <!-- 累计积分 -->
                 <div class="pot-area">
-                    <div class="pot-label">底池</div>
+                    <div class="pot-label">累计积分</div>
                     <div class="pot-amount" id="potDisplay">0</div>
                 </div>
 
@@ -1765,15 +1776,15 @@
             <div class="action-buttons" id="actionButtons" style="display: none;">
                 <button class="btn-action btn-fold" onclick="playerAction('fold')">弃牌</button>
                 <button class="btn-action btn-check" id="btnCheck" onclick="playerAction('check')">看牌</button>
-                <button class="btn-action btn-call" id="btnCall" onclick="playerAction('call')">跟注</button>
-                <button class="btn-action btn-raise" id="btnRaise" onclick="showRaiseControls()">加注</button>
-                <button class="btn-action btn-allin" onclick="playerAction('allin')">全下</button>
+                <button class="btn-action btn-call" id="btnCall" onclick="playerAction('call')">加分</button>
+                <button class="btn-action btn-raise" id="btnRaise" onclick="showRaiseControls()">加小分</button>
+                <button class="btn-action btn-allin" onclick="playerAction('allin')">大积分</button>
             </div>
             <div class="bet-controls" id="betControls" style="display: none;">
-                <span>下注:</span>
+                <span>加分:</span>
                 <input type="range" class="bet-slider" id="betSlider" min="20" max="1000" step="10" value="20">
                 <span class="bet-amount" id="betAmountDisplay">20</span>
-                <button class="btn-action btn-raise" onclick="confirmRaise()">确认</button>
+                <button class="btn-action btn-raise" onclick="confirmRaise()">加分</button>
                 <button class="btn-action btn-fold" onclick="hideRaiseControls()">取消</button>
             </div>
         </div>
@@ -2439,7 +2450,7 @@ socket.on('game-ending-soon', (data) => {
 
             document.getElementById('roomName').textContent = '贵州扑克';
             document.getElementById('blindsInfo').textContent = 
-                `盲注: ${gameState.smallBlind}/${gameState.bigBlind}`;
+                `基础分: ${gameState.smallBlind}/${gameState.bigBlind}`;
             
             updatePot(gameState.pot);
             updateCommunityCards(gameState.communityCards);
@@ -2454,7 +2465,7 @@ socket.on('game-ending-soon', (data) => {
             highlightCurrentPlayer(data.currentPlayer);
         }
 
-        // 更新底池
+        // 更新累计积分
         function updatePot(amount) {
             document.getElementById('potDisplay').textContent = amount;
         }
@@ -2553,9 +2564,9 @@ socket.on('game-ending-soon', (data) => {
                     const actionLabels = {
                         'fold': '弃牌',
                         'check': '看牌',
-                        'call': '跟注',
-                        'raise': '加注',
-                        'allin': '全下'
+                        'call': '加分',
+                        'raise': '加小分',
+                        'allin': '大积分'
                     };
                     const actionLabel = actionLabels[playerAction.action] || playerAction.action;
                     actionText = playerAction.amount > 0 ? `${actionLabel} ${playerAction.amount}` : actionLabel;
@@ -2673,10 +2684,10 @@ socket.on('game-ending-soon', (data) => {
             btnRaise.style.display = data.canRaise ? 'inline-block' : 'none';
 
             if (data.canCall) {
-                btnCall.textContent = `跟注 ${data.callAmount}`;
+                btnCall.textContent = `加分 ${data.callAmount}`;
             }
 
-            // 更新加注滑块
+            // 更新加小分滑块
             const slider = document.getElementById('betSlider');
             slider.min = data.minRaise;
             slider.max = data.maxRaise;
@@ -2708,7 +2719,7 @@ socket.on('game-ending-soon', (data) => {
             }, 1000);
         }
 
-        // 显示加注控制
+        // 显示加小分控制
         function showRaiseControls() {
             document.getElementById('actionButtons').style.display = 'none';
             document.getElementById('betControls').style.display = 'flex';
@@ -2719,16 +2730,16 @@ socket.on('game-ending-soon', (data) => {
             };
         }
 
-        // 隐藏加注控制
+        // 隐藏加小分控制
         function hideRaiseControls() {
             document.getElementById('actionButtons').style.display = 'flex';
             document.getElementById('betControls').style.display = 'none';
         }
 
-        // 确认加注
+        // 确认加小分
         function confirmRaise() {
             const amount = parseInt(document.getElementById('betSlider').value);
-            // 先隐藏加注控制，再发送操作
+            // 先隐藏加小分控制，再发送操作
             document.getElementById('betControls').style.display = 'none';
             playerAction('raise', amount);
         }
@@ -2764,9 +2775,9 @@ socket.on('game-ending-soon', (data) => {
             const texts = {
                 'fold': '弃牌',
                 'check': '看牌',
-                'call': '跟注',
-                'raise': '加注',
-                'allin': '全下'
+                'call': '加分',
+                'raise': '加小分',
+                'allin': '大积分'
             };
             return texts[action] || action;
         }
@@ -3046,5 +3057,32 @@ socket.on('game-ending-soon', (data) => {
         // 初始显示等待
         document.getElementById('waitingText').style.display = 'block';
     </script>
+    
+    <!-- 底部备案信息区域 -->
+    <style>
+        .footer-info {
+            position: fixed;
+            bottom: 0;
+            right: 0;
+            background: rgba(0, 0, 0, 0.85);
+            border-top: 1px solid rgba(220, 20, 60, 0.2);
+            border-left: 1px solid rgba(220, 20, 60, 0.2);
+            padding: 6px 12px;
+            text-align: right;
+            font-size: 0.6rem;
+            color: rgba(255, 255, 255, 0.5);
+            z-index: 1000;
+            border-radius: 8px 0 0 0;
+        }
+        .footer-info .age-tip {
+            color: rgba(220, 20, 60, 0.9);
+            font-weight: 600;
+            margin-right: 8px;
+        }
+    </style>
+    <div class="footer-info">
+        <span class="age-tip">⚠️ 18+ 学习交流</span>
+        <span>无盈利 | 备案号：待申请</span>
+    </div>
 </body>
 </html>
