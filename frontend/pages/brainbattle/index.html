@@ -18,6 +18,8 @@
             color: #fff;
             min-height: 100vh;
             overflow-x: hidden;
+            display: flex;
+            flex-direction: column;
         }
 
         /* 背景动画 */
@@ -78,6 +80,19 @@
             100% { transform: translateY(-100vh) rotate(720deg); opacity: 0; }
         }
 
+        /* 顶部导航 - 全宽 */
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 40px;
+            border-bottom: 1px solid rgba(220, 20, 60, 0.3);
+            height: 80px;
+            background: linear-gradient(180deg, rgba(10,10,10,0.95) 0%, rgba(10,10,10,0.8) 100%);
+            position: relative;
+            z-index: 100;
+        }
+
         /* 主容器 */
         .container {
             position: relative;
@@ -85,18 +100,9 @@
             max-width: 1200px;
             margin: 0 auto;
             padding: 20px;
-            min-height: 100vh;
+            flex: 1;
             display: flex;
             flex-direction: column;
-        }
-
-        /* 顶部导航 */
-        .header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 20px 0;
-            border-bottom: 1px solid rgba(220, 20, 60, 0.3);
         }
 
         .header-right {
@@ -181,7 +187,7 @@
         /* 用户状态 */
         .user-stats {
             display: flex;
-            gap: 20px;
+            gap: 10px;
             align-items: center;
         }
 
@@ -189,12 +195,13 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            padding: 10px 20px;
+            padding: 6px 14px;
             background: linear-gradient(145deg, rgba(20,20,20,0.9), rgba(10,10,10,0.95));
             border: 1px solid rgba(220, 20, 60, 0.3);
-            border-radius: 12px;
+            border-radius: 8px;
             position: relative;
             overflow: hidden;
+            min-width: 70px;
         }
 
         .stat-badge::before {
@@ -208,15 +215,15 @@
         }
 
         .stat-label {
-            font-size: 0.6rem;
-            color: rgba(255,255,255,0.4);
-            letter-spacing: 2px;
-            margin-bottom: 4px;
+            font-size: 0.55rem;
+            color: rgba(255,255,255,0.5);
+            letter-spacing: 1px;
+            margin-bottom: 2px;
         }
 
         .stat-value {
-            font-size: 1.2rem;
-            font-weight: 800;
+            font-size: 0.95rem;
+            font-weight: 700;
             color: #dc143c;
             text-shadow: 0 0 10px rgba(220, 20, 60, 0.3);
         }
@@ -231,26 +238,31 @@
             text-shadow: 0 0 10px rgba(255, 215, 0, 0.4);
         }
 
-        /* 返回按钮 */
+        /* 返回按钮 - 样式02风格 */
         .btn-back, .btn-nav {
             display: flex;
+            flex-direction: column;
             align-items: center;
-            gap: 8px;
-            padding: 10px 20px;
-            background: linear-gradient(145deg, rgba(170, 20, 60, 0.9), rgba(139, 0, 0, 0.95));
-            border: 2px solid rgba(220, 20, 60, 0.5);
-            border-radius: 10px;
+            justify-content: center;
+            padding: 6px 16px;
+            background: linear-gradient(145deg, rgba(220, 20, 60, 0.9), rgba(139, 0, 0, 0.95));
+            border: 2px solid rgba(220, 20, 60, 0.6);
+            border-radius: 8px;
             color: #fff;
             font-weight: 700;
             cursor: pointer;
             transition: all 0.3s;
             font-family: inherit;
-            font-size: 0.95rem;
+            font-size: 0.75rem;
+            min-width: 70px;
+            height: 42px;
+            line-height: 1.2;
         }
 
         .btn-back:hover, .btn-nav:hover {
             transform: translateY(-2px);
-            box-shadow: 0 8px 25px rgba(220, 20, 60, 0.4);
+            box-shadow: 0 5px 15px rgba(220, 20, 60, 0.4);
+            background: linear-gradient(145deg, rgba(220, 20, 60, 1), rgba(139, 0, 0, 1));
         }
 
         .btn-nav {
@@ -259,7 +271,19 @@
 
         .btn-nav:hover {
             background: linear-gradient(145deg, rgba(220, 20, 60, 0.95), rgba(170, 20, 60, 1));
-            box-shadow: 0 8px 25px rgba(220, 20, 60, 0.5);
+            box-shadow: 0 5px 15px rgba(220, 20, 60, 0.5);
+        }
+
+        .btn-nav .btn-label-small {
+            font-size: 0.6rem;
+            color: rgba(255,255,255,0.7);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .btn-nav .btn-label-large {
+            font-size: 0.85rem;
+            font-weight: 700;
         }
 
         /* 主内容区 */
@@ -693,41 +717,53 @@
     <div class="bg-animation"></div>
     <div class="particles" id="particles"></div>
 
-    <div class="container">
-        <!-- 顶部导航 -->
-        <header class="header">
-            <!-- 左侧：ShareX Logo -->
-            <div class="logo" onclick="goToGameHall()" style="display: flex; align-items: center; gap: 8px;">
-                <span style="font-size: 14px; font-weight: 700; letter-spacing: 2px; color: #dc143c; background: rgba(220, 20, 60, 0.1); padding: 4px 10px; border-radius: 4px; border: 1px solid rgba(220, 20, 60, 0.3);">SHARE</span>
-                <span style="color: #fff; font-size: 18px; font-weight: 800;">X</span>
+    <!-- 顶部导航 - 移出 container 实现全宽 -->
+    <header class="header">
+        <!-- 左侧区域：ShareX Logo + PLAYER/POINTS -->
+        <div style="display: flex; align-items: center; gap: 20px;">
+            <!-- ShareX Logo -->
+            <div class="logo" onclick="goToGameHall()" style="display: flex; align-items: center; gap: 6px;">
+                <span style="font-size: 11px; font-weight: 700; letter-spacing: 2px; color: #dc143c; background: rgba(220, 20, 60, 0.1); padding: 3px 8px; border-radius: 4px; border: 1px solid rgba(220, 20, 60, 0.3);">SHARE</span>
+                <span style="color: #dc143c; font-size: 16px; font-weight: 800;">X</span>
             </div>
-
-            <!-- 中间：脑力对抗 -->
-            <div style="position: absolute; left: 50%; transform: translateX(-50%); display: flex; flex-direction: column; align-items: center; gap: 2px;">
-                <span style="font-size: 22px; font-weight: 800; color: #fff; letter-spacing: 4px;">脑力对抗</span>
-                <span style="font-size: 11px; font-weight: 600; color: #dc143c; letter-spacing: 3px; text-transform: uppercase;">Brain Battle</span>
-            </div>
-
-            <div class="user-stats">
+            
+            <!-- PLAYER / POINTS -->
+            <div class="user-stats" style="gap: 8px;">
                 <div class="stat-badge rank-badge">
-                    <span class="stat-label">RANK</span>
-                    <span class="stat-value" id="userRank">青铜脑瓜</span>
+                    <span class="stat-label">PLAYER</span>
+                    <span class="stat-value" id="userRankName">Admin</span>
                 </div>
                 <div class="stat-badge">
-                    <span class="stat-label">RATING</span>
-                    <span class="stat-value" id="userRating">500</span>
+                    <span class="stat-label">POINTS</span>
+                    <span class="stat-value" id="userRating">888.9K</span>
                 </div>
-                <button class="btn-back btn-nav" onclick="showLeaderboard()">
-                    <span>🏆</span>
-                    <span>积分榜</span>
-                </button>
-                <button class="btn-back btn-nav" onclick="goToGameHall()">
-                    <span>←</span>
-                    <span>返回大厅</span>
-                </button>
             </div>
-        </header>
+        </div>
 
+        <!-- 中间：脑力对抗 -->
+        <div style="position: absolute; left: 50%; transform: translateX(-50%); display: flex; flex-direction: column; align-items: center; gap: 1px;">
+            <span style="font-size: 20px; font-weight: 800; color: #dc143c; letter-spacing: 6px; text-shadow: 0 0 20px rgba(220, 20, 60, 0.5);">脑力对抗</span>
+            <span style="font-size: 10px; font-weight: 600; color: rgba(220, 20, 60, 0.8); letter-spacing: 4px; text-transform: uppercase;">Brain Battle</span>
+        </div>
+
+        <!-- 右侧：按钮组 -->
+        <div class="user-stats" style="gap: 10px;">
+            <button class="btn-back btn-nav" onclick="showLeaderboard()">
+                <span class="btn-label-small">RANK</span>
+                <span class="btn-label-large">排行榜</span>
+            </button>
+            <button class="btn-back btn-nav" onclick="goToGameHall()">
+                <span class="btn-label-small">BACK</span>
+                <span class="btn-label-large">返回大厅</span>
+            </button>
+            <button class="btn-back btn-nav" onclick="logout()">
+                <span class="btn-label-small">EXIT</span>
+                <span class="btn-label-large">退出</span>
+            </button>
+        </div>
+    </header>
+
+    <div class="container">
         <!-- 主内容 -->
         <main class="main-content">
             <!-- 模式选择 -->

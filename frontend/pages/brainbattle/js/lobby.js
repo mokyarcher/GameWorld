@@ -184,14 +184,30 @@ async function loadUserData() {
 function updateUserDisplay() {
     if (!currentUser) return;
     
-    const rank = getRankByRating(currentUser.brain_rating || 500);
-    document.getElementById('userRank').textContent = rank.name;
-    document.getElementById('userRating').textContent = currentUser.brain_rating || 500;
+    // 更新显示名称（显示昵称或用户名）
+    const displayName = currentUser.nickname || currentUser.username || 'Admin';
+    const rankNameEl = document.getElementById('userRankName');
+    if (rankNameEl) rankNameEl.textContent = displayName;
     
-    document.getElementById('statTotalGames').textContent = currentUser.brain_total || 0;
-    document.getElementById('statWinRate').textContent = calculateWinRate();
-    document.getElementById('statWinStreak').textContent = currentUser.brain_streak || 0;
-    document.getElementById('statMaxRating').textContent = currentUser.brain_max_rating || 500;
+    // 更新积分显示
+    const ratingEl = document.getElementById('userRating');
+    if (ratingEl) {
+        const rating = currentUser.brain_rating || 500;
+        ratingEl.textContent = rating >= 1000 ? (rating / 1000).toFixed(1) + 'K' : rating;
+    }
+    
+    // 更新统计数据
+    const statTotalGamesEl = document.getElementById('statTotalGames');
+    if (statTotalGamesEl) statTotalGamesEl.textContent = currentUser.brain_total || 0;
+    
+    const statWinRateEl = document.getElementById('statWinRate');
+    if (statWinRateEl) statWinRateEl.textContent = calculateWinRate();
+    
+    const statWinStreakEl = document.getElementById('statWinStreak');
+    if (statWinStreakEl) statWinStreakEl.textContent = currentUser.brain_streak || 0;
+    
+    const statMaxRatingEl = document.getElementById('statMaxRating');
+    if (statMaxRatingEl) statMaxRatingEl.textContent = currentUser.brain_max_rating || 500;
 }
 
 // 根据积分获取段位
@@ -575,6 +591,14 @@ document.addEventListener('click', (e) => {
 // 返回游戏大厅
 function goToGameHall() {
     window.location.href = '../gamehall.html';
+}
+
+// 退出登录
+function logout() {
+    if (confirm('确定要退出登录吗？')) {
+        localStorage.removeItem('token');
+        window.location.href = '../login.html';
+    }
 }
 
 // 键盘快捷键
