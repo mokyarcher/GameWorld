@@ -63,6 +63,13 @@ CREATE TABLE IF NOT EXISTS brainbattle_user_question_history (
     UNIQUE(user_id, question_id)      -- 每个玩家每道题只记录一次
 );
 
+-- 用户脑力对决统计字段（需要添加到 users 表）
+-- ALTER TABLE users ADD COLUMN brain_total INTEGER DEFAULT 0;
+-- ALTER TABLE users ADD COLUMN brain_wins INTEGER DEFAULT 0;
+-- ALTER TABLE users ADD COLUMN brain_streak INTEGER DEFAULT 0;
+-- ALTER TABLE users ADD COLUMN brain_rating INTEGER DEFAULT 500;
+-- ALTER TABLE users ADD COLUMN brain_max_rating INTEGER DEFAULT 500;
+
 -- 注意：题库数据不再通过此文件硬编码插入
 -- 请使用后台管理界面添加题目，或通过 admin API 批量导入
 -- 路径：/admin/brainbattle/questions

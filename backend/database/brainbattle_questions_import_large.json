@@ -1,0 +1,1962 @@
+[
+  {
+    "type": "速算题",
+    "difficulty": 2,
+    "question": "125 × 8 = ?",
+    "options": [
+      "1000",
+      "800",
+      "900",
+      "1100"
+    ],
+    "answer": 0,
+    "explanation": "125×8=1000",
+    "tags": "数学,乘法"
+  },
+  {
+    "type": "速算题",
+    "difficulty": 3,
+    "question": "91 + 24 = ?",
+    "options": [
+      "129",
+      "110",
+      "115",
+      "116"
+    ],
+    "answer": 2,
+    "explanation": "91+24=115",
+    "tags": "数学,加法"
+  },
+  {
+    "type": "知识题",
+    "difficulty": 2,
+    "question": "人体内有多少块骨头？",
+    "options": [
+      "196",
+      "206",
+      "216",
+      "226"
+    ],
+    "answer": 1,
+    "explanation": "成年人有206块骨头",
+    "tags": "生物,人体"
+  },
+  {
+    "type": "趣味题",
+    "difficulty": 1,
+    "question": "什么笔不能写字？",
+    "options": [
+      "钢笔",
+      "毛笔",
+      "电笔",
+      "铅笔"
+    ],
+    "answer": 2,
+    "explanation": "电笔是用来测电的",
+    "tags": "趣味,脑筋急转弯"
+  },
+  {
+    "type": "趣味题",
+    "difficulty": 2,
+    "question": "什么井不出水？",
+    "options": [
+      "水井",
+      "盐井",
+      "天井",
+      "油井"
+    ],
+    "answer": 2,
+    "explanation": "天井是院子里的空地",
+    "tags": "趣味,脑筋急转弯"
+  },
+  {
+    "type": "反应题",
+    "difficulty": 1,
+    "question": "A A B B A A ?",
+    "options": [
+      "A",
+      "B",
+      "C",
+      "D"
+    ],
+    "answer": 1,
+    "explanation": "两个A两个B循环",
+    "tags": "反应,规律"
+  },
+  {
+    "type": "逻辑题",
+    "difficulty": 3,
+    "question": "找规律：3, 8, 13, 18, ?",
+    "options": [
+      "28",
+      "18",
+      "24",
+      "23"
+    ],
+    "answer": 3,
+    "explanation": "等差数列，公差为5，下一个是23",
+    "tags": "逻辑,数列"
+  },
+  {
+    "type": "逻辑题",
+    "difficulty": 1,
+    "question": "A和B是兄弟，A是B的哥哥，B是A的？",
+    "options": [
+      "哥哥",
+      "弟弟",
+      "叔叔",
+      "爸爸"
+    ],
+    "answer": 1,
+    "explanation": "B是A的弟弟",
+    "tags": "逻辑,关系"
+  },
+  {
+    "type": "趣味题",
+    "difficulty": 3,
+    "question": "什么球不能踢？",
+    "options": [
+      "足球",
+      "篮球",
+      "地球",
+      "排球"
+    ],
+    "answer": 2,
+    "explanation": "地球是行星",
+    "tags": "趣味,脑筋急转弯"
+  },
+  {
+    "type": "速算题",
+    "difficulty": 2,
+    "question": "120×25 = ?",
+    "options": [
+      "3000",
+      "2500",
+      "3500",
+      "2800"
+    ],
+    "answer": 0,
+    "explanation": "120×25=3000",
+    "tags": "数学,乘法"
+  },
+  {
+    "type": "速算题",
+    "difficulty": 1,
+    "question": "53 + 45 = ?",
+    "options": [
+      "94",
+      "101",
+      "114",
+      "98"
+    ],
+    "answer": 3,
+    "explanation": "53+45=98",
+    "tags": "数学,加法"
+  },
+  {
+    "type": "反应题",
+    "difficulty": 1,
+    "question": "大 大 小 小 中 中 大 ?",
+    "options": [
+      "大",
+      "小",
+      "中",
+      "微"
+    ],
+    "answer": 0,
+    "explanation": "两两重复的循环规律",
+    "tags": "反应,规律"
+  },
+  {
+    "type": "逻辑题",
+    "difficulty": 1,
+    "question": "如果下雨地就湿，地湿了，所以？",
+    "options": [
+      "下雨了",
+      "可能下雨了",
+      "一定下雨了",
+      "没下雨"
+    ],
+    "answer": 1,
+    "explanation": "地湿不一定是下雨",
+    "tags": "逻辑,充分必要"
+  },
+  {
+    "type": "逻辑题",
+    "difficulty": 3,
+    "question": "说谎者悖论：我正在说谎。这句话？",
+    "options": [
+      "真话",
+      "假话",
+      "悖论",
+      "不确定"
+    ],
+    "answer": 2,
+    "explanation": "经典的逻辑悖论",
+    "tags": "逻辑,悖论"
+  },
+  {
+    "type": "知识题",
+    "difficulty": 1,
+    "question": "《清明上河图》描绘的是哪个城市的景象？",
+    "options": [
+      "洛阳",
+      "开封",
+      "杭州",
+      "南京"
+    ],
+    "answer": 1,
+    "explanation": "描绘北宋都城汴京（今开封）",
+    "tags": "艺术,历史"
+  },
+  {
+    "type": "逻辑题",
+    "difficulty": 2,
+    "question": "一斤棉花和一斤铁，哪个重？",
+    "options": [
+      "棉花",
+      "铁",
+      "一样重",
+      "无法比较"
+    ],
+    "answer": 2,
+    "explanation": "都是一斤，一样重",
+    "tags": "逻辑,陷阱"
+  },
+  {
+    "type": "速算题",
+    "difficulty": 1,
+    "question": "99 + 58 = ?",
+    "options": [
+      "157",
+      "147",
+      "167",
+      "155"
+    ],
+    "answer": 0,
+    "explanation": "99+58=100+58-1=157",
+    "tags": "数学,加法"
+  },
+  {
+    "type": "逻辑题",
+    "difficulty": 2,
+    "question": "所有鸟都会飞，企鹅是鸟，那么企鹅？",
+    "options": [
+      "会飞",
+      "不会飞",
+      "可能是鸟",
+      "不确定"
+    ],
+    "answer": 1,
+    "explanation": "前提错误，企鹅不会飞",
+    "tags": "逻辑,演绎"
+  },
+  {
+    "type": "知识题",
+    "difficulty": 1,
+    "question": "维生素C缺乏会导致？",
+    "options": [
+      "夜盲症",
+      "坏血病",
+      "佝偻病",
+      "贫血"
+    ],
+    "answer": 1,
+    "explanation": "缺乏维生素C会导致坏血病",
+    "tags": "生物,医学"
+  },
+  {
+    "type": "逻辑题",
+    "difficulty": 3,
+    "question": "猫不喜欢吃香菜，我是猫，所以？",
+    "options": [
+      "我喜欢香菜",
+      "我不喜欢吃香菜",
+      "可能喜欢",
+      "无法确定"
+    ],
+    "answer": 1,
+    "explanation": "逻辑演绎，前提不一定对但推理形式正确",
+    "tags": "逻辑,演绎"
+  },
+  {
+    "type": "知识题",
+    "difficulty": 2,
+    "question": "奥运会每几年举办一次？",
+    "options": [
+      "2",
+      "3",
+      "4",
+      "5"
+    ],
+    "answer": 2,
+    "explanation": "奥运会每4年一届",
+    "tags": "体育,常识"
+  },
+  {
+    "type": "趣味题",
+    "difficulty": 1,
+    "question": "什么鸟不会飞？",
+    "options": [
+      "老鹰",
+      "鸵鸟",
+      "麻雀",
+      "燕子"
+    ],
+    "answer": 1,
+    "explanation": "鸵鸟不会飞",
+    "tags": "趣味,常识"
+  },
+  {
+    "type": "速算题",
+    "difficulty": 3,
+    "question": "38 + 67 = ?",
+    "options": [
+      "105",
+      "116",
+      "100",
+      "115"
+    ],
+    "answer": 0,
+    "explanation": "38+67=105",
+    "tags": "数学,加法"
+  },
+  {
+    "type": "知识题",
+    "difficulty": 3,
+    "question": "蜜蜂采蜜后对同伴跳什么舞？",
+    "options": [
+      "圆圈舞",
+      "8字舞",
+      "摇摆舞",
+      "芭蕾舞"
+    ],
+    "answer": 1,
+    "explanation": "蜜蜂通过8字舞传递蜜源信息",
+    "tags": "生物,昆虫"
+  },
+  {
+    "type": "知识题",
+    "difficulty": 1,
+    "question": "世界上最大的沙漠是？",
+    "options": [
+      "撒哈拉沙漠",
+      "塔克拉玛干沙漠",
+      "戈壁沙漠",
+      "阿拉伯沙漠"
+    ],
+    "answer": 0,
+    "explanation": "撒哈拉沙漠面积约906万平方公里",
+    "tags": "地理,常识"
+  },
+  {
+    "type": "逻辑题",
+    "difficulty": 2,
+    "question": "找规律：7, 12, 17, 22, ?",
+    "options": [
+      "27",
+      "32",
+      "22",
+      "28"
+    ],
+    "answer": 0,
+    "explanation": "等差数列，公差为5，下一个是27",
+    "tags": "逻辑,数列"
+  },
+  {
+    "type": "趣味题",
+    "difficulty": 2,
+    "question": "什么鼓不用敲？",
+    "options": [
+      "腰鼓",
+      "大鼓",
+      "鼓掌",
+      "铜鼓"
+    ],
+    "answer": 2,
+    "explanation": "鼓掌不需要敲",
+    "tags": "趣味,脑筋急转弯"
+  },
+  {
+    "type": "逻辑题",
+    "difficulty": 3,
+    "question": "找规律：3, 8, 13, 18, ?",
+    "options": [
+      "18",
+      "23",
+      "28",
+      "24"
+    ],
+    "answer": 1,
+    "explanation": "等差数列，公差为5，下一个是23",
+    "tags": "逻辑,数列"
+  },
+  {
+    "type": "知识题",
+    "difficulty": 3,
+    "question": "马拉松全程约为？",
+    "options": [
+      "21.195km",
+      "42.195km",
+      "10km",
+      "50km"
+    ],
+    "answer": 1,
+    "explanation": "马拉松全程42.195公里",
+    "tags": "体育,常识"
+  },
+  {
+    "type": "反应题",
+    "difficulty": 3,
+    "question": "1 2 4 8 16 ？",
+    "options": [
+      "24",
+      "30",
+      "32",
+      "36"
+    ],
+    "answer": 2,
+    "explanation": "等比数列，每次×2",
+    "tags": "反应,数列"
+  },
+  {
+    "type": "逻辑题",
+    "difficulty": 3,
+    "question": "教室里有10盏灯，关掉3盏，还有几盏灯？",
+    "options": [
+      "10",
+      "7",
+      "3",
+      "0"
+    ],
+    "answer": 0,
+    "explanation": "灯的数量不变，只是灭了",
+    "tags": "逻辑,陷阱"
+  },
+  {
+    "type": "趣味题",
+    "difficulty": 2,
+    "question": "什么鱼不能吃？",
+    "options": [
+      "鲤鱼",
+      "金鱼",
+      "鲫鱼",
+      "带鱼"
+    ],
+    "answer": 1,
+    "explanation": "金鱼是观赏鱼",
+    "tags": "趣味,脑筋急转弯"
+  },
+  {
+    "type": "速算题",
+    "difficulty": 2,
+    "question": "1000÷125 = ?",
+    "options": [
+      "8",
+      "6",
+      "10",
+      "7"
+    ],
+    "answer": 0,
+    "explanation": "1000÷125=8",
+    "tags": "数学,除法"
+  },
+  {
+    "type": "逻辑题",
+    "difficulty": 1,
+    "question": "找规律：3, 6, 9, 12, ?",
+    "options": [
+      "18",
+      "15",
+      "12",
+      "16"
+    ],
+    "answer": 1,
+    "explanation": "等差数列，公差为3，下一个是15",
+    "tags": "逻辑,数列"
+  },
+  {
+    "type": "知识题",
+    "difficulty": 1,
+    "question": "《兰亭集序》的作者是？",
+    "options": [
+      "王羲之",
+      "颜真卿",
+      "柳公权",
+      "苏轼"
+    ],
+    "answer": 0,
+    "explanation": "王羲之被称为书圣",
+    "tags": "艺术,书法"
+  },
+  {
+    "type": "知识题",
+    "difficulty": 3,
+    "question": "电流的单位是？",
+    "options": [
+      "伏特",
+      "安培",
+      "欧姆",
+      "瓦特"
+    ],
+    "answer": 1,
+    "explanation": "电流单位是安培(A)",
+    "tags": "物理,电学"
+  },
+  {
+    "type": "速算题",
+    "difficulty": 1,
+    "question": "1+3+5+...+19 = ?",
+    "options": [
+      "100",
+      "90",
+      "110",
+      "95"
+    ],
+    "answer": 0,
+    "explanation": "共10个奇数，和为10²=100",
+    "tags": "数学,数列"
+  },
+  {
+    "type": "反应题",
+    "difficulty": 3,
+    "question": "1 3 1 3 5 1 3 5 ?",
+    "options": [
+      "1",
+      "3",
+      "5",
+      "7"
+    ],
+    "answer": 3,
+    "explanation": "规律递增组合",
+    "tags": "反应,规律"
+  },
+  {
+    "type": "知识题",
+    "difficulty": 1,
+    "question": "万里长城始建于哪个朝代？",
+    "options": [
+      "秦",
+      "汉",
+      "春秋战国",
+      "唐"
+    ],
+    "answer": 2,
+    "explanation": "春秋战国时期各诸侯国开始修筑",
+    "tags": "历史,建筑"
+  },
+  {
+    "type": "速算题",
+    "difficulty": 2,
+    "question": "37 + 39 = ?",
+    "options": [
+      "76",
+      "87",
+      "66",
+      "85"
+    ],
+    "answer": 0,
+    "explanation": "37+39=76",
+    "tags": "数学,加法"
+  },
+  {
+    "type": "反应题",
+    "difficulty": 1,
+    "question": "前 后 前 后 ？",
+    "options": [
+      "前",
+      "后",
+      "左",
+      "右"
+    ],
+    "answer": 0,
+    "explanation": "前后循环",
+    "tags": "反应,规律"
+  },
+  {
+    "type": "知识题",
+    "difficulty": 2,
+    "question": "《哈姆雷特》的作者是？",
+    "options": [
+      "莎士比亚",
+      "雨果",
+      "托尔斯泰",
+      "狄更斯"
+    ],
+    "answer": 0,
+    "explanation": "莎士比亚是英国剧作家",
+    "tags": "文学,戏剧"
+  },
+  {
+    "type": "趣味题",
+    "difficulty": 2,
+    "question": "什么桥不能走？",
+    "options": [
+      "石桥",
+      "立交桥",
+      "奈何桥",
+      "木桥"
+    ],
+    "answer": 2,
+    "explanation": "奈何桥是传说中的桥",
+    "tags": "趣味,脑筋急转弯"
+  },
+  {
+    "type": "速算题",
+    "difficulty": 1,
+    "question": "12 × 25 = ?",
+    "options": [
+      "300",
+      "250",
+      "350",
+      "280"
+    ],
+    "answer": 0,
+    "explanation": "12×25=3×100=300",
+    "tags": "数学,乘法"
+  },
+  {
+    "type": "速算题",
+    "difficulty": 3,
+    "question": "11² + 12² = ?",
+    "options": [
+      "265",
+      "255",
+      "275",
+      "285"
+    ],
+    "answer": 0,
+    "explanation": "121+144=265",
+    "tags": "数学,平方"
+  },
+  {
+    "type": "速算题",
+    "difficulty": 1,
+    "question": "720 ÷ 8 = ?",
+    "options": [
+      "90",
+      "80",
+      "100",
+      "85"
+    ],
+    "answer": 0,
+    "explanation": "720÷8=90",
+    "tags": "数学,除法"
+  },
+  {
+    "type": "速算题",
+    "difficulty": 2,
+    "question": "302 - 199 = ?",
+    "options": [
+      "103",
+      "113",
+      "93",
+      "123"
+    ],
+    "answer": 0,
+    "explanation": "302-199=302-200+1=103",
+    "tags": "数学,减法"
+  },
+  {
+    "type": "反应题",
+    "difficulty": 2,
+    "question": "红 黄 蓝 红 黄 ？",
+    "options": [
+      "红",
+      "黄",
+      "蓝",
+      "绿"
+    ],
+    "answer": 2,
+    "explanation": "红黄蓝循环",
+    "tags": "反应,规律"
+  },
+  {
+    "type": "逻辑题",
+    "difficulty": 2,
+    "question": "A比B大3岁，B比C大3岁，A比C大几岁？",
+    "options": [
+      "3",
+      "6",
+      "9",
+      "不确定"
+    ],
+    "answer": 1,
+    "explanation": "3+3=6",
+    "tags": "逻辑,计算"
+  },
+  {
+    "type": "速算题",
+    "difficulty": 2,
+    "question": "2+4+6+...+20 = ?",
+    "options": [
+      "110",
+      "100",
+      "120",
+      "105"
+    ],
+    "answer": 0,
+    "explanation": "共10项，(2+20)×10÷2=110",
+    "tags": "数学,数列"
+  },
+  {
+    "type": "知识题",
+    "difficulty": 1,
+    "question": "太阳系中最大的行星是？",
+    "options": [
+      "地球",
+      "木星",
+      "土星",
+      "火星"
+    ],
+    "answer": 1,
+    "explanation": "木星是太阳系最大行星",
+    "tags": "天文,常识"
+  },
+  {
+    "type": "速算题",
+    "difficulty": 3,
+    "question": "0.25 × 16 = ?",
+    "options": [
+      "4",
+      "3",
+      "5",
+      "6"
+    ],
+    "answer": 0,
+    "explanation": "0.25×16=4",
+    "tags": "数学,乘法"
+  },
+  {
+    "type": "趣味题",
+    "difficulty": 3,
+    "question": "什么猫不吃鱼？",
+    "options": [
+      "家猫",
+      "熊猫",
+      "野猫",
+      "波斯猫"
+    ],
+    "answer": 1,
+    "explanation": "熊猫吃竹子",
+    "tags": "趣味,脑筋急转弯"
+  },
+  {
+    "type": "反应题",
+    "difficulty": 2,
+    "question": "△ ○ □ △ ○ ？",
+    "options": [
+      "△",
+      "○",
+      "□",
+      "☆"
+    ],
+    "answer": 2,
+    "explanation": "三种图形循环",
+    "tags": "反应,图形"
+  },
+  {
+    "type": "逻辑题",
+    "difficulty": 2,
+    "question": "如果X>Y且Y>Z，那么？",
+    "options": [
+      "X>Z",
+      "Z>X",
+      "X=Z",
+      "不确定"
+    ],
+    "answer": 0,
+    "explanation": "传递性",
+    "tags": "逻辑,传递"
+  },
+  {
+    "type": "速算题",
+    "difficulty": 2,
+    "question": "15² = ?",
+    "options": [
+      "225",
+      "215",
+      "235",
+      "250"
+    ],
+    "answer": 0,
+    "explanation": "15×15=225",
+    "tags": "数学,平方"
+  },
+  {
+    "type": "趣味题",
+    "difficulty": 3,
+    "question": "什么船不在水里？",
+    "options": [
+      "轮船",
+      "帆船",
+      "飞船",
+      "渔船"
+    ],
+    "answer": 2,
+    "explanation": "飞船在天上",
+    "tags": "趣味,脑筋急转弯"
+  },
+  {
+    "type": "知识题",
+    "difficulty": 2,
+    "question": "钢琴有多少个键？",
+    "options": [
+      "85",
+      "86",
+      "88",
+      "90"
+    ],
+    "answer": 2,
+    "explanation": "标准钢琴88个键",
+    "tags": "音乐,常识"
+  },
+  {
+    "type": "知识题",
+    "difficulty": 3,
+    "question": "企鹅生活在？",
+    "options": [
+      "北极",
+      "南极",
+      "赤道",
+      "温带"
+    ],
+    "answer": 1,
+    "explanation": "企鹅生活在南极地区",
+    "tags": "生物,地理"
+  },
+  {
+    "type": "逻辑题",
+    "difficulty": 1,
+    "question": "鸡蛋不能放在同一个篮子里，是为了？",
+    "options": [
+      "减少风险",
+      "增加收益",
+      "便于管理",
+      "美观"
+    ],
+    "answer": 0,
+    "explanation": "分散风险",
+    "tags": "逻辑,常识"
+  },
+  {
+    "type": "知识题",
+    "difficulty": 2,
+    "question": "光的传播速度约为？",
+    "options": [
+      "30万km/s",
+      "3万km/s",
+      "300万km/s",
+      "3千km/s"
+    ],
+    "answer": 0,
+    "explanation": "光速约30万千米每秒",
+    "tags": "物理,常识"
+  },
+  {
+    "type": "速算题",
+    "difficulty": 1,
+    "question": "96 + 79 = ?",
+    "options": [
+      "177",
+      "165",
+      "192",
+      "175"
+    ],
+    "answer": 3,
+    "explanation": "96+79=175",
+    "tags": "数学,加法"
+  },
+  {
+    "type": "逻辑题",
+    "difficulty": 1,
+    "question": "所有偶数都能被2整除，7是偶数吗？",
+    "options": [
+      "是",
+      "不是",
+      "可能是",
+      "不确定"
+    ],
+    "answer": 1,
+    "explanation": "7不能被2整除，不是偶数",
+    "tags": "逻辑,分类"
+  },
+  {
+    "type": "趣味题",
+    "difficulty": 2,
+    "question": "什么池没有水？",
+    "options": [
+      "游泳池",
+      "电池",
+      "池塘",
+      "水池"
+    ],
+    "answer": 1,
+    "explanation": "电池里没有水",
+    "tags": "趣味,脑筋急转弯"
+  },
+  {
+    "type": "反应题",
+    "difficulty": 1,
+    "question": "○ ○ △ △ ○ ○ △ ?",
+    "options": [
+      "○",
+      "△",
+      "□",
+      "☆"
+    ],
+    "answer": 1,
+    "explanation": "两圆两三角循环",
+    "tags": "反应,规律"
+  },
+  {
+    "type": "反应题",
+    "difficulty": 2,
+    "question": "黑 黑 白 白 黑 黑 ?",
+    "options": [
+      "黑",
+      "白",
+      "灰",
+      "红"
+    ],
+    "answer": 1,
+    "explanation": "两黑两白循环",
+    "tags": "反应,规律"
+  },
+  {
+    "type": "知识题",
+    "difficulty": 1,
+    "question": "《红楼梦》的作者是？",
+    "options": [
+      "吴承恩",
+      "曹雪芹",
+      "罗贯中",
+      "施耐庵"
+    ],
+    "answer": 1,
+    "explanation": "曹雪芹著《红楼梦》",
+    "tags": "文学,名著"
+  },
+  {
+    "type": "逻辑题",
+    "difficulty": 3,
+    "question": "工欲善其事，必先？",
+    "options": [
+      "磨刀",
+      "利其器",
+      "吃饱饭",
+      "休息好"
+    ],
+    "answer": 1,
+    "explanation": "工欲善其事，必先利其器",
+    "tags": "逻辑,古语"
+  },
+  {
+    "type": "趣味题",
+    "difficulty": 1,
+    "question": "什么牛不会吃草？",
+    "options": [
+      "水牛",
+      "蜗牛",
+      "黄牛",
+      "奶牛"
+    ],
+    "answer": 1,
+    "explanation": "蜗牛不是牛",
+    "tags": "趣味,脑筋急转弯"
+  },
+  {
+    "type": "趣味题",
+    "difficulty": 3,
+    "question": "什么花不能摸？",
+    "options": [
+      "玫瑰",
+      "烟花",
+      "牡丹",
+      "荷花"
+    ],
+    "answer": 1,
+    "explanation": "烟花会爆炸",
+    "tags": "趣味,脑筋急转弯"
+  },
+  {
+    "type": "趣味题",
+    "difficulty": 3,
+    "question": "什么狼不吃羊？",
+    "options": [
+      "灰太狼",
+      "黄鼠狼",
+      "大灰狼",
+      "北极狼"
+    ],
+    "answer": 1,
+    "explanation": "黄鼠狼吃鸡不吃羊",
+    "tags": "趣味,脑筋急转弯"
+  },
+  {
+    "type": "反应题",
+    "difficulty": 2,
+    "question": "正 反 正 反 ？",
+    "options": [
+      "正",
+      "反",
+      "侧",
+      "斜"
+    ],
+    "answer": 0,
+    "explanation": "正反循环",
+    "tags": "反应,规律"
+  },
+  {
+    "type": "逻辑题",
+    "difficulty": 1,
+    "question": "如果A→B，B→C，那么A→？",
+    "options": [
+      "B",
+      "C",
+      "A",
+      "无法确定"
+    ],
+    "answer": 1,
+    "explanation": "A→B→C，所以A→C",
+    "tags": "逻辑,传递"
+  },
+  {
+    "type": "知识题",
+    "difficulty": 2,
+    "question": "世界上人口最多的国家是？",
+    "options": [
+      "印度",
+      "中国",
+      "美国",
+      "印尼"
+    ],
+    "answer": 1,
+    "explanation": "中国人口约14亿",
+    "tags": "地理,人口"
+  },
+  {
+    "type": "反应题",
+    "difficulty": 2,
+    "question": "5 4 3 2 ？",
+    "options": [
+      "0",
+      "1",
+      "2",
+      "3"
+    ],
+    "answer": 1,
+    "explanation": "递减数列",
+    "tags": "反应,规律"
+  },
+  {
+    "type": "速算题",
+    "difficulty": 3,
+    "question": "3×4×5 = ?",
+    "options": [
+      "60",
+      "50",
+      "70",
+      "55"
+    ],
+    "answer": 0,
+    "explanation": "3×4×5=60",
+    "tags": "数学,乘法"
+  },
+  {
+    "type": "趣味题",
+    "difficulty": 2,
+    "question": "什么布剪不断？",
+    "options": [
+      "棉布",
+      "瀑布",
+      "丝绸",
+      "麻布"
+    ],
+    "answer": 1,
+    "explanation": "瀑布不是布",
+    "tags": "趣味,脑筋急转弯"
+  },
+  {
+    "type": "趣味题",
+    "difficulty": 1,
+    "question": "什么锅不能煮饭？",
+    "options": [
+      "铁锅",
+      "砂锅",
+      "背锅",
+      "高压锅"
+    ],
+    "answer": 2,
+    "explanation": "背锅是网络用语",
+    "tags": "趣味,脑筋急转弯"
+  },
+  {
+    "type": "知识题",
+    "difficulty": 3,
+    "question": "黄河注入哪个海？",
+    "options": [
+      "黄海",
+      "渤海",
+      "东海",
+      "南海"
+    ],
+    "answer": 1,
+    "explanation": "黄河注入渤海",
+    "tags": "地理,河流"
+  },
+  {
+    "type": "知识题",
+    "difficulty": 2,
+    "question": "世界上使用人数最多的语言是？",
+    "options": [
+      "英语",
+      "汉语",
+      "西班牙语",
+      "印地语"
+    ],
+    "answer": 1,
+    "explanation": "汉语使用人数最多",
+    "tags": "语言,常识"
+  },
+  {
+    "type": "逻辑题",
+    "difficulty": 1,
+    "question": "三个和尚没水喝，一个和尚？",
+    "options": [
+      "有水喝",
+      "没水喝",
+      "不一定",
+      "看情况"
+    ],
+    "answer": 0,
+    "explanation": "一个和尚挑水喝",
+    "tags": "逻辑,常识"
+  },
+  {
+    "type": "速算题",
+    "difficulty": 3,
+    "question": "25 × 4 × 7 = ?",
+    "options": [
+      "700",
+      "600",
+      "800",
+      "650"
+    ],
+    "answer": 0,
+    "explanation": "25×4=100,100×7=700",
+    "tags": "数学,乘法"
+  },
+  {
+    "type": "速算题",
+    "difficulty": 2,
+    "question": "22 + 58 = ?",
+    "options": [
+      "80",
+      "72",
+      "96",
+      "85"
+    ],
+    "answer": 0,
+    "explanation": "22+58=80",
+    "tags": "数学,加法"
+  },
+  {
+    "type": "速算题",
+    "difficulty": 3,
+    "question": "450 ÷ 15 = ?",
+    "options": [
+      "30",
+      "25",
+      "35",
+      "40"
+    ],
+    "answer": 0,
+    "explanation": "450÷15=30",
+    "tags": "数学,除法"
+  },
+  {
+    "type": "趣味题",
+    "difficulty": 1,
+    "question": "什么马不会跑？",
+    "options": [
+      "白马",
+      "黑马",
+      "海马",
+      "斑马"
+    ],
+    "answer": 2,
+    "explanation": "海马是海洋生物",
+    "tags": "趣味,脑筋急转弯"
+  },
+  {
+    "type": "速算题",
+    "difficulty": 3,
+    "question": "36 + 95 = ?",
+    "options": [
+      "151",
+      "131",
+      "129",
+      "136"
+    ],
+    "answer": 1,
+    "explanation": "36+95=131",
+    "tags": "数学,加法"
+  },
+  {
+    "type": "反应题",
+    "difficulty": 2,
+    "question": "5 5 10 10 15 15 ?",
+    "options": [
+      "15",
+      "20",
+      "25",
+      "30"
+    ],
+    "answer": 1,
+    "explanation": "每个数字重复两次，下一个是20",
+    "tags": "反应,规律"
+  },
+  {
+    "type": "趣味题",
+    "difficulty": 2,
+    "question": "什么鼠不怕猫？",
+    "options": [
+      "田鼠",
+      "袋鼠",
+      "老鼠",
+      "松鼠"
+    ],
+    "answer": 1,
+    "explanation": "袋鼠不是鼠类",
+    "tags": "趣味,脑筋急转弯"
+  },
+  {
+    "type": "知识题",
+    "difficulty": 1,
+    "question": "彩虹有几种颜色？",
+    "options": [
+      "5",
+      "6",
+      "7",
+      "8"
+    ],
+    "answer": 2,
+    "explanation": "红橙黄绿青蓝紫七种",
+    "tags": "物理,光学"
+  },
+  {
+    "type": "逻辑题",
+    "difficulty": 2,
+    "question": "白马非马是谁提出的？",
+    "options": [
+      "孔子",
+      "孟子",
+      "公孙龙",
+      "老子"
+    ],
+    "answer": 2,
+    "explanation": "公孙龙提出白马非马",
+    "tags": "逻辑,历史"
+  },
+  {
+    "type": "趣味题",
+    "difficulty": 3,
+    "question": "什么刀不能切菜？",
+    "options": [
+      "菜刀",
+      "剪刀",
+      "水果刀",
+      "杀猪刀"
+    ],
+    "answer": 1,
+    "explanation": "剪刀不是切菜的",
+    "tags": "趣味,脑筋急转弯"
+  },
+  {
+    "type": "逻辑题",
+    "difficulty": 1,
+    "question": "找规律：3, 7, 11, 15, ?",
+    "options": [
+      "15",
+      "20",
+      "19",
+      "23"
+    ],
+    "answer": 2,
+    "explanation": "等差数列，公差为4，下一个是19",
+    "tags": "逻辑,数列"
+  },
+  {
+    "type": "反应题",
+    "difficulty": 3,
+    "question": "上 下 上 下 上 ?",
+    "options": [
+      "上",
+      "下",
+      "左",
+      "右"
+    ],
+    "answer": 1,
+    "explanation": "上下循环",
+    "tags": "反应,规律"
+  },
+  {
+    "type": "速算题",
+    "difficulty": 2,
+    "question": "22 + 55 = ?",
+    "options": [
+      "92",
+      "83",
+      "67",
+      "77"
+    ],
+    "answer": 3,
+    "explanation": "22+55=77",
+    "tags": "数学,加法"
+  },
+  {
+    "type": "趣味题",
+    "difficulty": 1,
+    "question": "什么门永远关不上？",
+    "options": [
+      "铁门",
+      "木门",
+      "球门",
+      "防盗门"
+    ],
+    "answer": 2,
+    "explanation": "球门要进球，不能关上",
+    "tags": "趣味,脑筋急转弯"
+  },
+  {
+    "type": "逻辑题",
+    "difficulty": 1,
+    "question": "甲说乙说谎，乙说丙说谎，丙说甲和乙都说谎。谁说真话？",
+    "options": [
+      "甲",
+      "乙",
+      "丙",
+      "无法确定"
+    ],
+    "answer": 1,
+    "explanation": "假设乙说真话，则丙说谎，甲说谎，丙说甲乙都说谎也是假话，成立",
+    "tags": "逻辑,真假话"
+  },
+  {
+    "type": "逻辑题",
+    "difficulty": 2,
+    "question": "一个正方体有几个面？",
+    "options": [
+      "4",
+      "5",
+      "6",
+      "8"
+    ],
+    "answer": 2,
+    "explanation": "正方体有6个面",
+    "tags": "逻辑,几何"
+  },
+  {
+    "type": "逻辑题",
+    "difficulty": 3,
+    "question": "没有不透风的墙意味着什么？",
+    "options": [
+      "所有墙都透风",
+      "有些墙不透风",
+      "墙都不是密的",
+      "无法判断"
+    ],
+    "answer": 0,
+    "explanation": "所有墙都透风",
+    "tags": "逻辑,语义"
+  },
+  {
+    "type": "反应题",
+    "difficulty": 2,
+    "question": "大 小 大 小 ？",
+    "options": [
+      "大",
+      "小",
+      "中",
+      "微"
+    ],
+    "answer": 0,
+    "explanation": "大小循环",
+    "tags": "反应,规律"
+  },
+  {
+    "type": "速算题",
+    "difficulty": 3,
+    "question": "60×15 = ?",
+    "options": [
+      "900",
+      "800",
+      "850",
+      "950"
+    ],
+    "answer": 0,
+    "explanation": "60×15=900",
+    "tags": "数学,乘法"
+  },
+  {
+    "type": "反应题",
+    "difficulty": 3,
+    "question": "10 9 8 7 ？",
+    "options": [
+      "5",
+      "6",
+      "7",
+      "8"
+    ],
+    "answer": 1,
+    "explanation": "递减数列，每次-1",
+    "tags": "反应,规律"
+  },
+  {
+    "type": "反应题",
+    "difficulty": 3,
+    "question": "A B C D E ？",
+    "options": [
+      "E",
+      "F",
+      "G",
+      "H"
+    ],
+    "answer": 1,
+    "explanation": "英文字母顺序",
+    "tags": "反应,字母"
+  },
+  {
+    "type": "速算题",
+    "difficulty": 1,
+    "question": "48÷(6×2) = ?",
+    "options": [
+      "4",
+      "6",
+      "3",
+      "8"
+    ],
+    "answer": 0,
+    "explanation": "48÷12=4",
+    "tags": "数学,运算顺序"
+  },
+  {
+    "type": "趣味题",
+    "difficulty": 3,
+    "question": "什么帽不能戴？",
+    "options": [
+      "草帽",
+      "螺帽",
+      "礼帽",
+      "鸭舌帽"
+    ],
+    "answer": 1,
+    "explanation": "螺帽是零件不是帽子",
+    "tags": "趣味,脑筋急转弯"
+  },
+  {
+    "type": "逻辑题",
+    "difficulty": 3,
+    "question": "找规律：4, 9, 14, 19, ?",
+    "options": [
+      "24",
+      "29",
+      "19",
+      "25"
+    ],
+    "answer": 0,
+    "explanation": "等差数列，公差为5，下一个是24",
+    "tags": "逻辑,数列"
+  },
+  {
+    "type": "知识题",
+    "difficulty": 3,
+    "question": "植物进行光合作用需要？",
+    "options": [
+      "氧气",
+      "二氧化碳",
+      "氮气",
+      "氢气"
+    ],
+    "answer": 1,
+    "explanation": "植物光合作用吸收二氧化碳",
+    "tags": "生物,植物"
+  },
+  {
+    "type": "逻辑题",
+    "difficulty": 3,
+    "question": "所有的A都是B，所有的B都是C，那么？",
+    "options": [
+      "所有A都是C",
+      "有些A不是C",
+      "无法确定",
+      "所有C都是A"
+    ],
+    "answer": 0,
+    "explanation": "三段论",
+    "tags": "逻辑,三段论"
+  },
+  {
+    "type": "反应题",
+    "difficulty": 3,
+    "question": "3 3 3 3 ？",
+    "options": [
+      "2",
+      "3",
+      "4",
+      "5"
+    ],
+    "answer": 1,
+    "explanation": "恒等数列",
+    "tags": "反应,规律"
+  },
+  {
+    "type": "速算题",
+    "difficulty": 2,
+    "question": "3.5 × 20 = ?",
+    "options": [
+      "70",
+      "60",
+      "75",
+      "65"
+    ],
+    "answer": 0,
+    "explanation": "3.5×20=70",
+    "tags": "数学,乘法"
+  },
+  {
+    "type": "逻辑题",
+    "difficulty": 2,
+    "question": "找规律：7, 11, 15, 19, ?",
+    "options": [
+      "19",
+      "27",
+      "24",
+      "23"
+    ],
+    "answer": 3,
+    "explanation": "等差数列，公差为4，下一个是23",
+    "tags": "逻辑,数列"
+  },
+  {
+    "type": "速算题",
+    "difficulty": 1,
+    "question": "83 + 34 = ?",
+    "options": [
+      "119",
+      "131",
+      "117",
+      "116"
+    ],
+    "answer": 2,
+    "explanation": "83+34=117",
+    "tags": "数学,加法"
+  },
+  {
+    "type": "知识题",
+    "difficulty": 3,
+    "question": "人类的血型系统最常用的有几种？",
+    "options": [
+      "2",
+      "3",
+      "4",
+      "5"
+    ],
+    "answer": 2,
+    "explanation": "A、B、AB、O四种",
+    "tags": "生物,医学"
+  },
+  {
+    "type": "速算题",
+    "difficulty": 1,
+    "question": "75×4 = ?",
+    "options": [
+      "300",
+      "250",
+      "350",
+      "280"
+    ],
+    "answer": 0,
+    "explanation": "75×4=300",
+    "tags": "数学,乘法"
+  },
+  {
+    "type": "知识题",
+    "difficulty": 3,
+    "question": "人体血液中负责运输氧气的是？",
+    "options": [
+      "白细胞",
+      "红细胞",
+      "血小板",
+      "血浆"
+    ],
+    "answer": 1,
+    "explanation": "红细胞中的血红蛋白运输氧气",
+    "tags": "生物,医学"
+  },
+  {
+    "type": "反应题",
+    "difficulty": 1,
+    "question": "3 6 6 9 9 12 12 ?",
+    "options": [
+      "12",
+      "15",
+      "18",
+      "21"
+    ],
+    "answer": 1,
+    "explanation": "3,6,6,9,9,12...每个数字重复一次递增3",
+    "tags": "反应,规律"
+  },
+  {
+    "type": "趣味题",
+    "difficulty": 1,
+    "question": "什么龙不吃人？",
+    "options": [
+      "恐龙",
+      "霸王龙",
+      "龙卷风",
+      "蛟龙"
+    ],
+    "answer": 2,
+    "explanation": "龙卷风是自然现象",
+    "tags": "趣味,脑筋急转弯"
+  },
+  {
+    "type": "趣味题",
+    "difficulty": 2,
+    "question": "什么竹不长在土里？",
+    "options": [
+      "毛竹",
+      "楠竹",
+      "爆竹",
+      "佛肚竹"
+    ],
+    "answer": 2,
+    "explanation": "爆竹是烟花",
+    "tags": "趣味,脑筋急转弯"
+  },
+  {
+    "type": "逻辑题",
+    "difficulty": 3,
+    "question": "找规律：9, 11, 13, 15, ?",
+    "options": [
+      "18",
+      "19",
+      "15",
+      "17"
+    ],
+    "answer": 3,
+    "explanation": "等差数列，公差为2，下一个是17",
+    "tags": "逻辑,数列"
+  },
+  {
+    "type": "趣味题",
+    "difficulty": 1,
+    "question": "什么牛不能吃？",
+    "options": [
+      "肉牛",
+      "蜗牛",
+      "耕牛",
+      "牦牛"
+    ],
+    "answer": 1,
+    "explanation": "蜗牛不是食用的牛",
+    "tags": "趣味,脑筋急转弯"
+  },
+  {
+    "type": "反应题",
+    "difficulty": 1,
+    "question": "1 4 7 10 ？",
+    "options": [
+      "11",
+      "12",
+      "13",
+      "14"
+    ],
+    "answer": 2,
+    "explanation": "等差数列，公差为3",
+    "tags": "反应,数列"
+  },
+  {
+    "type": "知识题",
+    "difficulty": 2,
+    "question": "世界上第一台电话的发明者是？",
+    "options": [
+      "爱迪生",
+      "贝尔",
+      "特斯拉",
+      "马可尼"
+    ],
+    "answer": 1,
+    "explanation": "贝尔发明了电话",
+    "tags": "科技,发明"
+  },
+  {
+    "type": "速算题",
+    "difficulty": 3,
+    "question": "78 + 25 = ?",
+    "options": [
+      "103",
+      "110",
+      "122",
+      "101"
+    ],
+    "answer": 0,
+    "explanation": "78+25=103",
+    "tags": "数学,加法"
+  },
+  {
+    "type": "反应题",
+    "difficulty": 3,
+    "question": "← ← → → ← ← ?",
+    "options": [
+      "←",
+      "→",
+      "↑",
+      "↓"
+    ],
+    "answer": 1,
+    "explanation": "两个左箭头两个右箭头循环",
+    "tags": "反应,规律"
+  },
+  {
+    "type": "反应题",
+    "difficulty": 1,
+    "question": "黑 白 黑 白 ？",
+    "options": [
+      "黑",
+      "白",
+      "灰",
+      "红"
+    ],
+    "answer": 0,
+    "explanation": "黑白循环",
+    "tags": "反应,规律"
+  },
+  {
+    "type": "反应题",
+    "difficulty": 1,
+    "question": "2 3 5 7 11 ？",
+    "options": [
+      "12",
+      "13",
+      "14",
+      "15"
+    ],
+    "answer": 1,
+    "explanation": "质数数列",
+    "tags": "反应,质数"
+  },
+  {
+    "type": "速算题",
+    "difficulty": 1,
+    "question": "2.5 × 3.2 = ?",
+    "options": [
+      "8",
+      "7",
+      "9",
+      "6.5"
+    ],
+    "answer": 0,
+    "explanation": "2.5×3.2=8",
+    "tags": "数学,乘法"
+  },
+  {
+    "type": "知识题",
+    "difficulty": 1,
+    "question": "篮球比赛每队上场几人？",
+    "options": [
+      "4",
+      "5",
+      "6",
+      "7"
+    ],
+    "answer": 1,
+    "explanation": "篮球每队5人上场",
+    "tags": "体育,常识"
+  },
+  {
+    "type": "知识题",
+    "difficulty": 1,
+    "question": "原子弹的原理基于？",
+    "options": [
+      "核裂变",
+      "核聚变",
+      "化学燃烧",
+      "电磁感应"
+    ],
+    "answer": 0,
+    "explanation": "原子弹基于核裂变反应",
+    "tags": "物理,核物理"
+  },
+  {
+    "type": "知识题",
+    "difficulty": 2,
+    "question": "足球世界杯奖杯叫什么名字？",
+    "options": [
+      "奥斯卡",
+      "诺贝尔",
+      "大力神杯",
+      "金马奖"
+    ],
+    "answer": 2,
+    "explanation": "世界杯奖杯是大力神杯",
+    "tags": "体育,常识"
+  },
+  {
+    "type": "逻辑题",
+    "difficulty": 2,
+    "question": "找规律：10, 15, 20, 25, ?",
+    "options": [
+      "25",
+      "30",
+      "35",
+      "31"
+    ],
+    "answer": 1,
+    "explanation": "等差数列，公差为5，下一个是30",
+    "tags": "逻辑,数列"
+  },
+  {
+    "type": "反应题",
+    "difficulty": 2,
+    "question": "1 2 1 2 1 ?",
+    "options": [
+      "1",
+      "2",
+      "3",
+      "4"
+    ],
+    "answer": 1,
+    "explanation": "1,2循环",
+    "tags": "反应,规律"
+  },
+  {
+    "type": "反应题",
+    "difficulty": 1,
+    "question": "← → ← → 下一个方向是？",
+    "options": [
+      "←",
+      "→",
+      "↑",
+      "↓"
+    ],
+    "answer": 0,
+    "explanation": "左右左右循环，右之后是左",
+    "tags": "反应,规律"
+  },
+  {
+    "type": "趣味题",
+    "difficulty": 1,
+    "question": "什么鸡没有翅膀？",
+    "options": [
+      "公鸡",
+      "母鸡",
+      "田鸡",
+      "野鸡"
+    ],
+    "answer": 2,
+    "explanation": "田鸡是青蛙",
+    "tags": "趣味,脑筋急转弯"
+  },
+  {
+    "type": "知识题",
+    "difficulty": 3,
+    "question": "中国历史上第一个统一王朝是？",
+    "options": [
+      "商",
+      "周",
+      "秦",
+      "汉"
+    ],
+    "answer": 2,
+    "explanation": "秦始皇统一六国建立秦朝",
+    "tags": "历史,常识"
+  },
+  {
+    "type": "知识题",
+    "difficulty": 2,
+    "question": "世界上第一台计算机诞生于？",
+    "options": [
+      "美国",
+      "英国",
+      "德国",
+      "中国"
+    ],
+    "answer": 0,
+    "explanation": "1946年诞生于美国宾夕法尼亚大学",
+    "tags": "计算机,历史"
+  },
+  {
+    "type": "反应题",
+    "difficulty": 3,
+    "question": "1 1 2 2 3 3 ？",
+    "options": [
+      "3",
+      "4",
+      "5",
+      "6"
+    ],
+    "answer": 1,
+    "explanation": "每个数字重复两次",
+    "tags": "反应,规律"
+  },
+  {
+    "type": "逻辑题",
+    "difficulty": 1,
+    "question": "找规律：6, 8, 10, 12, ?",
+    "options": [
+      "12",
+      "15",
+      "14",
+      "16"
+    ],
+    "answer": 2,
+    "explanation": "等差数列，公差为2，下一个是14",
+    "tags": "逻辑,数列"
+  },
+  {
+    "type": "知识题",
+    "difficulty": 3,
+    "question": "地球上面积最大的海洋是？",
+    "options": [
+      "大西洋",
+      "印度洋",
+      "太平洋",
+      "北冰洋"
+    ],
+    "answer": 2,
+    "explanation": "太平洋面积约1.65亿平方公里",
+    "tags": "地理,常识"
+  },
+  {
+    "type": "逻辑题",
+    "difficulty": 2,
+    "question": "眼见一定为实吗？",
+    "options": [
+      "一定",
+      "不一定",
+      "永远",
+      "总是"
+    ],
+    "answer": 1,
+    "explanation": "眼见不一定为实",
+    "tags": "逻辑,常识"
+  },
+  {
+    "type": "趣味题",
+    "difficulty": 3,
+    "question": "什么瓜不能吃？",
+    "options": [
+      "西瓜",
+      "南瓜",
+      "傻瓜",
+      "黄瓜"
+    ],
+    "answer": 2,
+    "explanation": "傻瓜不能吃",
+    "tags": "趣味,脑筋急转弯"
+  }
+]

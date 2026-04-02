@@ -250,7 +250,15 @@ async function initBrainBattleDatabase() {
     const brainbattleSchemaPath = path.join(__dirname, 'brainbattle_schema.sql');
     if (fs.existsSync(brainbattleSchemaPath)) {
       const brainbattleSchema = fs.readFileSync(brainbattleSchemaPath, 'utf8');
-      const statements = brainbattleSchema.split(';').filter(stmt => stmt.trim());
+      // 过滤掉注释行，然后按分号分割
+      const lines = brainbattleSchema.split('\n').filter(line => {
+        const trimmed = line.trim();
+        return trimmed && !trimmed.startsWith('--') && !trimmed.startsWith('/*');
+      });
+      const statements = lines.join('\n').split(';').filter(stmt => {
+        const trimmed = stmt.trim();
+        return trimmed && !trimmed.startsWith('--');
+      });
       
       for (const statement of statements) {
         try {

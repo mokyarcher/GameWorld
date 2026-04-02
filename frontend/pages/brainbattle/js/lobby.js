@@ -498,6 +498,80 @@ function goToRank() {
     alert('排位赛功能开发中...');
 }
 
+// ========== 积分榜功能 ==========
+
+// 显示积分榜弹窗
+async function showLeaderboard() {
+    const modal = document.getElementById('leaderboardModal');
+    modal.classList.add('show');
+    await loadLeaderboard();
+}
+
+// 关闭积分榜弹窗
+function closeLeaderboard() {
+    const modal = document.getElementById('leaderboardModal');
+    modal.classList.remove('show');
+}
+
+// 加载积分榜数据
+async function loadLeaderboard() {
+    const container = document.getElementById('leaderboardList');
+    container.innerHTML = '<div class="leaderboard-loading">加载中...</div>';
+    
+    try {
+        const response = await fetch(`${API_BASE}/brainbattle/leaderboard?limit=50`);
+        const data = await response.json();
+        
+        if (!data.success || !data.data || data.data.length === 0) {
+            container.innerHTML = '<div class="leaderboard-empty">暂无数据<br>快来成为第一个上榜的玩家吧！</div>';
+            return;
+        }
+        
+        renderLeaderboard(data.data);
+    } catch (error) {
+        console.error('加载积分榜失败:', error);
+        container.innerHTML = '<div class="leaderboard-empty">加载失败<br>请稍后重试</div>';
+    }
+}
+
+// 渲染积分榜
+function renderLeaderboard(players) {
+    const container = document.getElementById('leaderboardList');
+    
+    container.innerHTML = players.map((player, index) => {
+        const rankClass = index === 0 ? 'rank-1' : index === 1 ? 'rank-2' : index === 2 ? 'rank-3' : 'other';
+        const top3Class = index < 3 ? 'top3' : '';
+        const rankDisplay = index < 3 ? ['🥇', '🥈', '🥉'][index] : (index + 1);
+        
+        return `
+            <div class="leaderboard-item ${top3Class}">
+                <div class="leaderboard-rank ${rankClass}">${rankDisplay}</div>
+                <img src="/avatars/${player.avatar || 'default.png'}" 
+                     class="leaderboard-avatar" 
+                     onerror="this.src='/avatars/default.png'">
+                <div class="leaderboard-info">
+                    <div class="leaderboard-name">${escapeHtml(player.nickname || player.username)}</div>
+                    <span class="leaderboard-rank-name" style="background: ${player.rank_color}20; color: ${player.rank_color}; border: 1px solid ${player.rank_color}40;">
+                        ${player.rank_name}
+                    </span>
+                </div>
+                <div class="leaderboard-score">
+                    <div class="leaderboard-rating">${player.rating}</div>
+                    <div class="leaderboard-stats">${player.wins}胜 / ${player.total_games}场</div>
+                </div>
+            </div>
+        `;
+    }).join('');
+}
+
+// 点击弹窗外部关闭
+document.addEventListener('click', (e) => {
+    const modal = document.getElementById('leaderboardModal');
+    if (e.target === modal) {
+        closeLeaderboard();
+    }
+});
+
 // 返回游戏大厅
 function goToGameHall() {
     window.location.href = '../gamehall.html';

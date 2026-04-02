@@ -99,6 +99,48 @@
             border-bottom: 1px solid rgba(220, 20, 60, 0.3);
         }
 
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .nav-btn {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 12px 24px;
+            background: linear-gradient(145deg, rgba(220, 20, 60, 0.15), rgba(139, 0, 0, 0.2));
+            border: 1px solid rgba(220, 20, 60, 0.4);
+            border-radius: 10px;
+            color: #fff;
+            font-weight: 700;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .nav-btn:hover {
+            background: linear-gradient(145deg, rgba(220, 20, 60, 0.3), rgba(139, 0, 0, 0.4));
+            border-color: rgba(220, 20, 60, 0.7);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(220, 20, 60, 0.3);
+        }
+
+        .nav-btn.primary {
+            background: linear-gradient(145deg, rgba(220, 20, 60, 0.8), rgba(139, 0, 0, 0.9));
+            border-color: rgba(220, 20, 60, 0.6);
+        }
+
+        .nav-btn.primary:hover {
+            background: linear-gradient(145deg, rgba(220, 20, 60, 1), rgba(139, 0, 0, 1));
+            box-shadow: 0 8px 25px rgba(220, 20, 60, 0.5);
+        }
+
+        .nav-btn .icon {
+            font-size: 1.1rem;
+        }
+
         .logo {
             display: flex;
             align-items: center;
@@ -190,7 +232,7 @@
         }
 
         /* 返回按钮 */
-        .btn-back {
+        .btn-back, .btn-nav {
             display: flex;
             align-items: center;
             gap: 8px;
@@ -202,11 +244,22 @@
             font-weight: 700;
             cursor: pointer;
             transition: all 0.3s;
+            font-family: inherit;
+            font-size: 0.95rem;
         }
 
-        .btn-back:hover {
+        .btn-back:hover, .btn-nav:hover {
             transform: translateY(-2px);
             box-shadow: 0 8px 25px rgba(220, 20, 60, 0.4);
+        }
+
+        .btn-nav {
+            background: linear-gradient(145deg, rgba(220, 20, 60, 0.8), rgba(170, 20, 60, 0.9));
+        }
+
+        .btn-nav:hover {
+            background: linear-gradient(145deg, rgba(220, 20, 60, 0.95), rgba(170, 20, 60, 1));
+            box-shadow: 0 8px 25px rgba(220, 20, 60, 0.5);
         }
 
         /* 主内容区 */
@@ -432,6 +485,188 @@
             border-color: #dc143c;
         }
 
+        /* 积分榜弹窗 */
+        .leaderboard-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.9);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        .leaderboard-modal.show {
+            display: flex;
+        }
+
+        .leaderboard-content {
+            background: linear-gradient(145deg, rgba(20,20,20,0.98) 0%, rgba(10,10,10,0.99) 100%);
+            border: 2px solid rgba(220, 20, 60, 0.5);
+            border-radius: 20px;
+            width: 90%;
+            max-width: 600px;
+            max-height: 80vh;
+            display: flex;
+            flex-direction: column;
+            box-shadow: 0 0 60px rgba(220, 20, 60, 0.3);
+        }
+
+        .leaderboard-header {
+            padding: 25px 30px;
+            border-bottom: 1px solid rgba(220, 20, 60, 0.3);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .leaderboard-title {
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: #dc143c;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .leaderboard-title::before {
+            content: '🏆';
+            font-size: 1.8rem;
+        }
+
+        .leaderboard-close {
+            padding: 8px 20px;
+            background: rgba(255,255,255,0.1);
+            border: 1px solid rgba(255,255,255,0.2);
+            border-radius: 6px;
+            color: #fff;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .leaderboard-close:hover {
+            background: rgba(220, 20, 60, 0.3);
+            border-color: rgba(220, 20, 60, 0.5);
+        }
+
+        .leaderboard-list {
+            flex: 1;
+            overflow-y: auto;
+            padding: 20px 30px;
+        }
+
+        .leaderboard-item {
+            display: flex;
+            align-items: center;
+            padding: 15px;
+            background: rgba(255,255,255,0.03);
+            border-radius: 12px;
+            margin-bottom: 10px;
+            transition: all 0.3s;
+            border: 1px solid transparent;
+        }
+
+        .leaderboard-item:hover {
+            background: rgba(220, 20, 60, 0.1);
+            border-color: rgba(220, 20, 60, 0.3);
+            transform: translateX(5px);
+        }
+
+        .leaderboard-item.top3 {
+            background: linear-gradient(145deg, rgba(220, 20, 60, 0.15), rgba(139, 0, 0, 0.1));
+            border-color: rgba(220, 20, 60, 0.4);
+        }
+
+        .leaderboard-rank {
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            font-weight: 800;
+            border-radius: 50%;
+            margin-right: 15px;
+        }
+
+        .leaderboard-rank.rank-1 {
+            background: linear-gradient(135deg, #ffd700, #ffaa00);
+            color: #000;
+            box-shadow: 0 0 15px rgba(255, 215, 0, 0.5);
+        }
+
+        .leaderboard-rank.rank-2 {
+            background: linear-gradient(135deg, #c0c0c0, #808080);
+            color: #000;
+        }
+
+        .leaderboard-rank.rank-3 {
+            background: linear-gradient(135deg, #cd7f32, #8b4513);
+            color: #fff;
+        }
+
+        .leaderboard-rank.other {
+            background: rgba(255,255,255,0.1);
+            color: rgba(255,255,255,0.6);
+        }
+
+        .leaderboard-avatar {
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            margin-right: 15px;
+            border: 2px solid rgba(220, 20, 60, 0.3);
+            object-fit: cover;
+        }
+
+        .leaderboard-info {
+            flex: 1;
+        }
+
+        .leaderboard-name {
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+
+        .leaderboard-rank-name {
+            font-size: 0.8rem;
+            padding: 2px 8px;
+            border-radius: 4px;
+            display: inline-block;
+        }
+
+        .leaderboard-score {
+            text-align: right;
+        }
+
+        .leaderboard-rating {
+            font-size: 1.3rem;
+            font-weight: 800;
+            color: #dc143c;
+        }
+
+        .leaderboard-stats {
+            font-size: 0.75rem;
+            color: rgba(255,255,255,0.5);
+            margin-top: 2px;
+        }
+
+        .leaderboard-loading {
+            text-align: center;
+            padding: 60px;
+            color: rgba(255,255,255,0.5);
+        }
+
+        .leaderboard-empty {
+            text-align: center;
+            padding: 60px;
+            color: rgba(255,255,255,0.5);
+        }
+
         /* 响应式 */
         @media (max-width: 768px) {
             .mode-selection {
@@ -461,12 +696,16 @@
     <div class="container">
         <!-- 顶部导航 -->
         <header class="header">
-            <div class="logo" onclick="goToGameHall()">
-                <span class="logo-icon">🧠</span>
-                <div class="logo-text">
-                    <span class="logo-title">BRAIN BATTLE</span>
-                    <span class="logo-subtitle">脑力对决</span>
-                </div>
+            <!-- 左侧：ShareX Logo -->
+            <div class="logo" onclick="goToGameHall()" style="display: flex; align-items: center; gap: 8px;">
+                <span style="font-size: 14px; font-weight: 700; letter-spacing: 2px; color: #dc143c; background: rgba(220, 20, 60, 0.1); padding: 4px 10px; border-radius: 4px; border: 1px solid rgba(220, 20, 60, 0.3);">SHARE</span>
+                <span style="color: #fff; font-size: 18px; font-weight: 800;">X</span>
+            </div>
+
+            <!-- 中间：脑力对抗 -->
+            <div style="position: absolute; left: 50%; transform: translateX(-50%); display: flex; flex-direction: column; align-items: center; gap: 2px;">
+                <span style="font-size: 22px; font-weight: 800; color: #fff; letter-spacing: 4px;">脑力对抗</span>
+                <span style="font-size: 11px; font-weight: 600; color: #dc143c; letter-spacing: 3px; text-transform: uppercase;">Brain Battle</span>
             </div>
 
             <div class="user-stats">
@@ -478,7 +717,11 @@
                     <span class="stat-label">RATING</span>
                     <span class="stat-value" id="userRating">500</span>
                 </div>
-                <button class="btn-back" onclick="goToGameHall()">
+                <button class="btn-back btn-nav" onclick="showLeaderboard()">
+                    <span>🏆</span>
+                    <span>积分榜</span>
+                </button>
+                <button class="btn-back btn-nav" onclick="goToGameHall()">
                     <span>←</span>
                     <span>返回大厅</span>
                 </button>
@@ -558,6 +801,7 @@
                 <button class="mode-btn" id="copyRoomCode" style="margin-bottom: 10px;">复制房间号</button>
                 <button class="mode-btn" onclick="showInviteModal()" style="background: linear-gradient(145deg, #4CAF50, #2E7D32); margin-bottom: 20px;">邀请好友</button>
                 <p class="matching-text" id="friendMatchStatus">等待好友加入...</p>
+                <button class="btn-cancel" onclick="cancelRoom()" style="margin-top: 15px; color: #ff6b6b; border-color: rgba(220,20,60,0.6);">退出房间</button>
             </div>
             
             <!-- 创建房间按钮 -->
@@ -590,6 +834,22 @@
             </div>
             <div id="inviteFriendsList" style="max-height: 300px; overflow-y: auto;">
                 <div style="text-align: center; padding: 40px; color: rgba(255,255,255,0.5);">加载中...</div>
+            </div>
+            <div style="margin-top: 15px; padding-top: 15px; border-top: 1px solid rgba(220,20,60,0.2); text-align: center;">
+                <button class="btn-cancel" onclick="closeInviteModal(); cancelRoom();" style="color: #ff6b6b; border-color: rgba(220,20,60,0.6);">退出房间</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 积分榜弹窗 -->
+    <div class="leaderboard-modal" id="leaderboardModal">
+        <div class="leaderboard-content">
+            <div class="leaderboard-header">
+                <div class="leaderboard-title">排位积分榜</div>
+                <button class="leaderboard-close" onclick="closeLeaderboard()">关闭</button>
+            </div>
+            <div class="leaderboard-list" id="leaderboardList">
+                <div class="leaderboard-loading">加载中...</div>
             </div>
         </div>
     </div>

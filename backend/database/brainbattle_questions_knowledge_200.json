@@ -1,0 +1,2799 @@
+[
+  {
+    "type": "知识题",
+    "difficulty": 1,
+    "question": "世界上最大的群岛是？",
+    "options": [
+      "马来群岛",
+      "日本群岛",
+      "菲律宾群岛",
+      "夏威夷群岛"
+    ],
+    "answer": 0,
+    "explanation": "马来群岛是世界最大群岛",
+    "tags": "地理,常识"
+  },
+  {
+    "type": "知识题",
+    "difficulty": 2,
+    "question": "世界上最深的海沟是？",
+    "options": [
+      "马里亚纳海沟",
+      "波多黎各海沟",
+      "日本海沟",
+      "菲律宾海沟"
+    ],
+    "answer": 0,
+    "explanation": "马里亚纳海沟最深处约11034米",
+    "tags": "地理,常识"
+  },
+  {
+    "type": "知识题",
+    "difficulty": 3,
+    "question": "非洲最大的国家是？",
+    "options": [
+      "埃及",
+      "尼日利亚",
+      "阿尔及利亚",
+      "苏丹"
+    ],
+    "answer": 2,
+    "explanation": "阿尔及利亚是非洲面积最大的国家",
+    "tags": "地理,常识"
+  },
+  {
+    "type": "知识题",
+    "difficulty": 1,
+    "question": "世界上最小的国家是？",
+    "options": [
+      "摩纳哥",
+      "梵蒂冈",
+      "瑙鲁",
+      "图瓦卢"
+    ],
+    "answer": 1,
+    "explanation": "梵蒂冈国土面积仅0.44平方公里",
+    "tags": "地理,常识"
+  },
+  {
+    "type": "知识题",
+    "difficulty": 2,
+    "question": "世界上最高的瀑布是？",
+    "options": [
+      "尼亚加拉瀑布",
+      "维多利亚瀑布",
+      "安赫尔瀑布",
+      "黄果树瀑布"
+    ],
+    "answer": 2,
+    "explanation": "安赫尔瀑布位于委内瑞拉，落差979米",
+    "tags": "地理,常识"
+  },
+  {
+    "type": "知识题",
+    "difficulty": 3,
+    "question": "欧洲最长的河流是？",
+    "options": [
+      "莱茵河",
+      "多瑙河",
+      "伏尔加河",
+      "塞纳河"
+    ],
+    "answer": 2,
+    "explanation": "伏尔加河全长约3530公里",
+    "tags": "地理,常识"
+  },
+  {
+    "type": "知识题",
+    "difficulty": 1,
+    "question": "北美洲五大湖中面积最大的是？",
+    "options": [
+      "密歇根湖",
+      "休伦湖",
+      "苏必利尔湖",
+      "伊利湖"
+    ],
+    "answer": 2,
+    "explanation": "苏必利尔湖是世界面积最大的淡水湖",
+    "tags": "地理,常识"
+  },
+  {
+    "type": "知识题",
+    "difficulty": 2,
+    "question": "世界上最热的沙漠是？",
+    "options": [
+      "戈壁沙漠",
+      "卡拉哈里沙漠",
+      "撒哈拉沙漠",
+      "塔克拉玛干沙漠"
+    ],
+    "answer": 2,
+    "explanation": "撒哈拉沙漠夏季气温常超50°C",
+    "tags": "地理,常识"
+  },
+  {
+    "type": "知识题",
+    "difficulty": 3,
+    "question": "澳大利亚的首都是？",
+    "options": [
+      "悉尼",
+      "墨尔本",
+      "堪培拉",
+      "布里斯班"
+    ],
+    "answer": 2,
+    "explanation": "堪培拉是澳大利亚首都",
+    "tags": "地理,常识"
+  },
+  {
+    "type": "知识题",
+    "difficulty": 1,
+    "question": "世界上最大的半岛是？",
+    "options": [
+      "朝鲜半岛",
+      "朝鲜半岛",
+      "阿拉伯半岛",
+      "印度半岛"
+    ],
+    "answer": 2,
+    "explanation": "阿拉伯半岛面积约300万平方公里",
+    "tags": "地理,常识"
+  },
+  {
+    "type": "知识题",
+    "difficulty": 2,
+    "question": "世界上最长的山脉是？",
+    "options": [
+      "喜马拉雅山脉",
+      "安第斯山脉",
+      "阿尔卑斯山脉",
+      "落基山脉"
+    ],
+    "answer": 1,
+    "explanation": "安第斯山脉全长约8900公里",
+    "tags": "地理,常识"
+  },
+  {
+    "type": "知识题",
+    "difficulty": 3,
+    "question": "北极圈穿过的国家不包括？",
+    "options": [
+      "挪威",
+      "芬兰",
+      "日本",
+      "俄罗斯"
+    ],
+    "answer": 2,
+    "explanation": "日本不在北极圈内",
+    "tags": "地理,常识"
+  },
+  {
+    "type": "知识题",
+    "difficulty": 1,
+    "question": "世界上最大的珊瑚礁系统是？",
+    "options": [
+      "大堡礁",
+      "红海珊瑚礁",
+      "马尔代夫珊瑚礁",
+      "加勒比珊瑚礁"
+    ],
+    "answer": 0,
+    "explanation": "大堡礁位于澳大利亚东北海岸",
+    "tags": "地理,常识"
+  },
+  {
+    "type": "知识题",
+    "difficulty": 2,
+    "question": "死海的湖面海拔约为？",
+    "options": [
+      "+100米",
+      "0米",
+      "-430米",
+      "-200米"
+    ],
+    "answer": 2,
+    "explanation": "死海湖面海拔约-430米，是世界陆地最低点",
+    "tags": "地理,常识"
+  },
+  {
+    "type": "知识题",
+    "difficulty": 3,
+    "question": "巴拿马运河连接了哪两个大洋？",
+    "options": [
+      "太平洋和大西洋",
+      "印度洋和大西洋",
+      "太平洋和印度洋",
+      "北冰洋和大西洋"
+    ],
+    "answer": 0,
+    "explanation": "巴拿马运河连接太平洋与大西洋",
+    "tags": "地理,常识"
+  },
+  {
+    "type": "知识题",
+    "difficulty": 1,
+    "question": "世界上面积最大的高原是？",
+    "options": [
+      "青藏高原",
+      "巴西高原",
+      "埃塞俄比亚高原",
+      "墨西哥高原"
+    ],
+    "answer": 1,
+    "explanation": "巴西高原面积约500多万平方公里",
+    "tags": "地理,常识"
+  },
+  {
+    "type": "知识题",
+    "difficulty": 2,
+    "question": "被称为世界屋脊的高原是？",
+    "options": [
+      "青藏高原",
+      "云贵高原",
+      "黄土高原",
+      "内蒙古高原"
+    ],
+    "answer": 0,
+    "explanation": "青藏高原平均海拔4000米以上，被称为世界屋脊",
+    "tags": "地理,常识"
+  },
+  {
+    "type": "知识题",
+    "difficulty": 3,
+    "question": "世界上流经国家最多的河流是？",
+    "options": [
+      "尼罗河",
+      "亚马逊河",
+      "多瑙河",
+      "莱茵河"
+    ],
+    "answer": 2,
+    "explanation": "多瑙河流经10个国家",
+    "tags": "地理,常识"
+  },
+  {
+    "type": "知识题",
+    "difficulty": 1,
+    "question": "赤道穿过的大陆是？",
+    "options": [
+      "亚欧大陆",
+      "非洲大陆",
+      "澳大利亚大陆",
+      "南极大陆"
+    ],
+    "answer": 1,
+    "explanation": "赤道穿过非洲大陆和南美洲大陆",
+    "tags": "地理,常识"
+  },
+  {
+    "type": "知识题",
+    "difficulty": 2,
+    "question": "世界上面积最大的淡水湖是？",
+    "options": [
+      "贝加尔湖",
+      "里海",
+      "苏必利尔湖",
+      "维多利亚湖"
+    ],
+    "answer": 2,
+    "explanation": "苏必利尔湖面积约8.2万平方公里",
+    "tags": "地理,常识"
+  },
+  {
+    "type": "知识题",
+    "difficulty": 3,
+    "question": "世界上最深的湖泊是？",
+    "options": [
+      "贝加尔湖",
+      "坦噶尼喀湖",
+      "马拉维湖",
+      "大熊湖"
+    ],
+    "answer": 0,
+    "explanation": "贝加尔湖最深处约1642米",
+    "tags": "地理,常识"
+  },
+  {
+    "type": "知识题",
+    "difficulty": 1,
+    "question": "世界四大洋中面积最小的是？",
+    "options": [
+      "印度洋",
+      "大西洋",
+      "太平洋",
+      "北冰洋"
+    ],
+    "answer": 3,
+    "explanation": "北冰洋面积约1405万平方公里",
+    "tags": "地理,常识"
+  },
+  {
+    "type": "知识题",
+    "difficulty": 2,
+    "question": "世界上最大的岛屿是？",
+    "options": [
+      "马达加斯加岛",
+      "格陵兰岛",
+      "新几内亚岛",
+      "加里曼丹岛"
+    ],
+    "answer": 1,
+    "explanation": "格陵兰岛面积约216万平方公里",
+    "tags": "地理,常识"
+  },
+  {
+    "type": "知识题",
+    "difficulty": 3,
+    "question": "中国的母亲河是？",
+    "options": [
+      "长江",
+      "黄河",
+      "珠江",
+      "淮河"
+    ],
+    "answer": 1,
+    "explanation": "黄河被称为中华民族的母亲河",
+    "tags": "地理,常识"
+  },
+  {
+    "type": "知识题",
+    "difficulty": 1,
+    "question": "长江全长约多少公里？",
+    "options": [
+      "约5000公里",
+      "约6300公里",
+      "约7000公里",
+      "约4500公里"
+    ],
+    "answer": 1,
+    "explanation": "长江全长约6300公里，是中国第一长河",
+    "tags": "地理,常识"
+  },
+  {
+    "type": "知识题",
+    "difficulty": 2,
+    "question": "中国最大的淡水湖是？",
+    "options": [
+      "洞庭湖",
+      "鄱阳湖",
+      "太湖",
+      "洪泽湖"
+    ],
+    "answer": 1,
+    "explanation": "鄱阳湖是中国最大的淡水湖",
+    "tags": "地理,常识"
+  },
+  {
+    "type": "知识题",
+    "difficulty": 3,
+    "question": "世界上最大的盆地是？",
+    "options": [
+      "四川盆地",
+      "刚果盆地",
+      "塔里木盆地",
+      "准噶尔盆地"
+    ],
+    "answer": 1,
+    "explanation": "刚果盆地面积约337万平方公里",
+    "tags": "地理,常识"
+  },
+  {
+    "type": "知识题",
+    "difficulty": 1,
+    "question": "世界上人口最多的城市是？",
+    "options": [
+      "东京",
+      "上海",
+      "德里",
+      "孟买"
+    ],
+    "answer": 0,
+    "explanation": "东京都市圈人口约3700多万",
+    "tags": "地理,人口"
+  },
+  {
+    "type": "知识题",
+    "difficulty": 2,
+    "question": "埃菲尔铁塔位于哪个城市？",
+    "options": [
+      "伦敦",
+      "巴黎",
+      "柏林",
+      "罗马"
+    ],
+    "answer": 1,
+    "explanation": "埃菲尔铁塔位于法国巴黎",
+    "tags": "地理,建筑"
+  },
+  {
+    "type": "知识题",
+    "difficulty": 3,
+    "question": "自由女神像是哪个国家送的礼物？",
+    "options": [
+      "英国",
+      "法国",
+      "德国",
+      "荷兰"
+    ],
+    "answer": 1,
+    "explanation": "自由女神像由法国送给美国",
+    "tags": "地理,历史"
+  },
+  {
+    "type": "知识题",
+    "difficulty": 1,
+    "question": "秦始皇统一六国的时间是？",
+    "options": [
+      "公元前230年",
+      "公元前221年",
+      "公元前210年",
+      "公元前206年"
+    ],
+    "answer": 1,
+    "explanation": "公元前221年秦始皇统一六国",
+    "tags": "历史,常识"
+  },
+  {
+    "type": "知识题",
+    "difficulty": 2,
+    "question": "中国历史上第一位皇帝是？",
+    "options": [
+      "周武王",
+      "秦始皇",
+      "汉武帝",
+      "唐太宗"
+    ],
+    "answer": 1,
+    "explanation": "秦始皇嬴政是中国历史上第一位皇帝",
+    "tags": "历史,常识"
+  },
+  {
+    "type": "知识题",
+    "difficulty": 3,
+    "question": "唐朝的开国皇帝是？",
+    "options": [
+      "李世民",
+      "李渊",
+      "李治",
+      "李隆基"
+    ],
+    "answer": 1,
+    "explanation": "李渊是唐朝开国皇帝，即唐高祖",
+    "tags": "历史,常识"
+  },
+  {
+    "type": "知识题",
+    "difficulty": 1,
+    "question": "明朝的开国皇帝是？",
+    "options": [
+      "朱棣",
+      "朱元璋",
+      "朱允炆",
+      "朱厚照"
+    ],
+    "answer": 1,
+    "explanation": "朱元璋是明朝开国皇帝，即明太祖",
+    "tags": "历史,常识"
+  },
+  {
+    "type": "知识题",
+    "difficulty": 2,
+    "question": "清朝的最后一个皇帝是？",
+    "options": [
+      "光绪",
+      "溥仪",
+      "同治",
+      "咸丰"
+    ],
+    "answer": 1,
+    "explanation": "溥仪是中国封建王朝的最后一位皇帝",
+    "tags": "历史,常识"
+  },
+  {
+    "type": "知识题",
+    "difficulty": 3,
+    "question": "赤壁之战发生在哪个朝代？",
+    "options": [
+      "西汉",
+      "东汉",
+      "三国",
+      "西晋"
+    ],
+    "answer": 1,
+    "explanation": "赤壁之战发生在东汉末年",
+    "tags": "历史,常识"
+  },
+  {
+    "type": "知识题",
+    "difficulty": 1,
+    "question": "郑和下西洋是在哪个朝代？",
+    "options": [
+      "元朝",
+      "明朝",
+      "清朝",
+      "宋朝"
+    ],
+    "answer": 1,
+    "explanation": "明成祖朱棣时期郑和七次下西洋",
+    "tags": "历史,常识"
+  },
+  {
+    "type": "知识题",
+    "difficulty": 2,
+    "question": "戊戌变法发生在哪一年？",
+    "options": [
+      "1894年",
+      "1898年",
+      "1900年",
+      "1911年"
+    ],
+    "answer": 1,
+    "explanation": "戊戌变法又称百日维新，发生在1898年",
+    "tags": "历史,常识"
+  },
+  {
+    "type": "知识题",
+    "difficulty": 3,
+    "question": "辛亥革命爆发于哪一年？",
+    "options": [
+      "1900年",
+      "1911年",
+      "1919年",
+      "1921年"
+    ],
+    "answer": 1,
+    "explanation": "1911年10月10日武昌起义爆发",
+    "tags": "历史,常识"
+  },
+  {
+    "type": "知识题",
+    "difficulty": 1,
+    "question": "五四运动发生于哪一年？",
+    "options": [
+      "1911年",
+      "1919年",
+      "1921年",
+      "1927年"
+    ],
+    "answer": 1,
+    "explanation": "1919年5月4日爆发五四运动",
+    "tags": "历史,常识"
+  },
+  {
+    "type": "知识题",
+    "difficulty": 2,
+    "question": "长征胜利结束的标志是？",
+    "options": [
+      "遵义会议",
+      "会宁会师",
+      "吴起镇会师",
+      "强渡大渡河"
+    ],
+    "answer": 1,
+    "explanation": "1936年10月红军三大主力在会宁会师",
+    "tags": "历史,常识"
+  },
+  {
+    "type": "知识题",
+    "difficulty": 3,
+    "question": "第二次世界大战开始于哪一年？",
+    "options": [
+      "1937年",
+      "1939年",
+      "1941年",
+      "1945年"
+    ],
+    "answer": 1,
+    "explanation": "1939年9月1日德国入侵波兰",
+    "tags": "历史,常识"
+  },
+  {
+    "type": "知识题",
+    "difficulty": 1,
+    "question": "美国独立战争开始于哪一年？",
+    "options": [
+      "1773年",
+      "1775年",
+      "1776年",
+      "1783年"
+    ],
+    "answer": 1,
+    "explanation": "1775年莱克星顿的枪声标志着独立战争开始",
+    "tags": "历史,常识"
+  },
+  {
+    "type": "知识题",
+    "difficulty": 2,
+    "question": "法国大革命爆发于哪一年？",
+    "options": [
+      "1787年",
+      "1789年",
+      "1792年",
+      "1799年"
+    ],
+    "answer": 1,
+    "explanation": "1789年7月14日攻占巴士底狱标志大革命爆发",
+    "tags": "历史,常识"
+  },
+  {
+    "type": "知识题",
+    "difficulty": 3,
+    "question": "文艺复兴起源于哪个国家？",
+    "options": [
+      "法国",
+      "英国",
+      "意大利",
+      "德国"
+    ],
+    "answer": 2,
+    "explanation": "文艺复兴起源于14世纪的意大利",
+    "tags": "历史,文化"
+  },
+  {
+    "type": "知识题",
+    "difficulty": 1,
+    "question": "《史记》的作者是谁？",
+    "options": [
+      "司马光",
+      "司马迁",
+      "班固",
+      "左丘明"
+    ],
+    "answer": 1,
+    "explanation": "司马迁著《史记》，是中国第一部纪传体通史",
+    "tags": "历史,文学"
+  },
+  {
+    "type": "知识题",
+    "difficulty": 2,
+    "question": "东汉末年黄巾起义的领导者是？",
+    "options": [
+      "张角",
+      "张宝",
+      "张梁",
+      "董卓"
+    ],
+    "answer": 0,
+    "explanation": "张角创立太平道，领导黄巾起义",
+    "tags": "历史,常识"
+  },
+  {
+    "type": "知识题",
+    "difficulty": 3,
+    "question": "成吉思汗的原名是？",
+    "options": [
+      "忽必烈",
+      "铁木真",
+      "窝阔台",
+      "拖雷"
+    ],
+    "answer": 1,
+    "explanation": "成吉思汗原名铁木真",
+    "tags": "历史,常识"
+  },
+  {
+    "type": "知识题",
+    "difficulty": 1,
+    "question": "中国历史上唯一的女皇帝是？",
+    "options": [
+      "吕雉",
+      "武则天",
+      "慈禧",
+      "萧太后"
+    ],
+    "answer": 1,
+    "explanation": "武则天是中国历史上唯一的女皇帝",
+    "tags": "历史,常识"
+  },
+  {
+    "type": "知识题",
+    "difficulty": 2,
+    "question": "鸦片战争爆发于哪一年？",
+    "options": [
+      "1839年",
+      "1840年",
+      "1842年",
+      "1856年"
+    ],
+    "answer": 1,
+    "explanation": "1840年英国发动鸦片战争",
+    "tags": "历史,常识"
+  },
+  {
+    "type": "知识题",
+    "difficulty": 3,
+    "question": "八国联军侵华发生于哪一年？",
+    "options": [
+      "1894年",
+      "1898年",
+      "1900年",
+      "1901年"
+    ],
+    "answer": 2,
+    "explanation": "1900年英、美、法、德、俄、日、意、奥组成联军侵华",
+    "tags": "历史,常识"
+  },
+  {
+    "type": "知识题",
+    "difficulty": 1,
+    "question": "新文化运动的主要阵地是？",
+    "options": [
+      "《民报》",
+      "《新青年》",
+      "《申报》",
+      "《时务报》"
+    ],
+    "answer": 1,
+    "explanation": "陈独秀创办的《新青年》是新文化运动的主要阵地",
+    "tags": "历史,文化"
+  },
+  {
+    "type": "知识题",
+    "difficulty": 2,
+    "question": "西安事变发生于哪一年？",
+    "options": [
+      "1935年",
+      "1936年",
+      "1937年",
+      "1938年"
+    ],
+    "answer": 1,
+    "explanation": "1936年12月12日张学良、杨虎城发动西安事变",
+    "tags": "历史,常识"
+  },
+  {
+    "type": "知识题",
+    "difficulty": 3,
+    "question": "诺曼底登陆发生于哪一年？",
+    "options": [
+      "1942年",
+      "1943年",
+      "1944年",
+      "1945年"
+    ],
+    "answer": 2,
+    "explanation": "1944年6月6日盟军在法国诺曼底登陆",
+    "tags": "历史,常识"
+  },
+  {
+    "type": "知识题",
+    "difficulty": 1,
+    "question": "冷战结束的标志是？",
+    "options": [
+      "柏林墙倒塌",
+      "苏联解体",
+      "东欧剧变",
+      "铁幕演说"
+    ],
+    "answer": 1,
+    "explanation": "1991年苏联解体标志着冷战结束",
+    "tags": "历史,常识"
+  },
+  {
+    "type": "知识题",
+    "difficulty": 2,
+    "question": "马可·波罗游记中描述的是哪个朝代的中国？",
+    "options": [
+      "唐朝",
+      "宋朝",
+      "元朝",
+      "明朝"
+    ],
+    "answer": 2,
+    "explanation": "马可·波罗在元朝时期来到中国",
+    "tags": "历史,常识"
+  },
+  {
+    "type": "知识题",
+    "difficulty": 3,
+    "question": "古罗马帝国的第一位皇帝是？",
+    "options": [
+      "凯撒",
+      "屋大维",
+      "尼禄",
+      "图拉真"
+    ],
+    "answer": 1,
+    "explanation": "屋大维被元老院尊为奥古斯都，成为罗马帝国第一位皇帝",
+    "tags": "历史,常识"
+  },
+  {
+    "type": "知识题",
+    "difficulty": 1,
+    "question": "明治维新发生在哪个国家？",
+    "options": [
+      "中国",
+      "韩国",
+      "日本",
+      "越南"
+    ],
+    "answer": 2,
+    "explanation": "1868年日本开始明治维新",
+    "tags": "历史,常识"
+  },
+  {
+    "type": "知识题",
+    "difficulty": 2,
+    "question": "第一次世界大战持续了几年？",
+    "options": [
+      "2年",
+      "3年",
+      "4年",
+      "5年"
+    ],
+    "answer": 2,
+    "explanation": "1914年至1918年，第一次世界大战持续了4年",
+    "tags": "历史,常识"
+  },
+  {
+    "type": "知识题",
+    "difficulty": 3,
+    "question": "金字塔是哪个文明古国的象征？",
+    "options": [
+      "巴比伦",
+      "古埃及",
+      "古印度",
+      "古希腊"
+    ],
+    "answer": 1,
+    "explanation": "金字塔是古埃及文明的象征",
+    "tags": "历史,常识"
+  },
+  {
+    "type": "知识题",
+    "difficulty": 1,
+    "question": "植物进行光合作用的主要场所是？",
+    "options": [
+      "线粒体",
+      "叶绿体",
+      "细胞核",
+      "核糖体"
+    ],
+    "answer": 1,
+    "explanation": "叶绿体是植物进行光合作用的场所",
+    "tags": "生物,植物"
+  },
+  {
+    "type": "知识题",
+    "difficulty": 2,
+    "question": "人体最大的淋巴器官是？",
+    "options": [
+      "扁桃体",
+      "脾脏",
+      "胸腺",
+      "淋巴结"
+    ],
+    "answer": 1,
+    "explanation": "脾脏是人体最大的淋巴器官",
+    "tags": "生物,人体"
+  },
+  {
+    "type": "知识题",
+    "difficulty": 3,
+    "question": "DNA的中文名称是？",
+    "options": [
+      "核糖核酸",
+      "脱氧核糖核酸",
+      "蛋白质",
+      "氨基酸"
+    ],
+    "answer": 1,
+    "explanation": "DNA是脱氧核糖核酸的英文缩写",
+    "tags": "生物,遗传"
+  },
+  {
+    "type": "知识题",
+    "difficulty": 1,
+    "question": "蜻蜓点水是在干什么？",
+    "options": [
+      "喝水",
+      "洗澡",
+      "产卵",
+      "捕鱼"
+    ],
+    "answer": 2,
+    "explanation": "蜻蜓点水是雌蜻蜓在水中产卵",
+    "tags": "生物,昆虫"
+  },
+  {
+    "type": "知识题",
+    "difficulty": 2,
+    "question": "蝙蝠属于哪类动物？",
+    "options": [
+      "鸟类",
+      "哺乳类",
+      "爬行类",
+      "两栖类"
+    ],
+    "answer": 1,
+    "explanation": "蝙蝠是会飞的哺乳动物",
+    "tags": "生物,动物"
+  },
+  {
+    "type": "知识题",
+    "difficulty": 3,
+    "question": "鲸鱼属于哪类动物？",
+    "options": [
+      "鱼类",
+      "哺乳类",
+      "爬行类",
+      "软体动物"
+    ],
+    "answer": 1,
+    "explanation": "鲸鱼是生活在海洋中的哺乳动物",
+    "tags": "生物,动物"
+  },
+  {
+    "type": "知识题",
+    "difficulty": 1,
+    "question": "人体的消化系统中最长的器官是？",
+    "options": [
+      "胃",
+      "小肠",
+      "大肠",
+      "食道"
+    ],
+    "answer": 1,
+    "explanation": "小肠全长约5-7米",
+    "tags": "生物,人体"
+  },
+  {
+    "type": "知识题",
+    "difficulty": 2,
+    "question": "血液的成分不包括？",
+    "options": [
+      "红细胞",
+      "白细胞",
+      "血小板",
+      "骨细胞"
+    ],
+    "answer": 3,
+    "explanation": "骨细胞存在于骨骼中，不属于血液成分",
+    "tags": "生物,人体"
+  },
+  {
+    "type": "知识题",
+    "difficulty": 3,
+    "question": "植物的根主要功能是？",
+    "options": [
+      "光合作用",
+      "吸收水分和无机盐",
+      "繁殖",
+      "呼吸"
+    ],
+    "answer": 1,
+    "explanation": "根的主要功能是吸收水分和无机盐，固定植株",
+    "tags": "生物,植物"
+  },
+  {
+    "type": "知识题",
+    "difficulty": 1,
+    "question": "蜘蛛属于昆虫吗？",
+    "options": [
+      "属于",
+      "不属于",
+      "有时是",
+      "不确定"
+    ],
+    "answer": 1,
+    "explanation": "蜘蛛属于蛛形纲，不是昆虫",
+    "tags": "生物,分类"
+  },
+  {
+    "type": "知识题",
+    "difficulty": 2,
+    "question": "人体有多少对染色体？",
+    "options": [
+      "22对",
+      "23对",
+      "24对",
+      "25对"
+    ],
+    "answer": 1,
+    "explanation": "正常人体细胞有23对染色体",
+    "tags": "生物,遗传"
+  },
+  {
+    "type": "知识题",
+    "difficulty": 3,
+    "question": "光合作用释放的是什么气体？",
+    "options": [
+      "氧气",
+      "二氧化碳",
+      "氮气",
+      "氢气"
+    ],
+    "answer": 0,
+    "explanation": "光合作用吸收二氧化碳，释放氧气",
+    "tags": "生物,植物"
+  },
+  {
+    "type": "知识题",
+    "difficulty": 1,
+    "question": "人体中唯一不能再生的器官是？",
+    "options": [
+      "肝脏",
+      "皮肤",
+      "心脏",
+      "牙齿"
+    ],
+    "answer": 3,
+    "explanation": "恒牙脱落后不能再生（虽然严格来说还有其他不可再生组织，但牙齿是常见认知）",
+    "tags": "生物,人体"
+  },
+  {
+    "type": "知识题",
+    "difficulty": 2,
+    "question": "孔雀开屏的主要目的是？",
+    "options": [
+      "取暖",
+      "求偶",
+      "示威",
+      "清洁"
+    ],
+    "answer": 1,
+    "explanation": "雄孔雀开屏主要是为了吸引雌孔雀",
+    "tags": "生物,动物"
+  },
+  {
+    "type": "知识题",
+    "difficulty": 3,
+    "question": "企鹅孵蛋时主要由谁来孵？",
+    "options": [
+      "雌性",
+      "雄性",
+      "轮流",
+      "都不孵"
+    ],
+    "answer": 1,
+    "explanation": "帝企鹅由雄性负责孵蛋",
+    "tags": "生物,动物"
+  },
+  {
+    "type": "知识题",
+    "difficulty": 1,
+    "question": "变色龙变色的主要目的是？",
+    "options": [
+      "好玩",
+      "伪装和交流",
+      "吸热",
+      "散热"
+    ],
+    "answer": 1,
+    "explanation": "变色龙变色主要用于伪装和情绪交流",
+    "tags": "生物,动物"
+  },
+  {
+    "type": "知识题",
+    "difficulty": 2,
+    "question": "人体中含量最多的元素是？",
+    "options": [
+      "碳",
+      "氢",
+      "氧",
+      "氮"
+    ],
+    "answer": 2,
+    "explanation": "人体中氧元素含量约占65%",
+    "tags": "生物,化学"
+  },
+  {
+    "type": "知识题",
+    "difficulty": 3,
+    "question": "仙人掌的刺其实是它的？",
+    "options": [
+      "叶子",
+      "茎",
+      "根",
+      "花"
+    ],
+    "answer": 0,
+    "explanation": "仙人掌的刺是由叶子退化而来",
+    "tags": "生物,植物"
+  },
+  {
+    "type": "知识题",
+    "difficulty": 1,
+    "question": "萤火虫发光属于什么现象？",
+    "options": [
+      "化学反应",
+      "物理反应",
+      "反射",
+      "折射"
+    ],
+    "answer": 0,
+    "explanation": "萤火虫发光是体内的生物发光反应",
+    "tags": "生物,生理"
+  },
+  {
+    "type": "知识题",
+    "difficulty": 2,
+    "question": "人的手指上有多少个关节？",
+    "options": [
+      "12个",
+      "14个",
+      "16个",
+      "18个"
+    ],
+    "answer": 1,
+    "explanation": "每根手指3个关节，拇指2个，共14个",
+    "tags": "生物,人体"
+  },
+  {
+    "type": "知识题",
+    "difficulty": 3,
+    "question": "蜜蜂属于哪种昆虫？",
+    "options": [
+      "甲虫",
+      "膜翅目",
+      "鳞翅目",
+      "双翅目"
+    ],
+    "answer": 1,
+    "explanation": "蜜蜂属于膜翅目昆虫",
+    "tags": "生物,昆虫"
+  },
+  {
+    "type": "知识题",
+    "difficulty": 1,
+    "question": "水稻属于哪类植物？",
+    "options": [
+      "双子叶植物",
+      "单子叶植物",
+      "裸子植物",
+      "蕨类植物"
+    ],
+    "answer": 1,
+    "explanation": "水稻是单子叶植物",
+    "tags": "生物,植物"
+  },
+  {
+    "type": "知识题",
+    "difficulty": 2,
+    "question": "人体内最小的骨头是？",
+    "options": [
+      "锤骨",
+      "砧骨",
+      "镫骨",
+      "耳蜗"
+    ],
+    "answer": 2,
+    "explanation": "镫骨是人体中最小的骨头，位于中耳",
+    "tags": "生物,人体"
+  },
+  {
+    "type": "知识题",
+    "difficulty": 3,
+    "question": "熊猫的主要食物是？",
+    "options": [
+      "肉类",
+      "竹子",
+      "树叶",
+      "水果"
+    ],
+    "answer": 1,
+    "explanation": "大熊猫99%的食物是竹子",
+    "tags": "生物,动物"
+  },
+  {
+    "type": "知识题",
+    "difficulty": 1,
+    "question": "蛇属于哪类动物？",
+    "options": [
+      "两栖类",
+      "爬行类",
+      "哺乳类",
+      "鱼类"
+    ],
+    "answer": 1,
+    "explanation": "蛇属于爬行类动物",
+    "tags": "生物,动物"
+  },
+  {
+    "type": "知识题",
+    "difficulty": 2,
+    "question": "水的凝固点是？",
+    "options": [
+      "0°C",
+      "4°C",
+      "100°C",
+      "-4°C"
+    ],
+    "answer": 0,
+    "explanation": "标准大气压下水的凝固点是0°C",
+    "tags": "物理,常识"
+  },
+  {
+    "type": "知识题",
+    "difficulty": 3,
+    "question": "力的单位是？",
+    "options": [
+      "千克",
+      "牛顿",
+      "焦耳",
+      "瓦特"
+    ],
+    "answer": 1,
+    "explanation": "力的国际单位是牛顿(N)",
+    "tags": "物理,常识"
+  },
+  {
+    "type": "知识题",
+    "difficulty": 1,
+    "question": "声音在哪种介质中传播最快？",
+    "options": [
+      "空气",
+      "水",
+      "钢铁",
+      "真空"
+    ],
+    "answer": 2,
+    "explanation": "声音在固体中传播最快",
+    "tags": "物理,声学"
+  },
+  {
+    "type": "知识题",
+    "difficulty": 2,
+    "question": "彩虹的形成原理是？",
+    "options": [
+      "光的反射",
+      "光的折射和色散",
+      "光的衍射",
+      "光的干涉"
+    ],
+    "answer": 1,
+    "explanation": "彩虹是阳光在水滴中折射和色散形成的",
+    "tags": "物理,光学"
+  },
+  {
+    "type": "知识题",
+    "difficulty": 3,
+    "question": "地球的重力加速度约为？",
+    "options": [
+      "8.8 m/s²",
+      "9.8 m/s²",
+      "10.8 m/s²",
+      "11.8 m/s²"
+    ],
+    "answer": 1,
+    "explanation": "地球表面重力加速度约为9.8 m/s²",
+    "tags": "物理,常识"
+  },
+  {
+    "type": "知识题",
+    "difficulty": 1,
+    "question": "电流的方向规定为？",
+    "options": [
+      "电子移动方向",
+      "正电荷移动方向",
+      "负电荷移动方向",
+      "磁场方向"
+    ],
+    "answer": 1,
+    "explanation": "物理学中规定正电荷移动方向为电流方向",
+    "tags": "物理,电学"
+  },
+  {
+    "type": "知识题",
+    "difficulty": 2,
+    "question": "欧姆定律的公式是？",
+    "options": [
+      "I=U/R",
+      "I=UR",
+      "R=IU",
+      "U=I/R"
+    ],
+    "answer": 0,
+    "explanation": "欧姆定律：电流=电压÷电阻",
+    "tags": "物理,电学"
+  },
+  {
+    "type": "知识题",
+    "difficulty": 3,
+    "question": "原子核由什么组成？",
+    "options": [
+      "质子和电子",
+      "质子和中子",
+      "中子和电子",
+      "光子"
+    ],
+    "answer": 1,
+    "explanation": "原子核由质子和中子组成",
+    "tags": "物理,原子"
+  },
+  {
+    "type": "知识题",
+    "difficulty": 1,
+    "question": "摩擦起电的本质是？",
+    "options": [
+      "创造了电荷",
+      "电荷的转移",
+      "消灭了电荷",
+      "产生了磁场"
+    ],
+    "answer": 1,
+    "explanation": "摩擦起电是电子从一个物体转移到另一个物体",
+    "tags": "物理,电学"
+  },
+  {
+    "type": "知识题",
+    "difficulty": 2,
+    "question": "以下哪种现象不是由于光的折射引起的？",
+    "options": [
+      "筷子在水中变弯",
+      "海市蜃楼",
+      "镜子中的倒影",
+      "彩虹"
+    ],
+    "answer": 2,
+    "explanation": "镜子中的倒影是光的反射现象",
+    "tags": "物理,光学"
+  },
+  {
+    "type": "知识题",
+    "difficulty": 3,
+    "question": "铁生锈是铁与什么物质反应？",
+    "options": [
+      "氮气",
+      "氧气",
+      "二氧化碳",
+      "氢气"
+    ],
+    "answer": 1,
+    "explanation": "铁生锈是铁与氧气、水共同作用的结果",
+    "tags": "化学,常识"
+  },
+  {
+    "type": "知识题",
+    "difficulty": 1,
+    "question": "酸雨的pH值一般小于？",
+    "options": [
+      "7",
+      "6.5",
+      "5.6",
+      "4.5"
+    ],
+    "answer": 2,
+    "explanation": "pH小于5.6的降水称为酸雨",
+    "tags": "化学,环境"
+  },
+  {
+    "type": "知识题",
+    "difficulty": 2,
+    "question": "纯水的pH值在常温下约为？",
+    "options": [
+      "6",
+      "7",
+      "8",
+      "9"
+    ],
+    "answer": 1,
+    "explanation": "常温下纯水的pH值约为7",
+    "tags": "化学,常识"
+  },
+  {
+    "type": "知识题",
+    "difficulty": 3,
+    "question": "燃烧需要哪三个条件？",
+    "options": [
+      "可燃物、氧气、着火点",
+      "可燃物、氮气、高温",
+      "氧气、氢气、高温",
+      "可燃物、二氧化碳、高温"
+    ],
+    "answer": 0,
+    "explanation": "燃烧三要素：可燃物、助燃物、达到着火点",
+    "tags": "化学,常识"
+  },
+  {
+    "type": "知识题",
+    "difficulty": 1,
+    "question": "干冰是什么物质的固态？",
+    "options": [
+      "水",
+      "二氧化碳",
+      "氧气",
+      "氮气"
+    ],
+    "answer": 1,
+    "explanation": "干冰是固态二氧化碳",
+    "tags": "化学,常识"
+  },
+  {
+    "type": "知识题",
+    "difficulty": 2,
+    "question": "天然气的主要成分是？",
+    "options": [
+      "一氧化碳",
+      "甲烷",
+      "乙烷",
+      "丙烷"
+    ],
+    "answer": 1,
+    "explanation": "天然气的主要成分是甲烷",
+    "tags": "化学,能源"
+  },
+  {
+    "type": "知识题",
+    "difficulty": 3,
+    "question": "食盐的化学成分是？",
+    "options": [
+      "氯化钾",
+      "氯化钠",
+      "碳酸钠",
+      "硫酸钠"
+    ],
+    "answer": 1,
+    "explanation": "食盐的主要成分是氯化钠(NaCl)",
+    "tags": "化学,常识"
+  },
+  {
+    "type": "知识题",
+    "difficulty": 1,
+    "question": "铝制品不易腐蚀是因为表面形成了？",
+    "options": [
+      "铝粉",
+      "氧化铝保护膜",
+      "氢氧化铝",
+      "氯化铝"
+    ],
+    "answer": 1,
+    "explanation": "铝表面形成致密的氧化铝薄膜，阻止进一步氧化",
+    "tags": "化学,金属"
+  },
+  {
+    "type": "知识题",
+    "difficulty": 2,
+    "question": "铜锈的主要成分是？",
+    "options": [
+      "氧化铜",
+      "碱式碳酸铜",
+      "硫酸铜",
+      "氯化铜"
+    ],
+    "answer": 1,
+    "explanation": "铜锈俗称铜绿，主要成分是碱式碳酸铜",
+    "tags": "化学,金属"
+  },
+  {
+    "type": "知识题",
+    "difficulty": 3,
+    "question": "温室效应主要与哪种气体有关？",
+    "options": [
+      "氧气",
+      "氮气",
+      "二氧化碳",
+      "氢气"
+    ],
+    "answer": 2,
+    "explanation": "二氧化碳是主要的温室气体之一",
+    "tags": "化学,环境"
+  },
+  {
+    "type": "知识题",
+    "difficulty": 1,
+    "question": "以下哪种物质是强酸？",
+    "options": [
+      "醋酸",
+      "柠檬酸",
+      "硫酸",
+      "碳酸"
+    ],
+    "answer": 2,
+    "explanation": "硫酸是强酸",
+    "tags": "化学,酸碱"
+  },
+  {
+    "type": "知识题",
+    "difficulty": 2,
+    "question": "以下哪种元素是人体必需的微量元素？",
+    "options": [
+      "氧",
+      "碳",
+      "铁",
+      "氢"
+    ],
+    "answer": 2,
+    "explanation": "铁是人体必需的微量元素",
+    "tags": "化学,生物"
+  },
+  {
+    "type": "知识题",
+    "difficulty": 3,
+    "question": "石墨和金刚石都是由什么元素组成的？",
+    "options": [
+      "碳",
+      "硅",
+      "氧",
+      "氢"
+    ],
+    "answer": 0,
+    "explanation": "石墨和金刚石都是碳的同素异形体",
+    "tags": "化学,常识"
+  },
+  {
+    "type": "知识题",
+    "difficulty": 1,
+    "question": "氧气在空气中的体积分数约为？",
+    "options": [
+      "21%",
+      "78%",
+      "1%",
+      "0.03%"
+    ],
+    "answer": 0,
+    "explanation": "氧气约占空气体积的21%",
+    "tags": "化学,常识"
+  },
+  {
+    "type": "知识题",
+    "difficulty": 2,
+    "question": "诺贝尔奖中没有哪个奖项？",
+    "options": [
+      "物理学奖",
+      "化学奖",
+      "数学奖",
+      "文学奖"
+    ],
+    "answer": 2,
+    "explanation": "诺贝尔奖中没有数学奖",
+    "tags": "科学,常识"
+  },
+  {
+    "type": "知识题",
+    "difficulty": 3,
+    "question": "《静夜思》的作者是？",
+    "options": [
+      "杜甫",
+      "李白",
+      "王维",
+      "孟浩然"
+    ],
+    "answer": 1,
+    "explanation": "李白作《静夜思》：床前明月光",
+    "tags": "文学,古诗"
+  },
+  {
+    "type": "知识题",
+    "difficulty": 1,
+    "question": "《离骚》的作者是？",
+    "options": [
+      "孔子",
+      "屈原",
+      "司马迁",
+      "宋玉"
+    ],
+    "answer": 1,
+    "explanation": "屈原是《离骚》的作者",
+    "tags": "文学,古诗"
+  },
+  {
+    "type": "知识题",
+    "difficulty": 2,
+    "question": "《水浒传》中共有多少位好汉？",
+    "options": [
+      "100",
+      "105",
+      "108",
+      "110"
+    ],
+    "answer": 2,
+    "explanation": "梁山泊共有108位好汉",
+    "tags": "文学,名著"
+  },
+  {
+    "type": "知识题",
+    "difficulty": 3,
+    "question": "《三国演义》中桃园三结义的三人是？",
+    "options": [
+      "刘备、关羽、张飞",
+      "刘备、关羽、赵云",
+      "刘备、张飞、赵云",
+      "关羽、张飞、赵云"
+    ],
+    "answer": 0,
+    "explanation": "刘备、关羽、张飞桃园三结义",
+    "tags": "文学,名著"
+  },
+  {
+    "type": "知识题",
+    "difficulty": 1,
+    "question": "《诗经》分为哪三部分？",
+    "options": [
+      "风、雅、颂",
+      "赋、比、兴",
+      "诗、词、曲",
+      "经、史、子"
+    ],
+    "answer": 0,
+    "explanation": "《诗经》分为风、雅、颂三部分",
+    "tags": "文学,经典"
+  },
+  {
+    "type": "知识题",
+    "difficulty": 2,
+    "question": "楷书四大家不包括？",
+    "options": [
+      "颜真卿",
+      "柳公权",
+      "欧阳询",
+      "王羲之"
+    ],
+    "answer": 3,
+    "explanation": "楷书四大家是颜、柳、欧、赵，王羲之是书圣",
+    "tags": "艺术,书法"
+  },
+  {
+    "type": "知识题",
+    "difficulty": 3,
+    "question": "京剧的四大名旦之一是？",
+    "options": [
+      "梅兰芳",
+      "程砚秋",
+      "尚小云",
+      "以上都是"
+    ],
+    "answer": 3,
+    "explanation": "梅兰芳、程砚秋、尚小云、荀慧生并称四大名旦",
+    "tags": "艺术,戏曲"
+  },
+  {
+    "type": "知识题",
+    "difficulty": 1,
+    "question": "《蒙娜丽莎》的作者是？",
+    "options": [
+      "梵高",
+      "达芬奇",
+      "毕加索",
+      "米开朗基罗"
+    ],
+    "answer": 1,
+    "explanation": "《蒙娜丽莎》是达芬奇的作品",
+    "tags": "艺术,绘画"
+  },
+  {
+    "type": "知识题",
+    "difficulty": 2,
+    "question": "中国五大戏曲剧种中，被誉为国粹的是？",
+    "options": [
+      "越剧",
+      "京剧",
+      "黄梅戏",
+      "评剧"
+    ],
+    "answer": 1,
+    "explanation": "京剧被誉为中国国粹",
+    "tags": "艺术,戏曲"
+  },
+  {
+    "type": "知识题",
+    "difficulty": 3,
+    "question": "《荷马史诗》包括哪两部作品？",
+    "options": [
+      "《神曲》《浮士德》",
+      "《伊利亚特》《奥德赛》",
+      "《悲惨世界》《巴黎圣母院》",
+      "《哈姆雷特》《罗密欧与朱丽叶》"
+    ],
+    "answer": 1,
+    "explanation": "《荷马史诗》包括《伊利亚特》和《奥德赛》",
+    "tags": "文学,名著"
+  },
+  {
+    "type": "知识题",
+    "difficulty": 1,
+    "question": "被称为诗仙的诗人是？",
+    "options": [
+      "杜甫",
+      "李白",
+      "白居易",
+      "苏轼"
+    ],
+    "answer": 1,
+    "explanation": "李白被称为诗仙",
+    "tags": "文学,诗人"
+  },
+  {
+    "type": "知识题",
+    "difficulty": 2,
+    "question": "被称为诗圣的诗人是？",
+    "options": [
+      "杜甫",
+      "李白",
+      "王维",
+      "李商隐"
+    ],
+    "answer": 0,
+    "explanation": "杜甫被称为诗圣",
+    "tags": "文学,诗人"
+  },
+  {
+    "type": "知识题",
+    "difficulty": 3,
+    "question": "《西游记》中去西天取经的唐僧原型是？",
+    "options": [
+      "玄奘",
+      "鉴真",
+      "法显",
+      "慧能"
+    ],
+    "answer": 0,
+    "explanation": "唐僧原型是唐代高僧玄奘",
+    "tags": "文学,历史"
+  },
+  {
+    "type": "知识题",
+    "difficulty": 1,
+    "question": "中国古代四大发明不包括？",
+    "options": [
+      "造纸术",
+      "指南针",
+      "火药",
+      "地动仪"
+    ],
+    "answer": 3,
+    "explanation": "四大发明是造纸术、指南针、火药、印刷术",
+    "tags": "历史,科技"
+  },
+  {
+    "type": "知识题",
+    "difficulty": 2,
+    "question": "《黄河大合唱》的曲作者是？",
+    "options": [
+      "聂耳",
+      "冼星海",
+      "贺绿汀",
+      "田汉"
+    ],
+    "answer": 1,
+    "explanation": "冼星海作曲《黄河大合唱》",
+    "tags": "艺术,音乐"
+  },
+  {
+    "type": "知识题",
+    "difficulty": 3,
+    "question": "《义勇军进行曲》的曲作者是？",
+    "options": [
+      "田汉",
+      "聂耳",
+      "冼星海",
+      "贺绿汀"
+    ],
+    "answer": 1,
+    "explanation": "聂耳作曲《义勇军进行曲》",
+    "tags": "艺术,音乐"
+  },
+  {
+    "type": "知识题",
+    "difficulty": 1,
+    "question": "芭蕾舞起源于哪个国家？",
+    "options": [
+      "法国",
+      "意大利",
+      "俄罗斯",
+      "英国"
+    ],
+    "answer": 1,
+    "explanation": "芭蕾舞起源于文艺复兴时期的意大利",
+    "tags": "艺术,舞蹈"
+  },
+  {
+    "type": "知识题",
+    "difficulty": 2,
+    "question": "《最后的晚餐》描绘的是哪个宗教故事？",
+    "options": [
+      "耶稣诞生",
+      "耶稣受难",
+      "最后的晚餐",
+      "耶稣复活"
+    ],
+    "answer": 2,
+    "explanation": "《最后的晚餐》描绘耶稣与十二门徒的最后晚餐",
+    "tags": "艺术,宗教"
+  },
+  {
+    "type": "知识题",
+    "difficulty": 3,
+    "question": "中国画的四大题材是？",
+    "options": [
+      "人物、山水、花鸟、走兽"
+    ],
+    "answer": 0,
+    "explanation": "虽然严格说是人物、山水、花鸟，但走兽也常归入",
+    "tags": "艺术,国画"
+  },
+  {
+    "type": "知识题",
+    "difficulty": 1,
+    "question": "《清明上河图》的作者是？",
+    "options": [
+      "张择端",
+      "范宽",
+      "郭熙",
+      "李唐"
+    ],
+    "answer": 0,
+    "explanation": "北宋画家张择端绘《清明上河图》",
+    "tags": "艺术,绘画"
+  },
+  {
+    "type": "知识题",
+    "difficulty": 2,
+    "question": "足球比赛中，一张红牌会将球员？",
+    "options": [
+      "警告",
+      "罚下出场",
+      "禁赛一场",
+      "罚款"
+    ],
+    "answer": 1,
+    "explanation": "红牌表示球员被罚下出场",
+    "tags": "体育,足球"
+  },
+  {
+    "type": "知识题",
+    "difficulty": 3,
+    "question": "网球四大满贯中，法网是在哪个国家举行？",
+    "options": [
+      "英国",
+      "美国",
+      "法国",
+      "澳大利亚"
+    ],
+    "answer": 2,
+    "explanation": "法网在法国巴黎举行",
+    "tags": "体育,网球"
+  },
+  {
+    "type": "知识题",
+    "difficulty": 1,
+    "question": "NBA的MVP奖杯是以谁命名的？",
+    "options": [
+      "乔丹",
+      "科比",
+      "比尔·拉塞尔",
+      "奥尼尔"
+    ],
+    "answer": 2,
+    "explanation": "NBA总决赛FMVP奖杯以比尔·拉塞尔命名",
+    "tags": "体育,篮球"
+  },
+  {
+    "type": "知识题",
+    "difficulty": 2,
+    "question": "乒乓球起源于哪个国家？",
+    "options": [
+      "中国",
+      "英国",
+      "美国",
+      "日本"
+    ],
+    "answer": 1,
+    "explanation": "乒乓球起源于19世纪末的英国",
+    "tags": "体育,乒乓球"
+  },
+  {
+    "type": "知识题",
+    "difficulty": 3,
+    "question": "拳击比赛中，击倒对手读秒到几算KO？",
+    "options": [
+      "5",
+      "8",
+      "10",
+      "12"
+    ],
+    "answer": 2,
+    "explanation": "裁判读秒到10，选手未起身则判KO",
+    "tags": "体育,拳击"
+  },
+  {
+    "type": "知识题",
+    "difficulty": 1,
+    "question": "F1赛车中，获得年度车手总冠军次数最多的是？",
+    "options": [
+      "塞纳",
+      "舒马赫/汉密尔顿",
+      "阿隆索",
+      "维特尔"
+    ],
+    "answer": 1,
+    "explanation": "舒马赫和汉密尔顿均获7次年度总冠军",
+    "tags": "体育,F1"
+  },
+  {
+    "type": "知识题",
+    "difficulty": 2,
+    "question": "围棋棋盘上共有多少个交叉点？",
+    "options": [
+      "300",
+      "324",
+      "361",
+      "400"
+    ],
+    "answer": 2,
+    "explanation": "19×19围棋盘共有361个交叉点",
+    "tags": "体育,围棋"
+  },
+  {
+    "type": "知识题",
+    "difficulty": 3,
+    "question": "中国象棋中，帅（将）的活动范围是？",
+    "options": [
+      "整个棋盘",
+      "九宫格",
+      "河边",
+      "中场"
+    ],
+    "answer": 1,
+    "explanation": "帅（将）只能在九宫格内活动",
+    "tags": "体育,象棋"
+  },
+  {
+    "type": "知识题",
+    "difficulty": 1,
+    "question": "排球比赛中，一方最多可以触球几次？",
+    "options": [
+      "2次",
+      "3次",
+      "4次",
+      "5次"
+    ],
+    "answer": 1,
+    "explanation": "排球每方最多触球3次（拦网除外）",
+    "tags": "体育,排球"
+  },
+  {
+    "type": "知识题",
+    "difficulty": 2,
+    "question": "奥运会的五环标志代表什么？",
+    "options": [
+      "五大洲",
+      "五个国家",
+      "五个项目",
+      "五大洋"
+    ],
+    "answer": 0,
+    "explanation": "奥运五环代表世界五大洲",
+    "tags": "体育,奥运"
+  },
+  {
+    "type": "知识题",
+    "difficulty": 3,
+    "question": "世界杯足球赛每几年举办一次？",
+    "options": [
+      "2年",
+      "3年",
+      "4年",
+      "5年"
+    ],
+    "answer": 2,
+    "explanation": "男足世界杯每4年一届",
+    "tags": "体育,足球"
+  },
+  {
+    "type": "知识题",
+    "difficulty": 1,
+    "question": "NBA一场比赛分为几节？",
+    "options": [
+      "2节",
+      "3节",
+      "4节",
+      "5节"
+    ],
+    "answer": 2,
+    "explanation": "NBA比赛分为4节，每节12分钟",
+    "tags": "体育,篮球"
+  },
+  {
+    "type": "知识题",
+    "difficulty": 2,
+    "question": "羽毛球比赛中，一方先得多少分且领先2分获胜？",
+    "options": [
+      "15",
+      "21",
+      "25",
+      "30"
+    ],
+    "answer": 1,
+    "explanation": "羽毛球通常采用21分制",
+    "tags": "体育,羽毛球"
+  },
+  {
+    "type": "知识题",
+    "difficulty": 3,
+    "question": "滑雪运动起源于哪个地区？",
+    "options": [
+      "阿尔卑斯山区",
+      "喜马拉雅山区",
+      "落基山区",
+      "安第斯山区"
+    ],
+    "answer": 0,
+    "explanation": "滑雪起源于北欧和阿尔卑斯山区",
+    "tags": "体育,滑雪"
+  },
+  {
+    "type": "知识题",
+    "difficulty": 1,
+    "question": "下列哪项不属于田径项目？",
+    "options": [
+      "100米",
+      "跳高",
+      "游泳",
+      "铅球"
+    ],
+    "answer": 2,
+    "explanation": "游泳属于水上项目，不属于田径",
+    "tags": "体育,田径"
+  },
+  {
+    "type": "知识题",
+    "difficulty": 2,
+    "question": "电子竞技哪一年首次成为亚运会正式比赛项目？",
+    "options": [
+      "2014年",
+      "2018年",
+      "2022年",
+      "2026年"
+    ],
+    "answer": 1,
+    "explanation": "2018年雅加达亚运会电子竞技为表演项目，2022年杭州亚运会首次成为正式项目（实际举办于2023年）",
+    "tags": "体育,电竞"
+  },
+  {
+    "type": "知识题",
+    "difficulty": 3,
+    "question": "斯诺克台球桌上共有多少颗红球？",
+    "options": [
+      "10",
+      "12",
+      "15",
+      "16"
+    ],
+    "answer": 2,
+    "explanation": "斯诺克球桌上有15颗红球",
+    "tags": "体育,台球"
+  },
+  {
+    "type": "知识题",
+    "difficulty": 1,
+    "question": "下列哪位被称为体操王子？",
+    "options": [
+      "李宁",
+      "李小鹏",
+      "杨威",
+      "邹凯"
+    ],
+    "answer": 0,
+    "explanation": "李宁被称为体操王子",
+    "tags": "体育,体操"
+  },
+  {
+    "type": "知识题",
+    "difficulty": 2,
+    "question": "世界三大电影节不包括？",
+    "options": [
+      "戛纳电影节",
+      "威尼斯电影节",
+      "柏林电影节",
+      "奥斯卡"
+    ],
+    "answer": 3,
+    "explanation": "奥斯卡是美国电影奖项，三大电影节是戛纳、威尼斯、柏林",
+    "tags": "娱乐,电影"
+  },
+  {
+    "type": "知识题",
+    "difficulty": 3,
+    "question": "《泰坦尼克号》的导演是？",
+    "options": [
+      "斯皮尔伯格",
+      "卡梅隆",
+      "诺兰",
+      "斯科塞斯"
+    ],
+    "answer": 1,
+    "explanation": "詹姆斯·卡梅隆导演《泰坦尼克号》",
+    "tags": "娱乐,电影"
+  },
+  {
+    "type": "知识题",
+    "difficulty": 1,
+    "question": "世界上第一台电子计算机的名字是？",
+    "options": [
+      "ENIAC",
+      "UNIVAC",
+      "IBM PC",
+      "Apple II"
+    ],
+    "answer": 0,
+    "explanation": "ENIAC于1946年在美国诞生",
+    "tags": "计算机,历史"
+  },
+  {
+    "type": "知识题",
+    "difficulty": 2,
+    "question": "互联网的前身ARPANET建立于哪一年？",
+    "options": [
+      "1965年",
+      "1969年",
+      "1975年",
+      "1983年"
+    ],
+    "answer": 1,
+    "explanation": "ARPANET于1969年建立",
+    "tags": "计算机,网络"
+  },
+  {
+    "type": "知识题",
+    "difficulty": 3,
+    "question": "CPU的中文名称是？",
+    "options": [
+      "中央处理器",
+      "图形处理器",
+      "内存",
+      "硬盘"
+    ],
+    "answer": 0,
+    "explanation": "CPU是中央处理器的英文缩写",
+    "tags": "计算机,硬件"
+  },
+  {
+    "type": "知识题",
+    "difficulty": 1,
+    "question": "下列哪种语言不是编程语言？",
+    "options": [
+      "Python",
+      "Java",
+      "HTML",
+      "C++"
+    ],
+    "answer": 2,
+    "explanation": "HTML是超文本标记语言，不是编程语言",
+    "tags": "计算机,编程"
+  },
+  {
+    "type": "知识题",
+    "difficulty": 2,
+    "question": "WiFi使用的无线电波主要属于哪个频段？",
+    "options": [
+      "2.4GHz/5GHz",
+      "900MHz",
+      "1.8GHz",
+      "10GHz"
+    ],
+    "answer": 0,
+    "explanation": "WiFi主要使用2.4GHz和5GHz频段",
+    "tags": "科技,通信"
+  },
+  {
+    "type": "知识题",
+    "difficulty": 3,
+    "question": "5G中的G代表什么？",
+    "options": [
+      "千兆",
+      "代/Generation",
+      "全球",
+      "高速"
+    ],
+    "answer": 1,
+    "explanation": "5G是第五代移动通信技术",
+    "tags": "科技,通信"
+  },
+  {
+    "type": "知识题",
+    "difficulty": 1,
+    "question": "区块链技术的核心特征是？",
+    "options": [
+      "中心化",
+      "去中心化",
+      "单一节点",
+      "私有性"
+    ],
+    "answer": 1,
+    "explanation": "区块链的核心是去中心化和不可篡改",
+    "tags": "科技,区块链"
+  },
+  {
+    "type": "知识题",
+    "difficulty": 2,
+    "question": "人工智能的英文缩写是？",
+    "options": [
+      "VR",
+      "AR",
+      "AI",
+      "IoT"
+    ],
+    "answer": 2,
+    "explanation": "AI是Artificial Intelligence的缩写",
+    "tags": "科技,AI"
+  },
+  {
+    "type": "知识题",
+    "difficulty": 3,
+    "question": "QR码发源于哪个国家？",
+    "options": [
+      "美国",
+      "中国",
+      "日本",
+      "韩国"
+    ],
+    "answer": 2,
+    "explanation": "QR码由日本电装公司于1994年发明",
+    "tags": "科技,常识"
+  },
+  {
+    "type": "知识题",
+    "difficulty": 1,
+    "question": "阿波罗11号实现人类首次登月是？",
+    "options": [
+      "1961年",
+      "1969年",
+      "1972年",
+      "1981年"
+    ],
+    "answer": 1,
+    "explanation": "1969年7月20日阿姆斯特朗登上月球",
+    "tags": "科技,航天"
+  },
+  {
+    "type": "知识题",
+    "difficulty": 2,
+    "question": "中国首次载人航天飞行是？",
+    "options": [
+      "神舟五号",
+      "神舟六号",
+      "神舟七号",
+      "神舟一号"
+    ],
+    "answer": 0,
+    "explanation": "2003年神舟五号搭载杨利伟飞天",
+    "tags": "科技,航天"
+  },
+  {
+    "type": "知识题",
+    "difficulty": 3,
+    "question": "SpaceX的创始人是？",
+    "options": [
+      "比尔·盖茨",
+      "杰夫·贝索斯",
+      "埃隆·马斯克",
+      "马克·扎克伯格"
+    ],
+    "answer": 2,
+    "explanation": "SpaceX由埃隆·马斯克创立",
+    "tags": "科技,航天"
+  },
+  {
+    "type": "知识题",
+    "difficulty": 1,
+    "question": "量子计算机的基本计算单元是？",
+    "options": [
+      "比特",
+      "量子比特/量子位",
+      "字节",
+      "神经元"
+    ],
+    "answer": 1,
+    "explanation": "量子计算机使用量子比特(qubit)",
+    "tags": "科技,量子"
+  },
+  {
+    "type": "知识题",
+    "difficulty": 2,
+    "question": "3D打印的正式名称是？",
+    "options": [
+      "立体雕刻",
+      "增材制造",
+      "减材制造",
+      "激光切割"
+    ],
+    "answer": 1,
+    "explanation": "3D打印的正式名称为增材制造",
+    "tags": "科技,制造"
+  },
+  {
+    "type": "知识题",
+    "difficulty": 3,
+    "question": "世界上第一个社交网站是？",
+    "options": [
+      "Facebook",
+      "Twitter",
+      "MySpace",
+      "LinkedIn"
+    ],
+    "answer": 2,
+    "explanation": "MySpace被认为是世界上第一个主流社交网站",
+    "tags": "科技,互联网"
+  },
+  {
+    "type": "知识题",
+    "difficulty": 1,
+    "question": "股票市场中，红色通常代表？",
+    "options": [
+      "下跌",
+      "上涨",
+      "停牌",
+      "持平"
+    ],
+    "answer": 1,
+    "explanation": "中国股市中红色代表上涨",
+    "tags": "财经,股票"
+  },
+  {
+    "type": "知识题",
+    "difficulty": 2,
+    "question": "世界上流通最广的货币是？",
+    "options": [
+      "欧元",
+      "人民币",
+      "美元",
+      "日元"
+    ],
+    "answer": 2,
+    "explanation": "美元是世界上流通最广的储备货币",
+    "tags": "财经,货币"
+  },
+  {
+    "type": "知识题",
+    "difficulty": 3,
+    "question": "GDP的中文全称是？",
+    "options": [
+      "国民生产总值",
+      "国内生产总值",
+      "人均生产总值",
+      "工业总产值"
+    ],
+    "answer": 1,
+    "explanation": "GDP是国内生产总值的英文缩写",
+    "tags": "财经,经济"
+  },
+  {
+    "type": "知识题",
+    "difficulty": 1,
+    "question": "中国的中央银行是？",
+    "options": [
+      "中国银行",
+      "中国人民银行",
+      "工商银行",
+      "建设银行"
+    ],
+    "answer": 1,
+    "explanation": "中国人民银行是中国的中央银行",
+    "tags": "财经,银行"
+  },
+  {
+    "type": "知识题",
+    "difficulty": 2,
+    "question": "通货膨胀是指？",
+    "options": [
+      "物价普遍持续上涨",
+      "物价普遍持续下跌",
+      "经济停滞",
+      "货币升值"
+    ],
+    "answer": 0,
+    "explanation": "通货膨胀是指物价总水平持续上涨",
+    "tags": "财经,经济"
+  },
+  {
+    "type": "知识题",
+    "difficulty": 3,
+    "question": "《中华人民共和国宪法》通过于哪一年？",
+    "options": [
+      "1949年",
+      "1954年",
+      "1978年",
+      "1982年"
+    ],
+    "answer": 1,
+    "explanation": "1954年第一届全国人大通过第一部宪法",
+    "tags": "法律,宪法"
+  },
+  {
+    "type": "知识题",
+    "difficulty": 1,
+    "question": "我国的根本政治制度是？",
+    "options": [
+      "人民代表大会制度",
+      "政治协商制度",
+      "民族区域自治制度",
+      "基层群众自治制度"
+    ],
+    "answer": 0,
+    "explanation": "人民代表大会制度是我国根本政治制度",
+    "tags": "法律,政治"
+  },
+  {
+    "type": "知识题",
+    "difficulty": 2,
+    "question": "个人所得税的起征点（基本减除费用）目前是每月多少元？",
+    "options": [
+      "3000元",
+      "5000元",
+      "8000元",
+      "10000元"
+    ],
+    "answer": 1,
+    "explanation": "现行个人所得税起征点为每月5000元",
+    "tags": "法律,税法"
+  },
+  {
+    "type": "知识题",
+    "difficulty": 3,
+    "question": "专利权的保护期限，发明专利是多少年？",
+    "options": [
+      "10年",
+      "15年",
+      "20年",
+      "25年"
+    ],
+    "answer": 2,
+    "explanation": "发明专利保护期限为20年",
+    "tags": "法律,知识产权"
+  },
+  {
+    "type": "知识题",
+    "difficulty": 1,
+    "question": "合同无效的法定情形不包括？",
+    "options": [
+      "违反法律强制性规定",
+      "恶意串通损害他人利益",
+      "价格略高",
+      "以合法形式掩盖非法目的"
+    ],
+    "answer": 2,
+    "explanation": "价格略高不属于合同无效的法定情形",
+    "tags": "法律,合同法"
+  },
+  {
+    "type": "知识题",
+    "difficulty": 2,
+    "question": "中国最大的岛屿是？",
+    "options": [
+      "海南岛",
+      "台湾岛",
+      "崇明岛",
+      "舟山岛"
+    ],
+    "answer": 1,
+    "explanation": "台湾岛是中国最大的岛屿",
+    "tags": "地理,常识"
+  },
+  {
+    "type": "知识题",
+    "difficulty": 3,
+    "question": "世界上最繁忙的海峡是？",
+    "options": [
+      "马六甲海峡",
+      "英吉利海峡",
+      "直布罗陀海峡",
+      "台湾海峡"
+    ],
+    "answer": 0,
+    "explanation": "马六甲海峡是世界上最繁忙的海峡之一",
+    "tags": "地理,常识"
+  },
+  {
+    "type": "知识题",
+    "difficulty": 1,
+    "question": "《本草纲目》的作者是？",
+    "options": [
+      "孙思邈",
+      "李时珍",
+      "华佗",
+      "张仲景"
+    ],
+    "answer": 1,
+    "explanation": "李时珍著《本草纲目》",
+    "tags": "历史,医学"
+  },
+  {
+    "type": "知识题",
+    "difficulty": 2,
+    "question": "中国的教师节是每年的？",
+    "options": [
+      "5月1日",
+      "6月1日",
+      "9月10日",
+      "10月1日"
+    ],
+    "answer": 2,
+    "explanation": "中国教师节是9月10日",
+    "tags": "社会,节日"
+  },
+  {
+    "type": "知识题",
+    "difficulty": 3,
+    "question": "联合国的总部设在哪个城市？",
+    "options": [
+      "纽约",
+      "日内瓦",
+      "巴黎",
+      "华盛顿"
+    ],
+    "answer": 0,
+    "explanation": "联合国总部位于美国纽约",
+    "tags": "政治,国际组织"
+  },
+  {
+    "type": "知识题",
+    "difficulty": 1,
+    "question": "世界上第一种抗生素是？",
+    "options": [
+      "青霉素",
+      "链霉素",
+      "红霉素",
+      "四环素"
+    ],
+    "answer": 0,
+    "explanation": "1928年弗莱明发现青霉素",
+    "tags": "生物,医学"
+  },
+  {
+    "type": "知识题",
+    "difficulty": 2,
+    "question": "《一千零一夜》又名？",
+    "options": [
+      "《格林童话》",
+      "《天方夜谭》",
+      "《安徒生童话》",
+      "《伊索寓言》"
+    ],
+    "answer": 1,
+    "explanation": "《一千零一夜》又称《天方夜谭》",
+    "tags": "文学,名著"
+  },
+  {
+    "type": "知识题",
+    "difficulty": 3,
+    "question": "世界上最长的跨海大桥是？",
+    "options": [
+      "港珠澳大桥",
+      "杭州湾跨海大桥",
+      "青岛海湾大桥",
+      "东海大桥"
+    ],
+    "answer": 0,
+    "explanation": "港珠澳大桥全长约55公里",
+    "tags": "地理,建筑"
+  },
+  {
+    "type": "知识题",
+    "difficulty": 1,
+    "question": "中国的国球是？",
+    "options": [
+      "篮球",
+      "足球",
+      "乒乓球",
+      "羽毛球"
+    ],
+    "answer": 2,
+    "explanation": "乒乓球被称为中国的国球",
+    "tags": "体育,常识"
+  },
+  {
+    "type": "知识题",
+    "difficulty": 2,
+    "question": "诺贝尔奖从哪一年开始颁发？",
+    "options": [
+      "1895年",
+      "1901年",
+      "1910年",
+      "1920年"
+    ],
+    "answer": 1,
+    "explanation": "1901年首次颁发诺贝尔奖",
+    "tags": "科学,常识"
+  },
+  {
+    "type": "知识题",
+    "difficulty": 3,
+    "question": "南京是中国的哪个省级行政区？",
+    "options": [
+      "南京市",
+      "南京省",
+      "南京自治区",
+      "南京特别行政区"
+    ],
+    "answer": 0,
+    "explanation": "南京是中国的直辖市或省会城市",
+    "tags": "地理,常识"
+  },
+  {
+    "type": "知识题",
+    "difficulty": 1,
+    "question": "珠江流经中国的哪些地区？",
+    "options": [
+      "华北地区",
+      "华南地区",
+      "东北地区",
+      "西北地区"
+    ],
+    "answer": 0,
+    "explanation": "珠江流经中国多个省份",
+    "tags": "地理,常识"
+  },
+  {
+    "type": "知识题",
+    "difficulty": 2,
+    "question": "下列哪个数字最大？",
+    "options": [
+      "70",
+      "33",
+      "84",
+      "48"
+    ],
+    "answer": 2,
+    "explanation": "84是最大的数字",
+    "tags": "数学,常识"
+  },
+  {
+    "type": "知识题",
+    "difficulty": 3,
+    "question": "三原色包括蓝色吗？",
+    "options": [
+      "包括",
+      "不包括",
+      "有时是",
+      "不确定"
+    ],
+    "answer": 0,
+    "explanation": "三原色是红、黄、蓝",
+    "tags": "艺术,常识"
+  },
+  {
+    "type": "知识题",
+    "difficulty": 1,
+    "question": "一年有四季，夏季是第2个季节吗？",
+    "options": [
+      "是",
+      "不是",
+      "有时是",
+      "不确定"
+    ],
+    "answer": 0,
+    "explanation": "一年分为春夏秋冬四季",
+    "tags": "地理,常识"
+  },
+  {
+    "type": "知识题",
+    "difficulty": 2,
+    "question": "北京是中国的哪个省级行政区？",
+    "options": [
+      "北京市",
+      "北京省",
+      "北京自治区",
+      "北京特别行政区"
+    ],
+    "answer": 0,
+    "explanation": "北京是中国的直辖市或省会城市",
+    "tags": "地理,常识"
+  },
+  {
+    "type": "知识题",
+    "difficulty": 3,
+    "question": "钱塘江流经中国的哪些地区？",
+    "options": [
+      "华北地区",
+      "华南地区",
+      "东北地区",
+      "西北地区"
+    ],
+    "answer": 0,
+    "explanation": "钱塘江流经中国多个省份",
+    "tags": "地理,常识"
+  },
+  {
+    "type": "知识题",
+    "difficulty": 1,
+    "question": "下列哪个数字最大？",
+    "options": [
+      "35",
+      "62",
+      "43",
+      "78"
+    ],
+    "answer": 3,
+    "explanation": "78是最大的数字",
+    "tags": "数学,常识"
+  },
+  {
+    "type": "知识题",
+    "difficulty": 2,
+    "question": "三原色包括黄色吗？",
+    "options": [
+      "包括",
+      "不包括",
+      "有时是",
+      "不确定"
+    ],
+    "answer": 0,
+    "explanation": "三原色是红、黄、蓝",
+    "tags": "艺术,常识"
+  },
+  {
+    "type": "知识题",
+    "difficulty": 3,
+    "question": "一年有四季，秋季是第3个季节吗？",
+    "options": [
+      "是",
+      "不是",
+      "有时是",
+      "不确定"
+    ],
+    "answer": 0,
+    "explanation": "一年分为春夏秋冬四季",
+    "tags": "地理,常识"
+  },
+  {
+    "type": "知识题",
+    "difficulty": 1,
+    "question": "南京是中国的哪个省级行政区？",
+    "options": [
+      "南京市",
+      "南京省",
+      "南京自治区",
+      "南京特别行政区"
+    ],
+    "answer": 0,
+    "explanation": "南京是中国的直辖市或省会城市",
+    "tags": "地理,常识"
+  },
+  {
+    "type": "知识题",
+    "difficulty": 2,
+    "question": "海河流经中国的哪些地区？",
+    "options": [
+      "华北地区",
+      "华南地区",
+      "东北地区",
+      "西北地区"
+    ],
+    "answer": 0,
+    "explanation": "海河流经中国多个省份",
+    "tags": "地理,常识"
+  },
+  {
+    "type": "知识题",
+    "difficulty": 3,
+    "question": "下列哪个数字最大？",
+    "options": [
+      "41",
+      "91",
+      "73",
+      "55"
+    ],
+    "answer": 1,
+    "explanation": "91是最大的数字",
+    "tags": "数学,常识"
+  },
+  {
+    "type": "知识题",
+    "difficulty": 1,
+    "question": "三原色包括红色吗？",
+    "options": [
+      "包括",
+      "不包括",
+      "有时是",
+      "不确定"
+    ],
+    "answer": 0,
+    "explanation": "三原色是红、黄、蓝",
+    "tags": "艺术,常识"
+  },
+  {
+    "type": "知识题",
+    "difficulty": 2,
+    "question": "一年有四季，冬季是第4个季节吗？",
+    "options": [
+      "是",
+      "不是",
+      "有时是",
+      "不确定"
+    ],
+    "answer": 0,
+    "explanation": "一年分为春夏秋冬四季",
+    "tags": "地理,常识"
+  }
+]

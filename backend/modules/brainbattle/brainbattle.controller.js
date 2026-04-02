@@ -432,4 +432,62 @@ router.get('/history/:userId', async (req, res) => {
   }
 });
 
+/**
+ * 获取排位积分榜
+ * GET /api/brainbattle/leaderboard
+ */
+router.get('/leaderboard', async (req, res) => {
+  try {
+    const limit = parseInt(req.query.limit) || 50;
+    
+    // 获取按 brain_rating 排序的用户列表
+    const leaderboard = await db.all(`
+      SELECT id, username, nickname, avatar, 
+             brain_rating as rating, 
+             brain_total as total_games,
+             brain_wins as wins,
+             CASE 
+               WHEN brain_total > 0 THEN ROUND(brain_wins * 100.0 / brain_total, 1)
+               ELSE 0 
+             END as win_rate
+      FROM users
+      WHERE brain_rating > 0 OR brain_total > 0
+      ORDER BY brain_rating DESC, brain_wins DESC
+      LIMIT ?
+    `, [limit]);
+    
+    // 添加段位信息
+    const ranks = [
+      { name: '青铜脑瓜', min: 0, max: 500, color: '#cd7f32' },
+      { name: '白银思维', min: 500, max: 1000, color: '#c0c0c0' },
+      { name: '黄金记忆', min: 1000, max: 2000, color: '#ffd700' },
+      { name: '铂金逻辑', min: 2000, max: 3500, color: '#3eb489' },
+      { name: '钻石智慧', min: 3500, max: 5500, color: '#b9f2ff' },
+      { name: '大师头脑', min: 5500, max: 8000, color: '#ff6b6b' },
+      { name: '最强王者', min: 8000, max: 99999, color: '#ff0000' }
+    ];
+    
+    const leaderboardWithRanks = leaderboard.map((user, index) => {
+      const rank = ranks.find(r => user.rating >= r.min && user.rating < r.max) || ranks[0];
+      return {
+        ...user,
+        rank_name: rank.name,
+        rank_color: rank.color,
+        position: index + 1
+      };
+    });
+    
+    res.json({
+      success: true,
+      data: leaderboardWithRanks
+    });
+  } catch (err) {
+    console.error('[BrainBattle] 获取排行榜失败:', err);
+    res.status(500).json({
+      success: false,
+      message: '获取排行榜失败'
+    });
+  }
+});
+
 module.exports = router;

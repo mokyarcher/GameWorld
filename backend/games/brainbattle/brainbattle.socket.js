@@ -698,6 +698,9 @@ module.exports = function(io) {
         // 更新题目使用记录
         await updateQuestionUsage(result.lastID, room.questions, p1.id, p2.id);
         
+        // 更新用户统计
+        await updateUserStats(p1.id, p2.id, winner ? winner.id : null);
+        
         // 初始化再来一局状态
         room.rematchStatus = { player1: false, player2: false };
         room.rematchTimeout = null;
@@ -722,6 +725,60 @@ module.exports = function(io) {
         
       } catch (err) {
         console.error('[BrainBattle] 结束游戏失败:', err);
+      }
+    }
+    
+    // ========== 更新用户统计 ==========
+    async function updateUserStats(player1Id, player2Id, winnerId) {
+      try {
+        const players = [
+          { id: player1Id, isWinner: winnerId === player1Id },
+          { id: player2Id, isWinner: winnerId === player2Id }
+        ];
+        
+        for (const player of players) {
+          // 获取当前用户数据
+          const user = await db.get(`
+            SELECT brain_total, brain_wins, brain_streak, brain_rating, brain_max_rating 
+            FROM users WHERE id = ?
+          `, [player.id]);
+          
+          if (!user) continue;
+          
+          const oldRating = user.brain_rating || 500;
+          const oldStreak = user.brain_streak || 0;
+          
+          // 计算新的统计数据
+          const newTotal = (user.brain_total || 0) + 1;
+          const newWins = (user.brain_wins || 0) + (player.isWinner ? 1 : 0);
+          const newStreak = player.isWinner ? oldStreak + 1 : 0;
+          
+          // 计算Rating变化（ELO简化版）
+          let ratingChange = 0;
+          if (player.isWinner) {
+            ratingChange = 20 + Math.min(oldStreak * 2, 20); // 基础20分，连胜加成最多20分
+          } else {
+            ratingChange = -15; // 失败扣15分
+          }
+          
+          const newRating = Math.max(0, oldRating + ratingChange);
+          const newMaxRating = Math.max(user.brain_max_rating || 500, newRating);
+          
+          // 更新用户数据
+          await db.run(`
+            UPDATE users 
+            SET brain_total = ?,
+                brain_wins = ?,
+                brain_streak = ?,
+                brain_rating = ?,
+                brain_max_rating = ?
+            WHERE id = ?
+          `, [newTotal, newWins, newStreak, newRating, newMaxRating, player.id]);
+          
+          console.log(`[BrainBattle] 用户统计更新: userId=${player.id}, total=${newTotal}, wins=${newWins}, streak=${newStreak}, rating=${newRating}(${ratingChange > 0 ? '+' : ''}${ratingChange})`);
+        }
+      } catch (err) {
+        console.error('[BrainBattle] 更新用户统计失败:', err);
       }
     }
     
@@ -769,6 +826,9 @@ module.exports = function(io) {
           
           // 更新题目使用记录
           await updateQuestionUsage(result.lastID, room.questions, room.player1.id, room.player2.id);
+          
+          // 更新用户统计（退出者算输）
+          await updateUserStats(room.player1.id, room.player2.id, opponent.id);
           
           console.log(`[BrainBattle] 退出游戏结果已保存: ${roomId}`);
         } catch (dbErr) {
@@ -878,7 +938,7 @@ module.exports = function(io) {
             answered: false,
             socketId: room.player2.socketId
           },
-          questions: parsedQuestions,
+          questions: questions,
           currentRound: 1,
           status: 'playing',
           answers: new Map(),

@@ -344,9 +344,35 @@
             text-align: center;
             margin-bottom: 20px;
         }
-        
+
         .import-area:hover {
             border-color: rgba(220, 20, 60, 0.6);
+        }
+
+        input[type="file"] {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid rgba(220, 20, 60, 0.3);
+            border-radius: 8px;
+            background: rgba(0,0,0,0.3);
+            color: white;
+            font-size: 1rem;
+            cursor: pointer;
+        }
+
+        input[type="file"]::file-selector-button {
+            background: linear-gradient(135deg, #dc143c, #8b0000);
+            color: white;
+            border: none;
+            border-radius: 6px;
+            padding: 8px 16px;
+            margin-right: 15px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        input[type="file"]::file-selector-button:hover {
+            opacity: 0.9;
         }
         
         /* Toast */
@@ -551,8 +577,18 @@
     <div class="modal-overlay" id="importModal">
         <div class="modal-content">
             <h3>批量导入题目</h3>
-            <p style="margin-bottom:15px;color:rgba(255,255,255,0.6);">支持 JSON 格式，每行一个题目对象</p>
+            <p style="margin-bottom:15px;color:rgba(255,255,255,0.6);">支持粘贴 JSON 文本或上传 .json 文件</p>
+
+            <!-- 文件上传区 -->
             <div class="form-group">
+                <label>选择 JSON 文件</label>
+                <input type="file" id="importFile" accept=".json,application/json" onchange="handleFileSelect()">
+            </div>
+
+            <div style="text-align:center; color:rgba(255,255,255,0.4); margin:10px 0;">— 或 —</div>
+
+            <div class="form-group">
+                <label>直接粘贴 JSON</label>
                 <textarea id="importData" style="min-height:200px;font-family:monospace;" placeholder='[
   {
     "type": "速算题",
@@ -872,16 +908,47 @@
         // 批量导入
         function showImportModal() {
             document.getElementById('importModal').classList.add('show');
+            // 重置文件选择
+            document.getElementById('importFile').value = '';
         }
         
         function closeImportModal() {
             document.getElementById('importModal').classList.remove('show');
+            document.getElementById('importFile').value = '';
+        }
+
+        // 读取上传的 JSON 文件并填充到文本框
+        function handleFileSelect() {
+            const fileInput = document.getElementById('importFile');
+            const file = fileInput.files[0];
+            if (!file) return;
+
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                try {
+                    const text = e.target.result;
+                    // 简单验证是否是合法 JSON
+                    const parsed = JSON.parse(text);
+                    if (!Array.isArray(parsed)) {
+                        showToast('JSON 格式错误：需要是数组', 'error');
+                        return;
+                    }
+                    document.getElementById('importData').value = text;
+                    showToast(`文件读取成功，共 ${parsed.length} 道题`, 'success');
+                } catch (err) {
+                    showToast('文件解析失败：不是有效的 JSON', 'error');
+                }
+            };
+            reader.onerror = function() {
+                showToast('文件读取失败', 'error');
+            };
+            reader.readAsText(file);
         }
         
         async function importQuestions() {
             const text = document.getElementById('importData').value.trim();
             if (!text) {
-                showToast('请输入数据', 'error');
+                showToast('请输入数据或选择文件', 'error');
                 return;
             }
             

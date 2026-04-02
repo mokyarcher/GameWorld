@@ -148,7 +148,7 @@ router.post('/guest', async (req, res) => {
 router.get('/profile', authenticateToken, async (req, res) => {
   try {
     const user = await db.get(
-      'SELECT id, username, nickname, avatar, chips, is_guest, created_at FROM users WHERE id = ?',
+      'SELECT id, username, nickname, avatar, chips, is_guest, created_at, brain_total, brain_wins, brain_streak, brain_rating, brain_max_rating FROM users WHERE id = ?',
       [req.userId]
     );
     
@@ -164,7 +164,12 @@ router.get('/profile', authenticateToken, async (req, res) => {
         nickname: user.nickname,
         avatar: user.avatar,
         chips: user.chips,
-        isGuest: user.is_guest === 1
+        isGuest: user.is_guest === 1,
+        brain_total: user.brain_total || 0,
+        brain_wins: user.brain_wins || 0,
+        brain_streak: user.brain_streak || 0,
+        brain_rating: user.brain_rating || 500,
+        brain_max_rating: user.brain_max_rating || 500
       }
     });
   } catch (error) {
