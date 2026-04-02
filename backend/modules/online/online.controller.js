@@ -8,6 +8,12 @@ const JWT_SECRET = process.env.JWT_SECRET || 'gameworld-secret-key-2024';
 // 在线用户存储: userId -> { socketId, location, lastActive }
 const onlineUsers = new Map();
 
+// 断开连接定时器: userId -> timeoutId
+const disconnectTimers = new Map();
+
+// 延迟下线时间（毫秒）- 给页面跳转留出时间
+const DISCONNECT_DELAY = 20000; // 20秒
+
 // 位置定义
 const LOCATION_NAMES = {
   'gamehall': '游戏大厅',
@@ -17,12 +23,22 @@ const LOCATION_NAMES = {
   'poker_lobby': '贵州扑克-大厅',
   'poker_room': '贵州扑克-等待房间',
   'poker_game': '贵州扑克-游戏中',
+  'brainbattle_lobby': '脑力对决-大厅',
+  'brainbattle_game': '脑力对决-游戏中',
   'unknown': '未知位置'
 };
 
 // 用户上线
 function userOnline(userId, socketId, location = 'unknown') {
   const userIdStr = String(userId);
+  
+  // 如果该用户正在下线倒计时中，取消它
+  if (disconnectTimers.has(userIdStr)) {
+    clearTimeout(disconnectTimers.get(userIdStr));
+    disconnectTimers.delete(userIdStr);
+    console.log(`[Online] 用户 ${userIdStr} 取消下线倒计时，重新上线`);
+  }
+  
   onlineUsers.set(userIdStr, {
     socketId,
     location,
@@ -42,11 +58,38 @@ function updateLocation(userId, location) {
   }
 }
 
-// 用户下线
+// 用户下线（延迟处理，给页面跳转留出时间）
 function userOffline(userId) {
   const userIdStr = String(userId);
-  onlineUsers.delete(userIdStr);
-  console.log(`[Online] 用户 ${userIdStr} 下线`);
+  
+  // 清除之前的定时器（如果有）
+  if (disconnectTimers.has(userIdStr)) {
+    clearTimeout(disconnectTimers.get(userIdStr));
+    disconnectTimers.delete(userIdStr);
+  }
+  
+  // 设置延迟下线定时器
+  const timeoutId = setTimeout(() => {
+    // 检查用户是否重新上线
+    const user = onlineUsers.get(userIdStr);
+    if (user) {
+      // 如果最后活跃时间在延迟期内，说明用户已经重新上线，不删除
+      const timeSinceLastActive = Date.now() - user.lastActive;
+      if (timeSinceLastActive < DISCONNECT_DELAY) {
+        console.log(`[Online] 用户 ${userIdStr} 已重新上线，取消下线`);
+        disconnectTimers.delete(userIdStr);
+        return;
+      }
+    }
+    
+    // 真正下线
+    onlineUsers.delete(userIdStr);
+    disconnectTimers.delete(userIdStr);
+    console.log(`[Online] 用户 ${userIdStr} 已下线`);
+  }, DISCONNECT_DELAY);
+  
+  disconnectTimers.set(userIdStr, timeoutId);
+  console.log(`[Online] 用户 ${userIdStr} 开始下线倒计时 ${DISCONNECT_DELAY/1000}秒...`);
 }
 
 // 获取用户在线状态

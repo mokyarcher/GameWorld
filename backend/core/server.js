@@ -13,6 +13,8 @@ const { router: onlineController, userOnline, userOffline, updateLocation } = re
 const mapController = require('../modules/map/map.controller');
 const feedbackController = require('../modules/feedback/feedback.controller');
 const joinController = require('../modules/join/join.controller');
+const brainbattleController = require('../modules/brainbattle/brainbattle.controller');
+const brainbattleAdminController = require('../modules/brainbattle/brainbattle.admin.controller');
 
 const app = express();
 const server = http.createServer(app);
@@ -59,6 +61,8 @@ async function startServer() {
   app.use('/api/map', mapController);
   app.use('/api/feedback', feedbackController);
   app.use('/api/join', joinController);
+  app.use('/api/brainbattle', brainbattleController);
+  app.use('/api/brainbattle/admin', brainbattleAdminController);
   
   // 初始化管理员账户
   await initAdminAccount();
@@ -95,6 +99,10 @@ async function startServer() {
   // 加载游戏 Socket 处理器
   const pokerSocket = require('../games/poker/poker.socket');
   pokerSocket(io);
+  
+  // 脑力对决 Socket 处理器
+  const brainbattleSocket = require('../games/brainbattle/brainbattle.socket');
+  brainbattleSocket(io);
   
   server.listen(PORT, HOST, () => {
     console.log(`ShareX 服务器运行在 http://${HOST}:${PORT}`);

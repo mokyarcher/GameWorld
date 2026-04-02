@@ -1289,11 +1289,29 @@
                         is_tool: true
                     };
                     
-                    // 如果后端没有map，则插入到第二位
+                    // 脑力对决放到第三位
+                    const brainBattle = {
+                        game_code: 'brain',
+                        game_name: '脑力对决',
+                        description: '1v1实时答题对战，考验你的知识储备和反应速度',
+                        icon: '🧠',
+                        min_points: 0,
+                        max_players: 2
+                    };
+                    
+                    // 组装游戏列表：贵州扑克、足迹空间、脑力对决、其他
                     if (!existingCodes.includes('map')) {
-                        gamesData = [backendGames[0], mapTool, ...backendGames.slice(1), ...uniqueTestGames];
+                        gamesData = [backendGames[0], mapTool, brainBattle, ...backendGames.slice(1), ...uniqueTestGames];
                     } else {
-                        gamesData = [...backendGames, ...uniqueTestGames];
+                        // 如果后端已有map，在map后面插入brain
+                        const mapIndex = backendGames.findIndex(g => g.game_code === 'map');
+                        if (mapIndex >= 0) {
+                            const before = backendGames.slice(0, mapIndex + 1);
+                            const after = backendGames.slice(mapIndex + 1);
+                            gamesData = [...before, brainBattle, ...after, ...uniqueTestGames];
+                        } else {
+                            gamesData = [...backendGames, brainBattle, ...uniqueTestGames];
+                        }
                     }
                     
                     initCarousel();
@@ -1304,6 +1322,13 @@
                 // 如果后端加载失败，使用测试数据
                 gamesData = [
                     {
+                        game_code: 'poker',
+                        game_name: '贵州扑克',
+                        description: '经典的贵州扑克游戏，考验你的牌技和心理',
+                        min_points: 1000,
+                        max_players: 9
+                    },
+                    {
                         game_code: 'map',
                         game_name: '足迹空间',
                         description: '在地图上标记你的足迹，分享美好瞬间',
@@ -1311,9 +1336,17 @@
                         is_tool: true
                     },
                     {
-                        game_code: 'poker',
-                        game_name: '贵州扑克',
-                        description: '经典的贵州扑克游戏，考验你的牌技和心理',
+                        game_code: 'brain',
+                        game_name: '脑力对决',
+                        description: '1v1实时答题对战，考验你的知识储备和反应速度',
+                        icon: '🧠',
+                        min_points: 0,
+                        max_players: 2
+                    },
+                    {
+                        game_code: 'chess',
+                        game_name: '正在开发',
+                        description: '经典策略棋类游戏，敬请期待',
                         min_points: 1000,
                         max_players: 9
                     },
@@ -2285,6 +2318,8 @@
                 window.location.href = '../games/poker/lobby.html';
             } else if (gameCode === 'map') {
                 window.location.href = './map/index.html';
+            } else if (gameCode === 'brain') {
+                window.location.href = './brainbattle/index.html';
             } else {
                 showModal('该游戏即将上线，敬请期待！', 'info');
             }
@@ -2335,22 +2370,43 @@
             console.log('[Invite] 初始化邀请监听, user.id:', user.id, '类型:', typeof user.id);
             if (!user.id) return;
             
-            // 连接到 poker 命名空间以接收邀请
-            const socket = io(`${window.location.protocol}//${window.location.host}/poker`);
+            const userId = user.id;
             
-            socket.on('connect', () => {
-                console.log('[Invite] 已连接到游戏服务器，监听 invite-' + user.id);
+            // 1. 连接到主 namespace 接收所有邀请
+            const mainSocket = io(`${window.location.protocol}//${window.location.host}`);
+            
+            mainSocket.on('connect', () => {
+                console.log('[Invite] 已连接到主服务器');
             });
             
-            socket.on('connect_error', (err) => {
-                console.error('[Invite] 连接错误:', err);
+            mainSocket.on(`invite-${userId}`, (data) => {
+                console.log('[Invite] 从主服务器收到邀请:', data);
+                showInviteModal(data);
             });
             
-            // 监听邀请通知
-            const eventName = `invite-${user.id}`;
-            console.log('[Invite] 监听事件:', eventName);
-            socket.on(eventName, (data) => {
-                console.log('[Invite] 收到邀请:', data);
+            // 2. 连接到 poker 命名空间（向后兼容）
+            const pokerSocket = io(`${window.location.protocol}//${window.location.host}/poker`);
+            
+            pokerSocket.on('connect', () => {
+                console.log('[Invite] 已连接到 poker 服务器');
+            });
+            
+            pokerSocket.on(`invite-${userId}`, (data) => {
+                console.log('[Invite] 从 poker 收到邀请:', data);
+                showInviteModal(data);
+            });
+            
+            // 3. 连接到 brainbattle 命名空间
+            const brainbattleSocket = io(`${window.location.protocol}//${window.location.host}/brainbattle`, {
+                auth: { userId: userId }
+            });
+            
+            brainbattleSocket.on('connect', () => {
+                console.log('[Invite] 已连接到 brainbattle 服务器');
+            });
+            
+            brainbattleSocket.on(`invite-${userId}`, (data) => {
+                console.log('[Invite] 从 brainbattle 收到邀请:', data);
                 showInviteModal(data);
             });
         }
@@ -2359,11 +2415,23 @@
         function showInviteModal(inviteData) {
             currentInvite = inviteData;
             
-            const infoHtml = `
-                <div><strong>${inviteData.inviterName}</strong> 邀请你加入游戏</div>
-                <div>房间: ${inviteData.roomName}</div>
-                <div>盲注: ${inviteData.smallBlind}/${inviteData.bigBlind}</div>
-            `;
+            let infoHtml = '';
+            
+            // 根据游戏类型显示不同的信息
+            if (inviteData.gameType === 'brainbattle' || inviteData.gameName === '脑力对决') {
+                infoHtml = `
+                    <div><strong>${inviteData.inviterName}</strong> 邀请你加入 <span style="color: #dc143c;">脑力对决</span></div>
+                    <div>房间号: ${inviteData.roomId}</div>
+                    <div style="margin-top: 10px; font-size: 0.9rem; color: #aaa;">5轮答题对战，考验你的脑力！</div>
+                `;
+            } else {
+                // Poker 或其他游戏
+                infoHtml = `
+                    <div><strong>${inviteData.inviterName}</strong> 邀请你加入游戏</div>
+                    <div>房间: ${inviteData.roomName || inviteData.roomId}</div>
+                    ${inviteData.smallBlind ? `<div>盲注: ${inviteData.smallBlind}/${inviteData.bigBlind}</div>` : ''}
+                `;
+            }
             
             document.getElementById('inviteInfo').innerHTML = infoHtml;
             document.getElementById('inviteModal').classList.add('show');
@@ -2385,11 +2453,23 @@
         
         // 接受邀请
         function acceptInvite() {
-            if (!currentInvite) return;
+            if (!currentInvite) {
+                console.error('[Invite] 接受邀请失败: currentInvite 为 null');
+                return;
+            }
             
+            // 先保存邀请数据，再关闭弹窗
+            const invite = currentInvite;
             hideInviteModal();
-            // 跳转到房间页面
-            window.location.href = `../games/poker/room.html?roomId=${currentInvite.roomId}`;
+            
+            // 根据游戏类型跳转到不同页面
+            if (invite.gameType === 'brainbattle' || invite.gameName === '脑力对决') {
+                // 脑力对决：跳转到大厅页面，自动加入房间
+                window.location.href = `./brainbattle/index.html?join=${invite.roomId}`;
+            } else {
+                // Poker 或其他游戏
+                window.location.href = `../games/poker/room.html?roomId=${invite.roomId}`;
+            }
         }
         
         // 拒绝邀请

@@ -932,6 +932,10 @@
                 <h3>系统总积分</h3>
                 <div class="value" id="totalChips">-</div>
             </div>
+            <div class="stat-card" style="cursor:pointer;" onclick="goToBrainBattleQuestions()">
+                <h3>🧠 脑力对决题库</h3>
+                <div class="value" style="font-size:1.5rem;">点击管理</div>
+            </div>
         </div>
         
         <!-- 加入我们申请管理 -->
@@ -1996,6 +2000,11 @@
         // 返回大厅
         function backToHall() {
             window.location.href = 'gamehall.html';
+        }
+        
+        // 跳转到脑力对决题库管理
+        function goToBrainBattleQuestions() {
+            window.location.href = 'admin/brainbattle-questions.html';
         }
         
         // 页面加载

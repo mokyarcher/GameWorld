@@ -311,7 +311,7 @@
         /* 刷新按钮 - 统一风格 */
         .fab-refresh {
             position: fixed;
-            bottom: 170px;
+            bottom: 240px;
             left: 30px;
             width: 56px;
             height: 56px;
@@ -341,6 +341,38 @@
         @keyframes spin {
             from { transform: rotate(0deg); }
             to { transform: rotate(360deg); }
+        }
+
+        /* 热力图按钮 - 统一风格 */
+        .fab-heatmap {
+            position: fixed;
+            bottom: 170px;
+            left: 30px;
+            width: 56px;
+            height: 56px;
+            border-radius: 50%;
+            background: rgba(128, 128, 128, 0.6);
+            border: 2px solid rgb(120, 0, 0);
+            color: #fff;
+            font-size: 24px;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(170, 0, 0, 0.1);
+            z-index: 1000;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .fab-heatmap:hover {
+            transform: scale(1.1);
+            box-shadow: 0 6px 25px rgba(170, 0, 0, 0.6);
+        }
+
+        .fab-heatmap.active {
+            background: linear-gradient(135deg, #dc143c, #8b0000);
+            box-shadow: 0 4px 15px rgba(220, 20, 60, 0.4);
+            border-color: rgba(220, 20, 60, 0.8);
         }
 
         /* 使用说明按钮 - 统一风格 */
@@ -752,6 +784,185 @@
             align-items: center;
             justify-content: center;
             gap: 6px;
+            margin-bottom: 16px;
+            padding-bottom: 16px;
+            border-bottom: 1px solid rgba(220, 20, 60, 0.2);
+        }
+
+        /* 点赞评论区域 */
+        .pin-actions {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            margin-bottom: 20px;
+            padding: 10px 0;
+        }
+
+        .pin-action-btn {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            padding: 8px 16px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(220, 20, 60, 0.3);
+            border-radius: 20px;
+            color: #888;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .pin-action-btn:hover {
+            background: rgba(220, 20, 60, 0.1);
+            border-color: rgba(220, 20, 60, 0.5);
+            color: #fff;
+        }
+
+        .pin-action-btn.active {
+            background: rgba(220, 20, 60, 0.2);
+            border-color: #dc143c;
+            color: #dc143c;
+        }
+
+        .pin-action-btn .icon {
+            font-size: 1.1rem;
+        }
+
+        .pin-action-btn .count {
+            font-weight: 600;
+        }
+
+        /* 评论列表 */
+        .comments-section {
+            text-align: left;
+            border-top: 1px solid rgba(220, 20, 60, 0.2);
+            padding-top: 16px;
+            max-height: 300px;
+            overflow-y: auto;
+        }
+
+        .comments-title {
+            font-size: 0.95rem;
+            color: #dc143c;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .comment-item {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 12px;
+            padding: 10px;
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 10px;
+        }
+
+        .comment-avatar {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 1px solid rgba(220, 20, 60, 0.3);
+            flex-shrink: 0;
+        }
+
+        .comment-content {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .comment-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 4px;
+        }
+
+        .comment-nickname {
+            font-weight: 600;
+            font-size: 0.85rem;
+            color: #fff;
+        }
+
+        .comment-time {
+            font-size: 0.7rem;
+            color: #666;
+        }
+
+        .comment-text {
+            font-size: 0.85rem;
+            color: rgba(255, 255, 255, 0.8);
+            line-height: 1.4;
+            word-wrap: break-word;
+        }
+
+        .comment-delete {
+            font-size: 0.7rem;
+            color: #666;
+            cursor: pointer;
+            margin-left: 8px;
+        }
+
+        .comment-delete:hover {
+            color: #dc143c;
+        }
+
+        .comments-empty {
+            text-align: center;
+            color: #666;
+            padding: 20px;
+            font-size: 0.85rem;
+        }
+
+        /* 发表评论输入框 */
+        .comment-input-area {
+            display: flex;
+            gap: 10px;
+            margin-top: 12px;
+            padding-top: 12px;
+            border-top: 1px solid rgba(220, 20, 60, 0.2);
+        }
+
+        .comment-input {
+            flex: 1;
+            padding: 10px 14px;
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(220, 20, 60, 0.3);
+            border-radius: 20px;
+            color: #fff;
+            font-size: 0.9rem;
+            outline: none;
+        }
+
+        .comment-input:focus {
+            border-color: #dc143c;
+        }
+
+        .comment-input::placeholder {
+            color: #666;
+        }
+
+        .comment-submit {
+            padding: 10px 20px;
+            background: linear-gradient(135deg, #dc143c, #8b0000);
+            border: none;
+            border-radius: 20px;
+            color: #fff;
+            font-size: 0.85rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .comment-submit:hover {
+            box-shadow: 0 0 15px rgba(220, 20, 60, 0.4);
+        }
+
+        .comment-submit:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
         }
 
         /* 提示消息 */
@@ -1047,6 +1258,9 @@
     <!-- 刷新按钮 -->
     <button class="fab-refresh" id="refreshBtn" onclick="refreshMap()" title="刷新地图">↻</button>
 
+    <!-- 热力图按钮（左下） -->
+    <button class="fab-heatmap" id="heatmapBtn" onclick="toggleHeatmapLayer()" title="热力图">🔥</button>
+
     <!-- 显示全部足迹按钮（左下偏上） -->
     <button class="fab-show-all" onclick="showAllPinsInfo()" title="显示全部足迹">🐾</button>
 
@@ -1145,6 +1359,27 @@
             </div>
             <div class="pin-detail" id="pinDetail">
                 <!-- 动态填充 -->
+            </div>
+            <!-- 点赞评论区域 -->
+            <div class="pin-actions" id="pinActions">
+                <button class="pin-action-btn" id="likeBtn" onclick="toggleLike()">
+                    <span class="icon">♡</span>
+                    <span class="count" id="likeCount">0</span>
+                </button>
+                <button class="pin-action-btn" onclick="focusComment()">
+                    <span class="icon">💬</span>
+                    <span class="count" id="commentCount">0</span>
+                </button>
+            </div>
+            <div class="comments-section" id="commentsSection">
+                <div class="comments-title">💬 评论</div>
+                <div id="commentsList">
+                    <div class="comments-empty">暂无评论</div>
+                </div>
+                <div class="comment-input-area">
+                    <input type="text" class="comment-input" id="commentInput" placeholder="写点什么吧..." maxlength="500">
+                    <button class="comment-submit" onclick="submitComment()">发送</button>
+                </div>
             </div>
         </div>
     </div>

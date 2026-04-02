@@ -10,6 +10,9 @@ let currentMapStyle = 'dark'; // 当前地图风格：默认暗夜黑
 let currentLayerType = 'vector'; // 当前图层类型：vector / satellite
 let satelliteLayer = null; // 卫星图层
 let trafficLayer = null; // 交通图层
+let heatmapLayer = null; // 热力图图层
+let isHeatmapVisible = false; // 热力图是否显示
+let isHeatmapPluginLoaded = false; // 热力图插件是否已加载
 let allInfoWindows = []; // 存储所有打开的信息窗体
 let isShowAllPins = false; // 是否正在显示全部足迹
 
@@ -462,9 +465,15 @@ async function submitPost() {
     }
 }
 
-// 显示标记详情
-// 显示足迹详情弹窗
-function showPinDetail(pinData) {
+// 当前查看的足迹ID
+let currentPinId = null;
+let currentPinData = null;
+
+// 显示足迹详情弹窗（包含点赞评论）
+async function showPinDetail(pinData) {
+    currentPinId = pinData.id;
+    currentPinData = pinData;
+    
     const detailHtml = `
         <div class="user-info">
             <img src="${pinData.avatar ? '/avatars/' + pinData.avatar : '../images/default-avatar.png'}" 
@@ -477,7 +486,7 @@ function showPinDetail(pinData) {
         ${pinData.images && pinData.images.length > 0 ? `
             <div class="images">
                 ${pinData.images.map(img => `
-                    <img src="/uploads/map/${img}" alt="分享图片">
+                    <img src="/uploads/map/${img}" alt="分享图片" onclick="previewImage('/uploads/map/${img}')">
                 `).join('')}
             </div>
         ` : ''}
@@ -487,17 +496,27 @@ function showPinDetail(pinData) {
     `;
     
     document.getElementById('pinDetail').innerHTML = detailHtml;
+    
+    // 更新点赞数和评论数
+    document.getElementById('likeCount').textContent = pinData.like_count || 0;
+    document.getElementById('commentCount').textContent = pinData.comment_count || 0;
+    
+    // 检查当前用户是否已点赞
+    await checkLikeStatus();
+    
+    // 加载评论列表
+    await loadComments();
+    
     document.getElementById('detailModal').classList.add('show');
 }
 
 // 点击卡片打开足迹详情（通过ID）
 async function openPinDetail(pinId) {
     try {
-        const data = await MapAPI.getPin(pinId);
+        const data = await MapAPI.getPinDetail(pinId);
         
         if (data.success && data.pin) {
-            // 复用现有的详情展示逻辑
-            showPinDetail(data.pin);
+            await showPinDetail(data.pin);
         } else {
             showToast('足迹不存在');
         }
@@ -510,6 +529,182 @@ async function openPinDetail(pinId) {
 // 关闭详情弹窗
 function closeDetailModal() {
     document.getElementById('detailModal').classList.remove('show');
+    currentPinId = null;
+    currentPinData = null;
+}
+
+// 检查点赞状态
+async function checkLikeStatus() {
+    const token = getToken();
+    if (!token || !currentPinId) return;
+    
+    try {
+        const data = await MapAPI.checkLike(currentPinId);
+        const likeBtn = document.getElementById('likeBtn');
+        const likeIcon = likeBtn.querySelector('.icon');
+        
+        if (data.liked) {
+            likeBtn.classList.add('active');
+            likeIcon.textContent = '♥';
+        } else {
+            likeBtn.classList.remove('active');
+            likeIcon.textContent = '♡';
+        }
+        document.getElementById('likeCount').textContent = data.likeCount;
+    } catch (error) {
+        console.error('[Map] 检查点赞状态失败:', error);
+    }
+}
+
+// 切换点赞
+async function toggleLike() {
+    const token = getToken();
+    if (!token) {
+        showToast('请先登录');
+        return;
+    }
+    
+    if (!currentPinId) return;
+    
+    try {
+        const data = await MapAPI.toggleLike(currentPinId);
+        const likeBtn = document.getElementById('likeBtn');
+        const likeIcon = likeBtn.querySelector('.icon');
+        
+        if (data.liked) {
+            likeBtn.classList.add('active');
+            likeIcon.textContent = '♥';
+            showToast('❤️ 点赞成功');
+        } else {
+            likeBtn.classList.remove('active');
+            likeIcon.textContent = '♡';
+            showToast('取消点赞');
+        }
+        
+        document.getElementById('likeCount').textContent = 
+            parseInt(document.getElementById('likeCount').textContent) + (data.liked ? 1 : -1);
+    } catch (error) {
+        console.error('[Map] 点赞失败:', error);
+        showToast('操作失败');
+    }
+}
+
+// 加载评论列表
+async function loadComments() {
+    if (!currentPinId) return;
+    
+    try {
+        const data = await MapAPI.getComments(currentPinId);
+        const commentsList = document.getElementById('commentsList');
+        const currentUserId = getUserId();
+        
+        if (data.comments && data.comments.length > 0) {
+            commentsList.innerHTML = data.comments.map(comment => `
+                <div class="comment-item" data-id="${comment.id}">
+                    <img src="${comment.avatar ? '/avatars/' + comment.avatar : '../images/default-avatar.png'}" 
+                         class="comment-avatar" alt="avatar">
+                    <div class="comment-content">
+                        <div class="comment-header">
+                            <span class="comment-nickname">${escapeHtml(comment.nickname || '匿名')}</span>
+                            <div>
+                                <span class="comment-time">${formatDate(comment.created_at)}</span>
+                                ${comment.user_id == currentUserId ? `
+                                    <span class="comment-delete" onclick="deleteComment(${comment.id})">删除</span>
+                                ` : ''}
+                            </div>
+                        </div>
+                        <div class="comment-text">${escapeHtml(comment.content)}</div>
+                    </div>
+                </div>
+            `).join('');
+        } else {
+            commentsList.innerHTML = '<div class="comments-empty">暂无评论，来说两句吧~</div>';
+        }
+        
+        document.getElementById('commentCount').textContent = data.total || 0;
+    } catch (error) {
+        console.error('[Map] 加载评论失败:', error);
+    }
+}
+
+// 聚焦评论输入框
+function focusComment() {
+    document.getElementById('commentInput').focus();
+}
+
+// 发表评论
+async function submitComment() {
+    const token = getToken();
+    if (!token) {
+        showToast('请先登录');
+        return;
+    }
+    
+    if (!currentPinId) return;
+    
+    const input = document.getElementById('commentInput');
+    const content = input.value.trim();
+    
+    if (!content) {
+        showToast('请输入评论内容');
+        return;
+    }
+    
+    try {
+        const submitBtn = document.querySelector('.comment-submit');
+        submitBtn.disabled = true;
+        submitBtn.textContent = '发送中...';
+        
+        const data = await MapAPI.addComment(currentPinId, content);
+        
+        if (data.success) {
+            input.value = '';
+            showToast('评论成功');
+            await loadComments();
+        }
+    } catch (error) {
+        console.error('[Map] 评论失败:', error);
+        showToast('评论失败');
+    } finally {
+        const submitBtn = document.querySelector('.comment-submit');
+        submitBtn.disabled = false;
+        submitBtn.textContent = '发送';
+    }
+}
+
+// 删除评论
+async function deleteComment(commentId) {
+    if (!confirm('确定要删除这条评论吗？')) return;
+    
+    try {
+        await MapAPI.deleteComment(commentId);
+        showToast('删除成功');
+        await loadComments();
+    } catch (error) {
+        console.error('[Map] 删除评论失败:', error);
+        showToast('删除失败');
+    }
+}
+
+// 图片预览（简易版）
+function previewImage(src) {
+    // 创建预览遮罩
+    const overlay = document.createElement('div');
+    overlay.style.cssText = `
+        position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+        background: rgba(0,0,0,0.9); z-index: 5000;
+        display: flex; align-items: center; justify-content: center;
+        cursor: zoom-out;
+    `;
+    
+    const img = document.createElement('img');
+    img.src = src;
+    img.style.cssText = 'max-width: 90%; max-height: 90%; border-radius: 8px;';
+    
+    overlay.appendChild(img);
+    document.body.appendChild(overlay);
+    
+    overlay.onclick = () => overlay.remove();
 }
 
 // 显示使用说明弹窗
@@ -1332,3 +1527,194 @@ function toggleTrafficLayer() {
 function switchMapLayer(layerType) {
     console.log('[Map] switchMapLayer 已弃用，请使用 switchMapStyle 或 switchLayerType');
 }
+
+/**
+ * ==================== 热力图功能 ====================
+ */
+
+// 切换热力图图层
+async function toggleHeatmapLayer() {
+    if (!map) return;
+    
+    const heatmapBtn = document.getElementById('heatmapBtn');
+    
+    if (!isHeatmapVisible) {
+        // 显示热力图
+        showLoading(true);
+        try {
+            // 加载热力图插件（如果还没加载）
+            if (!isHeatmapPluginLoaded) {
+                await new Promise((resolve, reject) => {
+                    AMap.plugin(['AMap.HeatMap'], function() {
+                        isHeatmapPluginLoaded = true;
+                        resolve();
+                    });
+                });
+            }
+            
+            // 获取当前地图视野中心
+            const center = map.getCenter();
+            const zoom = map.getZoom();
+            
+            // 根据缩放级别调整半径
+            let radius = 500; // 默认半径（公里）
+            if (zoom >= 10) radius = 20;
+            else if (zoom >= 8) radius = 50;
+            else if (zoom >= 6) radius = 100;
+            else if (zoom >= 4) radius = 300;
+            
+            const data = await MapAPI.getHeatmapData(center.lat, center.lng, radius);
+            
+            if (data.success && data.points && data.points.length > 0) {
+                // 高德热力图需要的数据格式: {lng, lat, count}
+                const heatmapData = data.points.map(p => ({
+                    lng: p.lng,
+                    lat: p.lat,
+                    count: p.count
+                }));
+                
+                // 创建或更新热力图
+                if (!heatmapLayer) {
+                    console.log('[Heatmap] Creating new HeatMap instance');
+                    heatmapLayer = new AMap.HeatMap(map, {
+                        radius: 30, // 适中的半径
+                        opacity: [0.4, 0.85], // 透明度
+                        // 纯正红色渐变：透明 -> 浅红 -> 红 -> 深红
+                        gradient: {
+                            0.0: 'rgba(220, 20, 60, 0)',
+                            0.3: 'rgba(220, 20, 60, 0.3)',
+                            0.5: 'rgba(220, 20, 60, 0.6)',
+                            0.7: 'rgba(220, 20, 60, 0.8)',
+                            0.9: 'rgba(139, 0, 0, 0.9)',
+                            1.0: 'rgba(100, 0, 0, 1)'
+                        }
+                    });
+                    console.log('[Heatmap] Instance created:', heatmapLayer);
+                }
+                
+                // 高德 2.0 热力图使用 setData 或 setDataSet
+                if (typeof heatmapLayer.setData === 'function') {
+                    console.log('[Heatmap] Using setData');
+                    heatmapLayer.setData(heatmapData, {
+                        max: Math.max(...heatmapData.map(p => p.count), 10)
+                    });
+                } else if (typeof heatmapLayer.setDataSet === 'function') {
+                    console.log('[Heatmap] Using setDataSet');
+                    heatmapLayer.setDataSet({
+                        data: heatmapData,
+                        max: Math.max(...heatmapData.map(p => p.count), 10)
+                    });
+                } else {
+                    console.error('[Heatmap] No data method found!');
+                    throw new Error('热力图方法未找到');
+                }
+                
+                // 显示热力图
+                heatmapLayer.show();
+                
+                isHeatmapVisible = true;
+                heatmapBtn.classList.add('active');
+                showToast(`🔥 热力图已开启 (${data.count} 个点位)`);
+            } else {
+                // 当前视野无数据，尝试获取全局数据
+                showToast('当前视野无足迹，正在获取全局数据...');
+                const globalData = await MapAPI.getHeatmapData(null, null, 5000);
+                
+                if (globalData.success && globalData.points && globalData.points.length > 0) {
+                    const heatmapData = globalData.points.map(p => ({
+                        lng: p.lng,
+                        lat: p.lat,
+                        count: p.count
+                    }));
+                    
+                    if (!heatmapLayer) {
+                        heatmapLayer = new AMap.HeatMap(map, {
+                            radius: 30,
+                            opacity: [0.4, 0.85],
+                            gradient: {
+                                0.0: 'rgba(220, 20, 60, 0)',
+                                0.3: 'rgba(220, 20, 60, 0.3)',
+                                0.5: 'rgba(220, 20, 60, 0.6)',
+                                0.7: 'rgba(220, 20, 60, 0.8)',
+                                0.9: 'rgba(139, 0, 0, 0.9)',
+                                1.0: 'rgba(100, 0, 0, 1)'
+                            }
+                        });
+                    }
+                    
+                    // 高德 2.0 热力图使用 setData 或 setDataSet
+                    if (typeof heatmapLayer.setData === 'function') {
+                        heatmapLayer.setData(heatmapData, {
+                            max: Math.max(...heatmapData.map(p => p.count), 10)
+                        });
+                    } else if (typeof heatmapLayer.setDataSet === 'function') {
+                        heatmapLayer.setDataSet({
+                            data: heatmapData,
+                            max: Math.max(...heatmapData.map(p => p.count), 10)
+                        });
+                    } else {
+                        console.error('[Heatmap] No data method found!');
+                        throw new Error('热力图方法未找到');
+                    }
+                    
+                    heatmapLayer.show();
+                    
+                    isHeatmapVisible = true;
+                    heatmapBtn.classList.add('active');
+                    showToast(`🔥 热力图已开启 (${globalData.count} 个点位)`);
+                } else {
+                    showToast('暂无足迹数据，无法显示热力图');
+                }
+            }
+        } catch (error) {
+            console.error('[Map] 加载热力图失败:', error);
+            showToast('热力图加载失败');
+        } finally {
+            showLoading(false);
+        }
+    } else {
+        // 隐藏热力图
+        if (heatmapLayer) {
+            heatmapLayer.hide();
+        }
+        isHeatmapVisible = false;
+        heatmapBtn.classList.remove('active');
+        showToast('热力图已关闭');
+    }
+}
+
+// 刷新热力图数据（当地图移动时）
+async function refreshHeatmap() {
+    if (!isHeatmapVisible || !heatmapLayer) return;
+    
+    try {
+        const center = map.getCenter();
+        const zoom = map.getZoom();
+        
+        let radius = 500;
+        if (zoom >= 10) radius = 20;
+        else if (zoom >= 8) radius = 50;
+        else if (zoom >= 6) radius = 100;
+        else if (zoom >= 4) radius = 300;
+        
+        const data = await MapAPI.getHeatmapData(center.lat, center.lng, radius);
+        
+        if (data.success && data.points && data.points.length > 0) {
+            const heatmapData = data.points.map(p => ({
+                lng: p.lng,
+                lat: p.lat,
+                count: p.count
+            }));
+            
+            heatmapLayer.setData(heatmapData, {
+                max: Math.max(...heatmapData.map(p => p.count), 10)
+            });
+        }
+    } catch (error) {
+        console.error('[Map] 刷新热力图失败:', error);
+    }
+}
+
+// 监听地图移动事件，自动刷新热力图
+//（可选：如果需要实时跟随地图视野更新热力图，取消下面的注释）
+// map?.on('moveend', refreshHeatmap);

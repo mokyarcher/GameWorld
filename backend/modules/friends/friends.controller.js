@@ -1,6 +1,7 @@
 const express = require('express');
 const jwt = require('jsonwebtoken');
 const db = require('../../database/db');
+const { getUserStatus } = require('../online/online.controller');
 
 const router = express.Router();
 const JWT_SECRET = process.env.JWT_SECRET || 'gameworld-secret-key-2024';
@@ -158,17 +159,21 @@ router.get('/list', authenticateToken, async (req, res) => {
       [userId, userId, userId]
     );
     
-    // 格式化数据
-    const formattedFriends = friends.map(f => ({
-      friendshipId: f.friendship_id,
-      id: f.id,
-      username: f.username,
-      nickname: f.nickname,
-      avatar: f.avatar,
-      lastLogin: f.last_login,
-      // 判断在线状态（30分钟内算在线）
-      isOnline: f.last_login && (new Date() - new Date(f.last_login)) < 30 * 60 * 1000
-    }));
+    // 格式化数据（使用在线状态系统的实时数据）
+    const formattedFriends = friends.map(f => {
+      const onlineStatus = getUserStatus(f.id);
+      return {
+        friendshipId: f.friendship_id,
+        id: f.id,
+        username: f.username,
+        nickname: f.nickname,
+        avatar: f.avatar,
+        lastLogin: f.last_login,
+        isOnline: onlineStatus.isOnline,
+        location: onlineStatus.location,
+        locationName: onlineStatus.locationName
+      };
+    });
     
     res.json({ success: true, friends: formattedFriends });
   } catch (error) {

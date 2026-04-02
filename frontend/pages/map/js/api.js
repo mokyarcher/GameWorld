@@ -9,6 +9,11 @@ function getToken() {
     return localStorage.getItem('token');
 }
 
+// 获取用户ID
+function getUserId() {
+    return localStorage.getItem('userId');
+}
+
 // 通用请求封装
 async function request(url, options = {}) {
     const token = getToken();
@@ -91,6 +96,62 @@ const MapAPI = {
     // 逆地理编码（通过后端代理）
     reverseGeocode(lat, lng) {
         return request(`/map/geocode/reverse?lat=${lat}&lng=${lng}`);
+    },
+    
+    // 获取足迹详情（包含点赞评论统计）
+    getPinDetail(id) {
+        return request(`/map/pins/${id}/detail`);
+    },
+    
+    // 检查点赞状态
+    checkLike(pinId) {
+        return request(`/map/pins/${pinId}/like`);
+    },
+    
+    // 切换点赞
+    toggleLike(pinId) {
+        return request(`/map/pins/${pinId}/like`, {
+            method: 'POST'
+        });
+    },
+    
+    // 获取评论列表
+    getComments(pinId, limit = 20, offset = 0) {
+        return request(`/map/pins/${pinId}/comments?limit=${limit}&offset=${offset}`);
+    },
+    
+    // 发表评论
+    addComment(pinId, content) {
+        return request(`/map/pins/${pinId}/comments`, {
+            method: 'POST',
+            body: JSON.stringify({ content })
+        });
+    },
+    
+    // 删除评论
+    deleteComment(commentId) {
+        return request(`/map/comments/${commentId}`, {
+            method: 'DELETE'
+        });
+    },
+    
+    // 获取热力图数据
+    getHeatmapData(lat, lng, radius = 50) {
+        let url = `/map/heatmap?radius=${radius}`;
+        if (lat && lng) {
+            url += `&lat=${lat}&lng=${lng}`;
+        }
+        return request(url);
+    },
+    
+    // 获取全局统计
+    getStatsOverview() {
+        return request('/map/stats/overview');
+    },
+    
+    // 获取用户个人统计
+    getUserStats() {
+        return request('/map/stats/user');
     }
 };
 

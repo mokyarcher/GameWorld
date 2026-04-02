@@ -49,6 +49,9 @@ async function init() {
   // 初始化加入我们模块数据库
   await initJoinDatabase();
   
+  // 初始化脑力对决模块数据库
+  await initBrainBattleDatabase();
+  
   console.log('数据库初始化完成');
 }
 
@@ -146,6 +149,9 @@ async function initMapDatabase() {
     
     // 迁移：添加 updated_at 列到 map_pins 表
     await migrateAddUpdatedAtColumn();
+    
+    // 迁移：添加点赞评论相关列到 map_pins 表
+    await migrateAddLikeCommentColumns();
   } catch (err) {
     console.error('[DB] 地图数据库初始化失败:', err.message);
   }
@@ -161,6 +167,29 @@ async function migrateAddUpdatedAtColumn() {
     if (!hasUpdatedAtColumn) {
       await run('ALTER TABLE map_pins ADD COLUMN updated_at DATETIME DEFAULT CURRENT_TIMESTAMP');
       console.log('[DB] 已添加 updated_at 列到 map_pins 表');
+    }
+  } catch (err) {
+    console.error('[DB] 迁移失败:', err.message);
+  }
+}
+
+// 迁移：添加点赞评论相关列到 map_pins 表
+async function migrateAddLikeCommentColumns() {
+  try {
+    const tableInfo = await all("PRAGMA table_info(map_pins)");
+    
+    // 添加 like_count 列
+    const hasLikeCountColumn = tableInfo.some(col => col.name === 'like_count');
+    if (!hasLikeCountColumn) {
+      await run('ALTER TABLE map_pins ADD COLUMN like_count INTEGER DEFAULT 0');
+      console.log('[DB] 已添加 like_count 列到 map_pins 表');
+    }
+    
+    // 添加 comment_count 列
+    const hasCommentCountColumn = tableInfo.some(col => col.name === 'comment_count');
+    if (!hasCommentCountColumn) {
+      await run('ALTER TABLE map_pins ADD COLUMN comment_count INTEGER DEFAULT 0');
+      console.log('[DB] 已添加 comment_count 列到 map_pins 表');
     }
   } catch (err) {
     console.error('[DB] 迁移失败:', err.message);
@@ -212,6 +241,31 @@ async function initJoinDatabase() {
     }
   } catch (err) {
     console.error('[DB] 加入我们数据库初始化失败:', err.message);
+  }
+}
+
+// 初始化脑力对决模块数据库
+async function initBrainBattleDatabase() {
+  try {
+    const brainbattleSchemaPath = path.join(__dirname, 'brainbattle_schema.sql');
+    if (fs.existsSync(brainbattleSchemaPath)) {
+      const brainbattleSchema = fs.readFileSync(brainbattleSchemaPath, 'utf8');
+      const statements = brainbattleSchema.split(';').filter(stmt => stmt.trim());
+      
+      for (const statement of statements) {
+        try {
+          await run(statement);
+        } catch (err) {
+          // 忽略表已存在和重复数据的错误
+          if (!err.message.includes('already exists') && !err.message.includes('UNIQUE constraint failed')) {
+            console.error('[DB] 脑力对决表初始化失败:', err.message);
+          }
+        }
+      }
+      console.log('[DB] 脑力对决模块数据库初始化完成');
+    }
+  } catch (err) {
+    console.error('[DB] 脑力对决数据库初始化失败:', err.message);
   }
 }
 
